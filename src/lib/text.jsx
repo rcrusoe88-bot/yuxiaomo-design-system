@@ -34,6 +34,16 @@ export function renderRich(text) {
  * MCE 的位置在**右下角、加粗深灰**（表达"这是结论"而非"这是说明"）；
  * tone="soft" 时改为居中浅灰（纯描述性图注）。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   图注：图下方的小字说明（strong=加粗深灰结论 / soft=浅灰描述）
+ * use:      任何图 / 表的下方
+ * notfor:   图上方的标题 → FigurePanel 的 title；正文段落 → BodyText
+ * pairs:    FigurePanel, FigurePanel 内容
+ * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * evidence: MCE 五册逆向（原页图注在右下角加粗深灰）
+ * since:    v0.4
+ * usage:    <FigCaption tone="strong">图 1  LNP 粒径与 PDI 分布</FigCaption>
+ */
 export function FigCaption({ children, tone = 'strong', align, style }) {
   const n = useNeutral()
   return (
@@ -52,6 +62,16 @@ export function FigCaption({ children, tone = 'strong', align, style }) {
  * text 支持 `**加粗**`；也可直接传 children（JSX）。
  * columns>1 → CSS 多栏流式（`breakInside: avoid` 在块级元素上可靠）。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   正文段落（支持 **行内加粗**，可 1–2 栏流式）
+ * use:      连续论述的正文
+ * notfor:   分点罗列 → BulletList / NumberedList；多栏仅用于无小标题的连续论述
+ * pairs:    FigCaption, BarTitle
+ * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <BodyText text="LNP 由四种脂质组分自组装而成，**可电离脂质**决定内体逃逸效率。" columns={2} />
+ */
 export function BodyText({ text, children, columns = 1, size = 'lg', justify = true, style }) {
   const n = useNeutral()
   const fs = TEXT_SIZE[size] || TEXT_SIZE.lg
@@ -72,6 +92,16 @@ export function BodyText({ text, children, columns = 1, size = 'lg', justify = t
  * K2 圆点列表（BulletList）
  * 圆点用主题色；items 每项支持 `**加粗**`。columns 支持双栏清单。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   圆点列表（主题色圆点），语义 = 并列、无先后
+ * use:      并列要点罗列
+ * notfor:   有先后顺序 → NumberedList；实验动作序列 → BeadChain
+ * pairs:    BarTitle, DefinitionList
+ * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <BulletList items={['**粒径** 80–120 nm', 'PDI ≤ 0.2']} columns={2} />
+ */
 export function BulletList({ items = [], columns = 1, size = 'md', marker = '•', style }) {
   const t = useTheme(); const n = useNeutral()
   const fs = TEXT_SIZE[size] || TEXT_SIZE.md
@@ -97,6 +127,16 @@ export function BulletList({ items = [], columns = 1, size = 'md', marker = '•
  * 数字用主题色 + 等宽数字，右对齐成列，使"第 10 项"不会把文字推歪。
  * 与 BulletList 的分工：**有先后顺序**用数字，纯并列用圆点。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   数字列表（主题色等宽数字、右对齐成列），语义 = 并列、有先后
+ * use:      有先后顺序的条目（第 10 项不会把文字推歪）
+ * notfor:   纯并列 → BulletList；需要图形化的步骤流 → NumberedStepFlow
+ * pairs:    BarTitle
+ * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <NumberedList items={['质粒构建', '体外转录', 'LNP 包封']} />
+ */
 export function NumberedList({ items = [], columns = 1, start = 1, size = 'md', style }) {
   const t = useTheme(); const n = useNeutral()
   const fs = TEXT_SIZE[size] || TEXT_SIZE.md
@@ -126,6 +166,16 @@ export function NumberedList({ items = [], columns = 1, start = 1, size = 'md', 
  * 用途：技术名词解释、缩写对照表、页面右下角的名词栏。
  * 与表格的分工：**没有列头**时用本组件，不需要扛表格语义。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   术语定义列表：左术语（深灰粗）+ 右释义（正文灰），行间细线
+ * use:      技术名词解释、缩写对照、页面右下角名词栏
+ * notfor:   属性→取值清单（要底色与可读性优先）→ KeyValueTable；不需要表格语义时用本组件
+ * pairs:    BarTitle
+ * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <DefinitionList items={[{ term: 'LNP', en: 'Lipid nanoparticle', desc: '脂质纳米颗粒' }]} />
+ */
 export function DefinitionList({ items = [], termWidth = '30mm', size = 'md', rule = true, style }) {
   const n = useNeutral()
   const fs = TEXT_SIZE[size] || TEXT_SIZE.md
@@ -154,6 +204,16 @@ export function DefinitionList({ items = [], termWidth = '30mm', size = 'md', ru
  * 用途：页脚的适用范围、"*注"之上的重要提示、合规声明。
  * 与 Footnotes 的分工：Footnotes 是页脚最末的 `*` 小字；NoteBand 是**版心内**的强调块。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   版心内的提示带：左色条 + 浅底 + 说明文字（solid 为主题色实底反白）
+ * use:      「注意 / 用哪个 / 为什么这样做」这类编者提示；合规声明
+ * notfor:   页脚最末的 * 小字 → Footnotes（NoteBand 在版心内，Footnotes 在页脚）
+ * pairs:    Footnotes, ConclusionBanner
+ * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <NoteBand icon="gear" label="为什么" text="**PEG-脂质**过量会降低细胞摄取。" />
+ */
 export function NoteBand({ children, text, label, icon, tone = 'tint', style }) {
   const t = useTheme(); const n = useNeutral()
   const solid = tone === 'solid'
@@ -183,6 +243,16 @@ export function NoteBand({ children, text, label, icon, tone = 'tint', style }) 
  * 上中文 9pt 深灰 + 下英文 7.5pt 浅灰；divider 打开时左侧加一条浅色竖线。
  * 用途：图旁的注解、服务网络图两侧的说明、双语页的每一条 bullet。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   注解对：上中文 9pt 深灰 + 下英文 7.5pt 浅灰（可加左竖线）
+ * use:      图旁的注解、服务网络图两侧的说明、双语页的每一条要点
+ * notfor:   通栏连续段落 → BodyText；需要左右分栏对照 → 用两列网格包 BodyText
+ * pairs:    ServiceNetworkMap, LegendFigure
+ * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <AnnotationPair cn="现象：粒径随 N/P 比下降" en="Particle size decreases with N/P ratio" />
+ */
 export function AnnotationPair({ cn, en, divider = true, size = 'md', align = 'left', style }) {
   const t = useTheme(); const n = useNeutral()
   const cnSize = size === 'sm' ? '8pt' : '9pt'

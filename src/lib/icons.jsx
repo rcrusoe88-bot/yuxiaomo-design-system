@@ -55,6 +55,16 @@ const PATHS = {
   check: ['M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z', 'M10.6 15.6l-4-4 1.4-1.4 2.6 2.6 5.4-5.4 1.4 1.4-6.8 6.8z'],
 }
 
+/* @ds-contract
+ * intent:   面性双色 SVG 图标（16 个内置名）
+ * use:      卡片 / 列表 / 胶囊里的图标位
+ * notfor:   裸放作装饰（R17 图标必入容器）；大幅装饰插画 → FigurePanel
+ * pairs:    StatCardRow, IconFlowBar, IconFeatureList, ChipPillGrid
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R1–R13 期
+ * since:    v0.1
+ * usage:    <Icon name="flask" size={22} />
+ */
 export function Icon({ name, size = 24, primary, secondary, style }) {
   const t = useTheme()
   const [main, accent] = PATHS[name] || PATHS.flask

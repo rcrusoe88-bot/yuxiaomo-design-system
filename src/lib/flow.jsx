@@ -4,6 +4,16 @@ import { useTheme, useNeutral } from './theme'
 import { Icon } from './icons'
 
 // ---------- E1 表头条流程框链（NA p3：白框 + 顶部实头条 + ">" 连接） ----------
+/* @ds-contract
+ * intent:   白框 + 顶部实色条 + › 连接的流程框链（正统、正式的交付阶段）
+ * use:      交付阶段 / 服务流程；需要「正式感」时
+ * notfor:   实验步骤（要更亲和）→ NumberedStepFlow；注意 R9：流程下必须跟 TimelineBar
+ * pairs:    TimelineBar（R9 必配）, TimelineBar 之后可接 StagePipelineChain
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R9
+ * since:    v0.1
+ * usage:    <FlowChain steps={[{ name: '序列设计', cycle: '3 天', desc: '密码子优化' }]} numbered />
+ */
 export function FlowChain({ steps, numbered = false }) {
   const t = useTheme(); const n = useNeutral()
   return (
@@ -44,6 +54,16 @@ export function FlowChain({ steps, numbered = false }) {
 }
 
 // ---------- E2 图标流程条（CE p3：细描边大容器 + 面性图标 + ">") ----------
+/* @ds-contract
+ * intent:   细描边大容器 + 面性图标横排（轻量流程 / 能力横排）
+ * use:      轻量的能力或阶段横排
+ * notfor:   并列相加（无方向）→ HexChain（HexChain 用 ⊕，本组件用 ›）
+ * pairs:    IconFeatureList
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R1–R13 期
+ * since:    v0.1
+ * usage:    <IconFlowBar steps={[{ icon: 'dna', name: '序列设计' }]} />
+ */
 export function IconFlowBar({ steps }) {
   const t = useTheme(); const n = useNeutral()
   return (
@@ -67,6 +87,16 @@ export function IconFlowBar({ steps }) {
 }
 
 // ---------- E3 分段色带时间轴（段宽∝时长，同色递进，末端箭头+总周期） ----------
+/* @ds-contract
+ * intent:   时间轴：段宽 ∝ 时长，ramp 色带递进 + 通栏箭头 + 黑粗总周期
+ * use:      流程页的时间承诺（R9：流程下必跟）
+ * notfor:   纯顺序但无时长 → FlowChain；阶段归档（时间轴上的位置）→ PhaseBand
+ * pairs:    FlowChain
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R9
+ * since:    v0.1
+ * usage:    <TimelineBar segments={[{ label: '设计', weeks: 1 }, { label: '合成', weeks: 1.5 }]} total="快至 2.5 周交付" />
+ */
 export function TimelineBar({ segments, total }) {
   const t = useTheme()
   const sum = segments.reduce((a, s) => a + s.weeks, 0)
@@ -96,6 +126,16 @@ export function TimelineBar({ segments, total }) {
 }
 
 // ---------- E4 Chevron 箭头带（PA p15/p17：燕尾咬合，gradient 变体可做漏斗） ----------
+/* @ds-contract
+ * intent:   燕尾咬合箭头带（variant=funnel 时反向渐变表达漏斗）
+ * use:      阶段推进；轻量漏斗
+ * notfor:   多入口汇聚的网络 → ServiceNetworkMap；量化收敛漏斗 → FunnelStages
+ * pairs:    PhaseBand
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R1–R13 期
+ * since:    v0.1
+ * usage:    <ChevronFlow steps={['初筛', '复筛', '验证']} variant="funnel" />
+ */
 export function ChevronFlow({ steps, variant = 'process' }) {
   const t = useTheme()
   return (

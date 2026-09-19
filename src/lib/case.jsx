@@ -3,6 +3,16 @@
 import { useTheme, useNeutral } from './theme'
 
 // ---------- F1 案例字段块（键黑粗、值灰、纯排版无底色） ----------
+/* @ds-contract
+ * intent:   案例三段式（技术难点 / 解决方案 / 结果），纯排版无底色
+ * use:      客户案例页
+ * notfor:   客户评价背书 → TestimonialCard
+ * pairs:    EvidenceGrid, MetricStrip
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R1–R13 期
+ * since:    v0.1
+ * usage:    <CaseBlock title="难表达蛋白的 mRNA 优化" facts={[{ k: '技术难点', v: 'GC 含量过高' }]} />
+ */
 export function CaseBlock({ title, facts }) {
   const n = useNeutral()
   return (
@@ -19,6 +29,16 @@ export function CaseBlock({ title, facts }) {
 
 // ---------- F3 证据图组（R7 + 可选绿色虚线圈选框） ----------
 // images: [{ src, caption }]  highlight: { imgIndex, x, y, w, h }（百分比）
+/* @ds-contract
+ * intent:   原始实验图直角平铺（可加绿色虚线圈选）
+ * use:      原始数据图作为证据（免疫荧光、电泳等）
+ * notfor:   精修示意图 / 通路图 → FigurePanel / LegendFigure
+ * pairs:    CaseBlock, FigCaption
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R1–R13 期
+ * since:    v0.1
+ * usage:    <EvidenceGrid images={[{ src: '/assets/if_1.png', caption: '图 1  免疫荧光' }]} cols={3} />
+ */
 export function EvidenceGrid({ images, note, highlight, cols }) {
   const n = useNeutral()
   return (
@@ -48,6 +68,16 @@ export function EvidenceGrid({ images, note, highlight, cols }) {
 
 // ---------- F4 品牌色柱状图（浅档 vs 深档双系列，阳性对照橙点缀） ----------
 // groups: [{ label, a, b, control? }]  a=light series, b=deep series, control=true 用橙色
+/* @ds-contract
+ * intent:   柱状图双系列（浅档 capsuleLight + 深档 functional，control 走橙）
+ * use:      两组对比（A/B 或优化前后）
+ * notfor:   单序列排行 → TargetBarChart；多面板小倍数 → PanelBarChart
+ * pairs:    FunnelStages
+ * hue:      GenScript · 双系列（浅档 capsuleLight + 深档 functional），对照橙 #E8963C
+ * evidence: GenScript 三册逆向 · R1–R13 期
+ * since:    v0.1
+ * usage:    <DataChart groups={[{ label: 'L1', a: 62, b: 88 }]} seriesNames={['未优化', '优化后']} unit="%" />
+ */
 export function DataChart({ title, groups, max = 100, unit = '%', seriesNames = ['组 A', '组 B'] }) {
   const t = useTheme(); const n = useNeutral()
   const W = 720, H = 230, padL = 44, padB = 34, padT = 14

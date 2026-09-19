@@ -17,6 +17,16 @@ import { Icon } from './icons'
  * 放在 `Page` 的第一个子元素。左侧品牌 + 副行，右侧 meta 或自定义 JSX。
  * 与 `Cover` 的区别：Cover 是**封面专用**（满版深底），本组件是所有**内页**的通用页眉。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   内页页眉品牌条：左品牌 + 副行，右侧 meta 或自定义 JSX，可加下细线
+ * use:      每个内页的第一个子元素（Page 内部）
+ * notfor:   封面（Cover 自带品牌位）；注意 @page 无 margin box，页眉必须画在 .page 内部
+ * pairs:    Page, ContactFooterBand
+ * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <BrandHeaderBar brand="远泰生物" tagline="Yuantai Bio" meta="mRNA-LNP CDMO" rule />
+ */
 export function BrandHeaderBar({ brand, tagline, meta, right, rule = true, style }) {
   const t = useTheme(); const n = useNeutral()
   return (
@@ -57,6 +67,16 @@ export function BrandHeaderBar({ brand, tagline, meta, right, rule = true, style
  *   内页出现实底深色块会破坏 R2，只在这一页就是转化页时才允许）
  * items: [{ type: 'web'|'phone'|'mail'|'addr', text }]
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   内页联系带：网页/电话/邮箱/地址 + 备注，横排 2–4 项
+ * use:      内页收口（例如服务页底部）
+ * notfor:   封底的整页联系页 → BackCover；tone=solid 慎用（内页实底深色破坏 R2）
+ * pairs:    BrandHeaderBar, Page
+ * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <ContactFooterBand heading="联系我们" items={[{ type: 'mail', text: 'service@yuantai.com' }]} />
+ */
 export function ContactFooterBand({ heading, items = [], tone = 'tint', columns, style }) {
   const t = useTheme(); const n = useNeutral()
   const icons = { web: 'globe', phone: 'phone', mail: 'mail', addr: 'pin' }

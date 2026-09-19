@@ -13,6 +13,7 @@
 import { readFileSync, existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { build as buildRegistry } from './registry.mjs'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const read = (p) => readFileSync(join(ROOT, p), 'utf8').replace(/\r\n/g, '\n')
@@ -153,7 +154,100 @@ for (const f of [
   if (!existsSync(join(ROOT, f))) fail(`文档声明但文件不存在：${f}`)
 }
 
-/* ---------- 7. 输出 ---------- */
+/* ---------- 7. 组件契约（唯一真相源）与生成物新鲜度 ---------- */
+
+/** 去掉平衡的 {…} 与引号串，只留属性名骨架（用于从签名串里抽属性名） */
+function stripShapes(s) {
+  let out = '', depth = 0
+  for (const ch of s) {
+    if (ch === '{') { depth++; continue }
+    if (ch === '}') { if (depth > 0) depth--; continue }
+    if (depth > 0) continue
+    out += ch
+  }
+  return out.replace(/"[^"]*"/g, ' ').replace(/'[^']*'/g, ' ')
+}
+
+/** 取 usage 第一个开标签的属性名（跳过 {} 内，遇深度 0 的 > 停） */
+function usageAttrs(usage) {
+  const m = usage.match(/<([A-Z]\w*)/)
+  if (!m) return null
+  let i = m.index + m[0].length, depth = 0, seg = ''
+  for (; i < usage.length; i++) {
+    const ch = usage[i]
+    if (ch === '{') depth++
+    else if (ch === '}') depth--
+    else if (ch === '>' && depth === 0) break
+    seg += ch
+  }
+  return { tag: m[1], names: [...new Set([...seg.matchAll(/([A-Za-z_][\w-]*)\s*=/g)].map((x) => x[1]))] }
+}
+
+const reg = buildRegistry()
+info.push(`组件契约：${reg.stats.components} 个组件 / ${reg.stats.families} 族，全部带 @ds-contract`)
+for (const iss of reg.issues) fail(`契约不完整：${iss}`)
+
+// 7.1 每个 usage 示例里用到的属性，必须真的存在于该组件
+let usageChecked = 0
+for (const c of reg.json.components) {
+  const a = usageAttrs(c.usage)
+  if (!a) { fail(`${c.name}：usage 无法解析出标签`); continue }
+  if (a.tag !== c.name) { fail(`${c.name}：usage 的标签是 <${a.tag}>，与组件名不符`); continue }
+  usageChecked++
+  const declared = new Set(c.props.map((p) => p.name))
+  for (const n of a.names) {
+    if (!declared.has(n)) fail(`${c.name}：usage 用了不存在的属性 「${n}」（实际属性：${[...declared].join(', ')}）`)
+  }
+}
+info.push(`usage 示例：${usageChecked} 个组件的用法示例，属性全部对应源码（这是"照抄就错"的那一类错误）`)
+
+// 7.2 生成物必须与源码同步（改了源码却忘了重新生成 = 下游拿到的还是旧契约）
+const regDisk = existsSync(join(ROOT, 'registry.json')) ? read('registry.json') : null
+if (regDisk === null) fail('registry.json 不存在 —— 跑 npm run registry')
+else if (regDisk !== reg.jsonText) fail('registry.json 与源码不一致 —— 跑 npm run registry 重新生成')
+const packPath = 'references/prompt-pack.md'
+if (!existsSync(join(ROOT, packPath))) fail(`${packPath} 不存在 —— 跑 npm run registry`)
+else if (read(packPath) !== reg.md) fail(`${packPath} 与源码不一致 —— 跑 npm run registry 重新生成`)
+if (regDisk !== null && read(packPath) === reg.md) info.push('registry.json 与 prompt-pack.md 均与源码同步')
+
+/* ---------- 8. 文档里的签名漂移（文档写了源码中不存在的属性） ---------- */
+
+const NOT_A_PROP = new Set(['style'])
+let driftCount = 0
+for (const c of reg.json.components) {
+  const declared = new Set(c.props.map((p) => p.name))
+  const hits = []
+  // 形态 1：`<Comp a b="c" />`
+  for (const m of compDoc.matchAll(new RegExp('`<' + c.name + '\\b([^`]*)`', 'g'))) {
+    hits.push(stripShapes(m[1].split('>')[0]))
+  }
+  // 形态 2：表格行 | `Comp` | `a b={...}` |（单元格可能以 <Comp 开头，要去掉，否则组件名自己会被当成属性）
+  for (const m of compDoc.matchAll(new RegExp('\\|\\s*`' + c.name + '`\\s*\\|\\s*`([^`]*)`', 'g'))) {
+    hits.push(stripShapes(m[1].split('>')[0]).replace(/^\s*<\w+\b/, ''))
+  }
+  const seen = new Set()
+  for (const region of hits) {
+    for (const w of region.matchAll(/([A-Za-z][\w-]*)/g)) {
+      const n = w[1]
+      if (declared.has(n) || NOT_A_PROP.has(n) || seen.has(n)) continue
+      seen.add(n)
+      driftCount++
+      fail(`references/components.md：${c.name} 写了属性 「${n}」，但源码里没有（实际：${[...declared].join(', ')}）`)
+    }
+  }
+}
+if (!driftCount) info.push('components.md 的签名与源码一致（没有"文档里有、代码里没有"的属性）')
+
+// 8.2 taxonomy.md 的计数必须与代码一致（层×族 是选型入口，数字错了会误导选型）
+const taxo = read('references/taxonomy.md')
+const tm = taxo.match(/（(\d+)\s*族\s*\/\s*(\d+)\s*个组件）/)
+if (!tm) warn('references/taxonomy.md：未找到「（N 族 / M 个组件）」计数声明')
+else {
+  if (Number(tm[1]) !== reg.stats.families) fail(`taxonomy.md 声明 ${tm[1]} 族，实际应为 ${reg.stats.families}`)
+  if (Number(tm[2]) !== reg.stats.components) fail(`taxonomy.md 声明 ${tm[2]} 个组件，实际应为 ${reg.stats.components}`)
+}
+
+/* ---------- 9. 输出 ---------- */
 
 const line = '─'.repeat(58)
 console.log(`\n${line}\n  设计系统一致性校验 · audit\n${line}`)

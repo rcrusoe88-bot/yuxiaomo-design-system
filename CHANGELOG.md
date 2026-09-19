@@ -2,6 +2,79 @@
 
 遵循「只加不改语义」（additive-first）：新增能力升**次版本**；修改既有组件 / 令牌的语义或默认值属破坏性变更，必须在此记明并检查 `examples/` 全部样例是否仍成立。
 
+## v0.4.1 — 2026-09-19
+
+**主题：把组件"代码化 + 提示词化" —— 让精确复用不靠自觉，靠校验**
+
+起因：v0.4.0 交付复核时发现，`references/components.md`（Agent 用来查签名的文件）有 **18 个组件**写了源码里
+根本不存在的属性 —— `BlockTitle` 的 `text`、`ContactFooterBand` 的 `contacts`、`BrandHeaderBar` 的
+`logo`/`en`/`pageNo`、`MethodTable` 的 `columns`、`TocList` 的 `leaders`、`MetricStrip` 的 `highlight`、
+`AnnotationPair` 的 `left`/`right`/`ratio`、`FigurePanel` 的 `en`/`notes`/`height`、
+`LegendFigure` 的 `center`/`height`、`RowLabelMatrixTable` 的 `headerImage`/`caption`、
+`KeyValueTable` 的 `caption`、`DefinitionList` 的 `divided`、`BeadChain` 的 `items`、
+`SwatchLegend` 的 `columns`/`caption`、`ScatterClusterPanel` 的 `axes`/`n`、
+`EyebrowTitle` 的 `cn`/`en`/`size`、`BarTitle`/`RuleTitle` 的 `cn`、`NumberedTitle` 的 `no`/`text`、
+`OutlineTitle` 的 `text`、`CategoryTagRow` 的 `palette`。
+`npm run build` 查不出这类错误（没人拿文档去跑），而 Agent 照文档写就会**静默渲染出空白**。
+
+**新增：组件契约层（源码内单一真相源）**
+
+- 71 个组件各加一块 `/* @ds-contract */`，紧贴 `export function` 上方，字段：
+  `intent` / `use` / `notfor` / `pairs` / **`hue`（来源配色）** / `evidence` / `since` / `usage`。
+- 为什么放源码而不是另建表：契约与实现只隔 5 行，改组件的人一定看得见；另存一张表则必然漂移（本次就是）。
+
+**新增：`scripts/registry.mjs`（`npm run registry`）**
+
+从源码生成两份产物（**投影，不手写**）：
+- `registry.json` —— 机器可读：语义 / 禁用 / 来源配色 / 真实 props（含默认值）/ 可运行用法 / 源码片段 / 成稿提示词。
+- `references/prompt-pack.md` —— 人的复制粘贴包，按族编排，每组件含「提示词 + 配置代码 + 源码」。
+
+**新增：提示词实验室 UI（`/?app=registry`）**
+
+参照 reactbits.dev 的「Copy for AI」四件套：每个组件四个按钮 —— 复制提示词 / 配置代码 / 源码 / import；
+按族筛选 + 全文搜索；每卡显示**来源配色色块**。
+
+**提示词实验室：来源配色必须画全（否则 UI 自己就在违反 R23）**
+
+色块最初只取 `hue` 里的**第一个** hex。但 71 个组件里 **40 个**的 hue 天然是多色相的，形如
+`GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）` —— 只画第一个等于把它们
+**全部显示成蓝色**，正好就是 R23 明令禁止的"统一成默认蓝"。现改为：
+
+- 取**全部** hex 逐个画色块（40 个三色 / 13 个双色组件现在显示完整）；
+- 摘掉色值后的文字（`hueLabel()`）作为"出处"显示，如 `GenScript 三册 · 随主题`；
+- 无 hex 的 6 个组件（`BlockTitle` / `PhaseBand` / `MetricStrip` 等）画**斜纹占位块**而非灰色实心
+  —— 灰色实心会被误读成"它的来源色就是灰的"。
+
+**修正**
+
+- `components.md` 的 18 处签名漂移全部按源码改正（并立检查防复发）。
+- `taxonomy.md` 的 `palette` 组件清单误列了 `CategoryTagRow`（它没有 `palette` 参数，类目色靠 per-item `color`）。
+- `AnnotatedDonut` 的示例误用了不存在的 `value`（该组件各扇区**均分**，弧长不代表数值）；`ScatterClusterPanel` 的
+  `clusters` 需 `{x,y,r}` 而非 `{label,color}` —— 两处示例已按源码修正。
+- `scripts/verify.cjs` 增加 `[path]` 参数与"无 A4 骨架时的渲染兜底"：工具页若因 JSON 导入失败而整页空白，
+  以前会被判为"0 页溢出 = 通过"，现在会报错。（该兜底当次就抓到提示词实验室的一个变量未定义导致整页空白。）
+- 新增 `scripts/shot-page.cjs`：抓取**非** A4 分页页面的整页截图（`shot.cjs` 只认 `.bds-page`，对工具页输出 0 页）。
+
+**新增 1 条规则（R23 配色随来源，不随默认）**
+
+组件复用时颜色由**其来源手册的色相**或**调用页主题**决定；禁止把不同来源的组件统一成同一种颜色（尤其默认蓝）。
+MCE 五册实测色相本就各不相同（library 深蓝 `#2C6BAA` / PROTAC 深紫 `#5A3A7D` / qms 珊瑚红 `#F16366` /
+生化试剂 青 `#2995B3` / 药物发现 紫 `#574DA0`）。
+
+**新增 4 条机械校验（都在 `npm run audit`）**
+
+1. 71 个组件是否都有契约（4 个必需字段齐全）；2. `usage` 示例里的属性是否真的存在；
+3. 生成物是否与源码同步（改了源码忘重新生成 = 下游拿到旧契约）；4. `components.md` 签名是否与源码一致。
+
+**修正**
+
+- `components.md` 的 18 处签名漂移全部按源码改正（并立检查防复发）。
+- `taxonomy.md` 的 `palette` 组件清单误列了 `CategoryTagRow`（它没有 `palette` 参数，类目色靠 per-item `color`）。
+- `AnnotatedDonut` 的示例误用了不存在的 `value`（该组件各扇区**均分**，弧长不代表数值）；`ScatterClusterPanel` 的
+  `clusters` 需 `{x,y,r}` 而非 `{label,color}` —— 两处示例已按源码修正。
+- `scripts/verify.cjs` 增加 `[path]` 参数与"无 A4 骨架时的渲染兜底"：工具页若因 JSON 导入失败而整页空白，
+  以前会被判为"0 页溢出 = 通过"，现在会报错。
+
 ## v0.4.0 — 2026-09-19
 
 **主题：把组件从 37 补到 71 —— 按「层 × 族」系统性补全组件库**

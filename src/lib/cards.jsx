@@ -9,6 +9,16 @@ import { pastelRamp } from './color'
 const SCOOP = { borderRadius: '3mm', borderTopRightRadius: '9mm' }
 
 // ---------- D1 卖点统计卡行（一行 3~4 张，tint 底 + 三段居中） ----------
+/* @ds-contract
+ * intent:   一行 3–4 张等宽卖点卡（图标 + 标题 + 描述，tint→zebra 渐变底）
+ * use:      首屏卖点、能力概览
+ * notfor:   纯数字指标组 → MetricStrip（MetricStrip 无图标无底）
+ * pairs:    PillTitle, Lead
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R6
+ * since:    v0.1
+ * usage:    <StatCardRow items={[{ icon: 'flask', title: '一站式', desc: '质粒到 LNP' }]} />
+ */
 export function StatCardRow({ items }) {
   const t = useTheme(); const n = useNeutral()
   return (
@@ -28,6 +38,16 @@ export function StatCardRow({ items }) {
 }
 
 // ---------- D3 三档套餐卡（基础/精选/高级） ----------
+/* @ds-contract
+ * intent:   三档套餐卡（顶部实色条 + 主题色「周期，价格」）
+ * use:      套餐报价与交付周期
+ * notfor:   特性 × 档位对照矩阵 → TierMatrixTable
+ * pairs:    SpecTable
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R6
+ * since:    v0.1
+ * usage:    <TierCards tiers={[{ name: '标准', cycle: '4 周', price: '¥ 面议' }]} />
+ */
 export function TierCards({ tiers, footnote }) {
   const t = useTheme(); const n = useNeutral()
   return (
@@ -53,6 +73,16 @@ export function TierCards({ tiers, footnote }) {
 }
 
 // ---------- F5 结论横幅（浅色 tint 版 / 实底 CTA 版） ----------
+/* @ds-contract
+ * intent:   通栏全圆胶囊结论横幅（solid 版即 CTA）
+ * use:      页末结论收口；单点转化
+ * notfor:   页中的过程性提醒 → NoteBand
+ * pairs:    NoteBand
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R1–R13 期
+ * since:    v0.1
+ * usage:    <ConclusionBanner tone="tint">把质控前置，是缩短 IND 周期的唯一办法。</ConclusionBanner>
+ */
 export function ConclusionBanner({ children, tone = 'tint', style }) {
   const t = useTheme()
   const solid = tone === 'solid'
@@ -69,6 +99,16 @@ export function ConclusionBanner({ children, tone = 'tint', style }) {
 }
 
 // ---------- D4 客户反馈卡（渐变面板 + 大引号 + 头像） ----------
+/* @ds-contract
+ * intent:   客户证言卡（渐变面板 + 超大引号 + 头像 + 虚线分隔）
+ * use:      客户评价与背书
+ * notfor:   案例的完整叙述（难点/方案/结果）→ CaseBlock
+ * pairs:    CitationBlock
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R1–R13 期
+ * since:    v0.1
+ * usage:    <TestimonialCard quote="交付节奏比预期快两周。" name="张博士" org="某生物技术公司" />
+ */
 export function TestimonialCard({ quote, name, org, avatar }) {
   const t = useTheme(); const n = useNeutral()
   return (
@@ -116,6 +156,16 @@ export function TestimonialCard({ quote, name, org, avatar }) {
  *
  * items: [{ category, code, name, desc, en }]
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   产品/服务卡网格：顶部类目条 + 目录号 + 产品名 + 描述（行内加粗）
+ * use:      产品明细页的主力版式
+ * notfor:   逐行参数对照 → SpecTable / RowLabelMatrixTable
+ * pairs:    BarTitle, FigCaption
+ * hue:      MCE PROTAC 手册 深紫 #5A3A7D（类目条玫红 #DC5973）
+ * evidence: MCE PROTAC p5「Ligands for Target Proteins for PROTACs」
+ * since:    v0.4
+ * usage:    <ProductCardGrid items={[{ category: 'Kinases', code: 'YT-1021', name: 'EGFR 抑制剂', desc: '**靶点** 明确' }]} />
+ */
 export function ProductCardGrid({ items = [], columns = 3, palette = 'tone', headerTone = 'solid', gap = '4mm', style }) {
   const t = useTheme(); const n = useNeutral()
   const ramps = pastelRamp(t.functional, Math.max(items.length, 1), { spread: palette === 'category' ? 1 : 0 })
@@ -190,6 +240,16 @@ const mixAlpha = (hex) => {
  *
  * items: [{ value, unit, label, en }]
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   大数字指标条：靠上下两条 0.4pt 细线框住，项间竖线分隔，无图标无底
+ * use:      「数字前置」的紧凑数据组；首屏优势条
+ * notfor:   带图标与描述的卖点卡 → StatCardRow
+ * pairs:    TargetBarChart
+ * hue:      MCE 各册首屏优势条 · 随册主题
+ * evidence: MCE 各册首屏优势条（数值形态）· v0.4 批
+ * since:    v0.4
+ * usage:    <MetricStrip items={[{ value: '60,000+', unit: '种', label: '活性化合物' }]} />
+ */
 export function MetricStrip({ items = [], columns, accent = true, style }) {
   const t = useTheme(); const n = useNeutral()
   const cols = columns || Math.max(items.length, 1)
@@ -228,6 +288,16 @@ export function MetricStrip({ items = [], columns, accent = true, style }) {
  * 会因字距渲染而抖动成锯齿。
  * items: [{ no, title, en, page, level }]   level=2 时缩进为子条目
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   目录条目：编号 + 标题 + 英文副题 + 点线引至页码（点线用 dotted 边框，非重复字符）
+ * use:      20 页以上手册的目录页
+ * notfor:   章节页导览（带分组标题的岛）→ IslandBulletGrid
+ * pairs:    NumberedTitle
+ * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <TocList items={[{ no: '01', title: '服务总览', en: 'Overview', page: 4 }]} />
+ */
 export function TocList({ items = [], columns = 2, style }) {
   const t = useTheme(); const n = useNeutral()
   return (

@@ -34,6 +34,16 @@ const SUB_SIZE = { 1: '13pt', 2: '11pt', 3: '9.5pt' }
  * MCE 实测用橙色 10pt；但本系统 R1「一册一色相」限制第二色相，
  * 故默认 tone="primary"（主色），仅当该页已有图表橙时才用 tone="accent"。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   眉标：标题之上的小字 + 短色条，标「编号 / 分类 / 章节归属」
+ * use:      页题之上标注章节归属（如「第 3 章 · 检测服务」）；目录号
+ * notfor:   当页题使用（它是眉，不是题）→ PairTitle / BlockTitle
+ * pairs:    PairTitle
+ * hue:      MCE 化合物库手册 橙 #F09B40（编号 / 文献专用）
+ * evidence: MCE 五册逆向（原页橙色 10pt，本系统改主色以守 R1）
+ * since:    v0.4
+ * usage:    <EyebrowTitle items={['第 3 章', '检测服务']} />
+ */
 export function EyebrowTitle({ items = [], align = 'left', divider = '·', tone = 'primary', style }) {
   const t = useTheme(); const n = useNeutral()
   const color = tone === 'accent' ? n.control : tone === 'muted' ? n.textSoft : t.functional
@@ -60,6 +70,16 @@ export function EyebrowTitle({ items = [], align = 'left', divider = '·', tone 
  * 为什么有效：中文负责"意义"，英文负责"检索与正式感"；两行字号差 1.5 倍即可分层，
  *   不需要任何色块——这也是它比胶囊标题更"高级"的原因。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   中英对照页题：中文实标题 + 英文浅色副题，左对齐、无底、无装饰线
+ * use:      服务型手册的默认页题（MCE 五册主力形态）
+ * notfor:   一页出现两个 H1；硬朗技术感页题 → BlockTitle
+ * pairs:    EyebrowTitle, BarTitle
+ * hue:      MCE 多册 · 色相随册（library #2C6BAA / qms #F16366），形态不变
+ * evidence: MCE library p3/p6/p7/p45/p89 与 qms 全线
+ * since:    v0.4
+ * usage:    <PairTitle cn="质粒与病毒载体质控" en="Plasmid & vector QC" />
+ */
 export function PairTitle({ cn, en, eyebrow, align = 'left', size = 'md', style }) {
   const t = useTheme(); const n = useNeutral()
   const c = CN_SIZE[size] || CN_SIZE.md
@@ -87,6 +107,16 @@ export function PairTitle({ cn, en, eyebrow, align = 'left', size = 'md', style 
  *   方块 = 分栏、并列、可重复的段落标题（视觉上是"逗号"）
  *   因此方块标题允许一页出现 2 个（分左右栏），胶囊只允许 1 个。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   方块实底页题（直角 1.2mm 柔化边角）——视觉上是「逗号」
+ * use:      分栏、并列、可重复的段落页题；技术感 / 硬朗场合
+ * notfor:   收口式单点承诺 → PillTitle（胶囊只允许一页 1 个，方块允许 2 个）
+ * pairs:    OutlineTitle（并置形成主次对照）
+ * hue:      GenScript 胶囊型 → 直角变体 · 随主题
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <BlockTitle en="Analytical development">分析方法开发</BlockTitle>
+ */
 export function BlockTitle({ children, en, tone = 'solid', size = 'md', width, inline = false, style }) {
   const t = useTheme(); const n = useNeutral()
   const c = CN_SIZE[size] || CN_SIZE.md
@@ -118,6 +148,16 @@ export function BlockTitle({ children, en, tone = 'solid', size = 'md', width, i
  * 用途：与 BlockTitle 同页并置形成"一个强调、一个次要"的对照；
  *   或用于不想让色块压住底纹的场合。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   描边空心页题：主题色细描边 + 主题色字 + 透明底
+ * use:      与 BlockTitle 同页并置作「次要」；不想让色块压住底纹时
+ * notfor:   需要强调的页题 → BlockTitle
+ * pairs:    BlockTitle
+ * hue:      BlockTitle 轻量变体 · 随主题（描边+主色字，不加新色）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <OutlineTitle en="Add-on services">配套服务</OutlineTitle>
+ */
 export function OutlineTitle({ children, en, size = 'md', align = 'left', width, inline = false, style }) {
   const t = useTheme(); const n = useNeutral()
   const c = CN_SIZE[size] || CN_SIZE.md
@@ -142,6 +182,16 @@ export function OutlineTitle({ children, en, size = 'md', align = 'left', width,
  * 但把青色换成主题主色以守住 R1。
  * level 1/2/3 → 13pt / 11pt / 9.5pt，对应三层小节。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   左粗色条 + 深灰粗字的 H2 级小节标题（条高随文字伸展）
+ * use:      同一页内第 2、3 组小节的标题
+ * notfor:   与 RuleTitle 混用（全册 H2 只用一种）；页题 → H1 系列
+ * pairs:    RuleTitle（二选一，不可并用）
+ * hue:      MCE library p8 青色 #58C6CE（本系统改用主题主色以守 R1）
+ * evidence: MCE library p8（原页 12pt 青色小标题，改主色守 R1）
+ * since:    v0.4
+ * usage:    <BarTitle en="Workflow" level={2}>服务流程</BarTitle>
+ */
 export function BarTitle({ children, sub, en, level = 2, style }) {
   const t = useTheme(); const n = useNeutral()
   return (
@@ -167,6 +217,16 @@ export function BarTitle({ children, sub, en, level = 2, style }) {
  * 上方一段主题色短线（宽度可调）+ 深灰粗字；不占满通栏，因此比 BarTitle 更轻。
  * 用途：把一页内的内容切成 2~3 组时的组标题；或页中嵌小节的起始标记。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   细线夹标题：上下细线夹字，最轻、最「期刊」的 H2
+ * use:      需要期刊感的分组隔断；把一页切成 2~3 组
+ * notfor:   与 BarTitle 混用；页题 → H1 系列
+ * pairs:    BarTitle（二选一，不可并用）
+ * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <RuleTitle en="Process parameters">工艺参数</RuleTitle>
+ */
 export function RuleTitle({ children, en, note, align = 'left', ruleWidth = '14mm', style }) {
   const t = useTheme(); const n = useNeutral()
   const centered = align === 'center'
@@ -192,6 +252,16 @@ export function RuleTitle({ children, en, note, align = 'left', ruleWidth = '14m
  *   当内容天然有序（章节、流程步骤、套餐档位）时用编号，否则用色条。
  * `total` 传入后渲染为 `01 / 06` 形式，让读者知道还有多少。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   前置大号编号的页题（01 / 06），编号用主题色大字 + 细竖线分隔
+ * use:      内容天然有序时（章节、流程步骤、套餐档位）
+ * notfor:   无序内容 → BarTitle；纯粹的小节划分 → RuleTitle
+ * pairs:    TocList
+ * hue:      MCE 化合物库手册（编号色 = 分区主题色 #2C6BAA 的 tint）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <NumberedTitle index={1} total={6} en="Analytical development">分析开发</NumberedTitle>
+ */
 export function NumberedTitle({ index, total, children, en, size = 'md', style }) {
   const t = useTheme(); const n = useNeutral()
   const num = String(index).padStart(2, '0')

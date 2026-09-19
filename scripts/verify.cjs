@@ -6,12 +6,15 @@
 //
 // 同时收集 console 报错与 React 警告（如 key 缺失、无效 DOM 属性）。
 //
-// 用法：node scripts/verify.cjs [port]     端口默认 5173
+// 用法：node scripts/verify.cjs [port] [path]     端口默认 5173，path 默认 /
+//   例：node scripts/verify.cjs 5175                检 A4 分页骨架是否溢出
+//       node scripts/verify.cjs 5175 "/?app=registry"  检提示词实验室（无 .bds-page 时做运行时校验）
 // 注意：playwright 装在托管 node 工作区，须带 NODE_PATH 运行，且必须用 .cjs + require
 //      （ESM 的 import 不认 NODE_PATH）。见 README「工具脚本」。
 const { chromium } = require('playwright')
 
 const PORT = process.argv[2] || process.env.PORT || 5173
+const PATH = process.argv[3] || '/'
 const MM = 96 / 25.4
 
 async function main() {
@@ -27,13 +30,13 @@ async function main() {
   })
   page.on('pageerror', (e) => errors.push('[pageerror] ' + e.message))
 
-  await page.goto(`http://127.0.0.1:${PORT}/`, { waitUntil: 'networkidle' })
+  await page.goto(`http://127.0.0.1:${PORT}${PATH}`, { waitUntil: 'networkidle' })
   await page.evaluate(() => document.fonts.ready)
   await page.waitForTimeout(500)
 
   const report = await page.evaluate(() => {
     const pages = [...document.querySelectorAll('.bds-page')]
-    return pages.map((el, i) => {
+    const rows = pages.map((el, i) => {
       const pr = el.getBoundingClientRect()
       const offenders = [...el.children]
         .map((c) => ({
@@ -50,12 +53,13 @@ async function main() {
         offenders,
       }
     })
+    return { rows, bodyText: (document.body.innerText || '').length, rootHtml: (document.getElementById('root') || {}).innerHTML ? 1 : 0 }
   })
 
   const line = '─'.repeat(58)
-  console.log(`\n${line}\n  A4 溢出与运行时校验 · verify\n${line}`)
+  console.log(`\n${line}\n  A4 溢出与运行时校验 · verify   ${PATH}\n${line}`)
   let bad = 0
-  for (const r of report) {
+  for (const r of report.rows) {
     const ok = r.overflowPx <= 1
     if (!ok) bad++
     console.log(
@@ -63,6 +67,14 @@ async function main() {
       (ok ? '无溢出' : `溢出 ${r.overflowPx}px ≈ ${(r.overflowPx / MM).toFixed(1)}mm`),
     )
     if (!ok && r.offenders.length) console.log(`       越界元素：${r.offenders.join('  ')}`)
+  }
+  if (!report.rows.length) {
+    // 工具页没有 A4 分页骨架。此时唯一会"静默失败"的是整页渲染不出来（如 JSON 导入失败），
+    // 所以用「正文是否有内容」兜底 —— 空白页必须报错，而不是被判为"0 页溢出 = 通过"。
+    const rendered = report.rootHtml && report.bodyText > 200
+    if (!rendered) bad++
+    console.log(`  ${rendered ? '✓' : '✗'} 无 A4 分页骨架；运行时渲染检查：正文 ${report.bodyText} 字` +
+      (rendered ? '（页面正常）' : '（页面疑似渲染失败）'))
   }
   console.log(line)
   if (errors.length) {
@@ -76,7 +88,7 @@ async function main() {
   if (!errors.length && !warnings.length) console.log('  ✓ 无 console 报错、无警告')
   console.log(line)
   console.log(bad || errors.length
-    ? `  未通过：${bad} 页溢出、${errors.length} 条报错\n`
+    ? `  未通过：${bad} 项问题、${errors.length} 条报错\n`
     : '  全部通过：无溢出、零报错\n')
 
   await browser.close()

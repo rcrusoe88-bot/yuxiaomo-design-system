@@ -136,7 +136,7 @@ flowchart TD
 
 ## 色彩纪律：`palette` 参数怎么选（R22）
 
-任何要"多档颜色"的组件（`HexChain` / `ProductCardGrid` / `NumberedStepFlow` / `CategoryTagRow` …）
+任何要"多档颜色"的组件（`HexChain` / `ProductCardGrid` / `NumberedStepFlow` / `BeadChain` / `AnnotatedDonut` / `ScatterClusterPanel` / `LegendFigure`）
 都有 `palette` 参数：
 
 | 取值 | 效果 | 什么时候用 |

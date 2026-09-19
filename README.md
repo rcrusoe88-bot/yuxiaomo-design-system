@@ -15,10 +15,11 @@ yuxiaomo-design-system/
 ├── ROADMAP.md                  # 路线图：已完成 / 待补 / backlog
 ├── design-language.md          # 设计基因：为什么这样设计
 ├── references/                 # 被参照的规范（Agent 按需读）
-│   ├── rules.md                # 22 条可命名审美规则（R1–R22）
+│   ├── rules.md                # 23 条可命名审美规则（R1–R23）
 │   ├── tokens.md               # 主题令牌 / 颜色 / 字阶 / 间距
 │   ├── taxonomy.md             # ⭐ 组件分类体系（层 × 族）：选组件的入口
 │   ├── components.md           # 71 个组件的 API 与用法（14 族）
+│   ├── prompt-pack.md          # ⭐ 提示词包（由源码生成）：复制即用的提示词 + 配置代码
 │   ├── layouts.md              # 7 个版式原型 + 叙事铁律
 │   ├── anti-patterns.md        # AI slop 反模式黑名单
 │   ├── checklist.md            # 交付前自检清单
@@ -33,6 +34,7 @@ yuxiaomo-design-system/
 │   ├── lib/                    # 组件库（themes/theme/primitives/titles/text/structure/cards/tables/flow/case/process/topology/data/figures/furniture/tags/icons/color）
 │   ├── demo/                   # 演示页：多主题巡展 + 真实文案手册
 │   └── styles.css              # 基础样式 + A4 打印规则
+├── registry.json               # ⭐ 机器可读契约（由源码生成）：Agent 精确选型入口
 ├── examples/                   # 出品样例（PDF）
 ├── scripts/                    # 校验脚本（audit / verify / density / api-push）
 ├── shot.cjs / export-pdf.cjs   # 截图 / A4 PDF 导出脚本
@@ -47,7 +49,9 @@ yuxiaomo-design-system/
 npm install
 node node_modules/vite/bin/vite.js --port 5173   # 浏览器预览
 node export-pdf.cjs output.pdf                    # 导出 A4 PDF（printBackground + preferCSSPageSize）
-node shot.cjs                                     # 逐页截图（visual check）
+node shot.cjs                                     # 逐页截图（visual check，认 .bds-page）
+node scripts/shot-page.cjs 5173 "/?app=registry" preview/lab   # 整页截图（工具页，无 .bds-page）
+npm run registry                                  # ⭐ 由源码生成 registry.json + 提示词包
 ```
 
 **改完页面必跑的两条**（A4 骨架的两个坑，都不是 `build` 能发现的）：
@@ -57,6 +61,8 @@ NODE_PATH="<托管 node 工作区>/node_modules" node scripts/verify.cjs 5173   
 NODE_PATH="<托管 node 工作区>/node_modules" node scripts/density.cjs 5173  # 密度？半页空白没有
 npm run audit                                                              # 文档与代码数对得上没有
 ```
+
+**要"复制提示词"**：`node node_modules/vite/bin/vite.js --port 5175` 后打开 **`/?app=registry`**（组件提示词实验室）。
 
 ## 主题一览（`src/lib/themes.js`）
 
@@ -95,13 +101,55 @@ npm run audit                                                              # 文
 另有色彩工具 `toneRamp` / `categoryRamp` / `pastelRamp` / `mixWhite` / `mixBlack` / `shiftHue`
 与文本工具 `renderRich`（行内加粗 = 唯一允许的文本高亮）：让组件从主题令牌**派生**浅色系，而非写死 hex。
 
+## 精确复用：契约 → registry → 提示词包（v0.4.1）
+
+**问题**：Agent 复现一页时读的是**文档**，不是源码。文档一旦与代码脱钩，Agent 就会"照抄一个不存在的属性"。
+v0.4.0 交付复核时实测：`references/components.md` 有 **18 个组件**的签名写了源码里根本没有的属性
+（`BlockTitle` 的 `text`、`ContactFooterBand` 的 `contacts`、`BrandHeaderBar` 的 `logo`/`pageNo`、
+`MethodTable` 的 `columns`、`TocList` 的 `leaders`、`MetricStrip` 的 `highlight` …）。
+`npm run build` 完全查不出来 —— 因为**没人拿文档去跑**。这就是"输出质量漂移"的根因。
+
+**解法：把契约放进源码，其余产物全部生成。**
+
+```
+src/lib/*.jsx
+  └── /* @ds-contract */      ← 唯一真相源。紧贴组件上方，改组件的人一定看得见。
+        intent    语义是什么（决定"该不该用它"）
+        use       何时用
+        notfor    何时【不】用（含该改用哪个组件）—— 防漂移的关键字段
+        pairs     常配套的组件
+        hue       来源配色（R23：不得统一成蓝色）
+        evidence  来源页证据（页码）
+        since     版本
+        usage     一行可运行用法
+              │
+              ├── npm run registry ──→  registry.json             机器可读，Agent 选型入口
+              │                        references/prompt-pack.md 人的复制粘贴包
+              │
+              └── npm run audit    ──→  4 条防漂移校验（见下表）
+```
+
+**四条机械校验**（都在 `npm run audit`，不一致即退出码 1）：
+
+| # | 查什么 | 为什么必须有 |
+|---|---|---|
+| 1 | 71 个组件是否都有契约（`intent`/`use`/`notfor`/`usage` 必需） | 缺契约 = 语义靠猜 = 漂移 |
+| 2 | `usage` 示例里用到的属性**是否真的存在** | 抓"照抄就错"这一类错误 |
+| 3 | `registry.json` / `prompt-pack.md` 是否与源码同步 | 改了源码忘重新生成 = 下游拿到旧契约 |
+| 4 | `components.md` 的签名是否与源码一致 | 抓"文档里有、代码里没有"的属性 |
+
+> **铁律重申**：凡写死一个可数事实，必须有脚本能数回来。
+> 现在"组件的语义与属性"也成了可数事实 —— 所以它也有了脚本。
+
+**人在浏览器里复制**：`/?app=registry` → 每个组件四个按钮：**复制提示词 / 配置代码 / 源码 / import**。
+
 ## 编号命名空间
 
 系统里并存六套编号，**互不通用**——引用时务必带前缀，否则 Agent 会误判指向哪个文件。
 
 | 命名空间 | 含义 | 定义处 | 当前范围 |
 |---|---|---|---|
-| `R1–R22` | 可命名审美规则 | `references/rules.md` | 22 条 |
+| `R1–R23` | 可命名审美规则 | `references/rules.md` | 23 条 |
 | 族 `A–O` | 组件族 | `references/components.md` | 14 族 / 71 组件 |
 | `L1–L7` | 版式原型（页面**句型**/骨架） | `references/layouts.md` | 7 个 |
 | `T01–T07` | 整页模板（装配好的**成品页**） | `templates/README.md` | 7 个（待补） |
@@ -118,6 +166,9 @@ npm run audit                                                              # 文
 | `scripts/api-push.py` | `python scripts/api-push.py <sha>` | **应急推送**：当本机代理把 `github.com` 隧道拦掉（502）、`git push` 不可用时，改用 GitHub Git Data API 原样推送已有提交（完整复刻 author/committer，**生成相同 sha**，不留分叉）。 |
 | `scripts/verify.cjs` | `npm run verify` | **A4 溢出与运行时校验**：逐页比对 `scrollHeight` vs `clientHeight`。**为什么必须有它**——分页骨架里每页是 `height:297mm; overflow:hidden`，内容超高**不会报错、只会被静默裁掉**，构建通过 ≠ 页面没被裁。同时收集 console 报错与 React 警告。须带 `NODE_PATH` 运行（见文件头注释）。 |
 | `scripts/density.cjs` | `npm run density` | **逐页密度校验**：量每页正常流内容占高（**排除 absolute 的页码**，否则每页都量成 96.6%）。`verify` 查"超出"（是错误），`density` 查"没填满"（是质量问题）——一个 A4 页只占 52% 高度时构建通过、无报错、截图也不崩，但印出来就是半页空白。不在 70–93% 区间即提示；**永远退出 0**，不挡构建。 |
+
+| `scripts/registry.mjs` | `npm run registry` | **从源码生成两份可复用产物**：`registry.json`（机器可读契约：语义/禁用/来源配色/真实 props/用法/源码）+ `references/prompt-pack.md`（人的复制粘贴包）。**不要手改这两份产物** —— 它们是 `src/lib/*.jsx` 里 `@ds-contract` 的投影，改源码后重新生成即可。 |
+| `scripts/shot-page.cjs` | `node scripts/shot-page.cjs <port> <path> <outPrefix>` | **整页截图（非 A4 页）**：抓工具页 / 提示词实验室（`/?app=registry`）的首屏与整页两张图。`shot.cjs` 只遍历 `.bds-page`，对工具页输出 "A4 pages found: 0"，所以需要这个。 |
 
 > `npm run build` 只保证代码能编译，**不保证文档没写错数**——改完文档或加了组件后跑一次 `npm run audit`。
 
@@ -151,6 +202,12 @@ npm run audit                                                              # 文
 
 **第三批 · 同一批 MCE 语料的 11 页版式细读（v0.4）** —— 把 11 张关键页截图逐页拆解"标题块 / 表格 / 文本块 / 流程图"的**形态谱系**，产出 **34 个新组件**（族 K / M / N / O + 族 B/C/D/I 扩展）、**R22 类目色纪律**，以及按"层 × 族"重排的 `references/taxonomy.md`。
 这一批解决的是**组件太少**的问题：v0.3 只有 37 个组件时，遇到"编号步骤""并列条件""多入口汇聚""时间轴位置"这类语义只能硬套现有拓扑，导致语义漂移；补齐到 71 个之后，每种语义都有专属形态可用。
+
+**第四批 · 组件代码化 + 提示词化（v0.4.1）** —— 给 71 个组件补上源码内的语义契约（`@ds-contract`），
+并生成 `registry.json` 与 `references/prompt-pack.md`；同时新增 **R23 配色随来源，不随默认**（组件保持其来源手册的色相，
+不得把不同来源的组件统一成蓝色 —— 五册实测色相本就各不相同：library 深蓝 `#2C6BAA` / PROTAC 深紫 `#5A3A7D` /
+qms 珊瑚红 `#F16366` / 生化试剂 青 `#2995B3` / 药物发现 紫 `#574DA0`）。
+这一批修掉了 18 个组件的文档签名漂移，并新增 4 条机械校验把漂移变成退出码。
 
 完整逆向报告：`行业参考手册库/GenScript_金斯瑞/设计元素完整清单_GenScript.md`、`行业参考手册库/MCE_皓元/设计元素完整清单_MCE.md`。
 方法可复用：《手册设计元素提炼提示词.md》。

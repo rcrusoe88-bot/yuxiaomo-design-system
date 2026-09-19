@@ -4,6 +4,16 @@ import { CapsuleDecor } from './primitives'
 import { Icon } from './icons'
 
 // ---------- A1 封面 ----------
+/* @ds-contract
+ * intent:   满版深底封面：全册唯一的深色满版页，承载标题组 + 品牌标识
+ * use:      手册第 1 页
+ * notfor:   内页（内页禁止满版深底 R2）→ Page；章节开篇 → SectionDivider；封底 → BackCover
+ * pairs:    CapsuleDecor（内置，preset=cover）
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R1–R13 期
+ * since:    v0.1
+ * usage:    <Cover title="mRNA-LNP 一站式 CDMO 服务" enTitle="mRNA-LNP CDMO Services" tagline="从序列设计到制剂灌装" logo={logoImg} />
+ */
 export function Cover({ title, enTitle, logo, tagline, children, style }) {
   const t = useTheme()
   return (
@@ -32,6 +42,16 @@ export function Cover({ title, enTitle, logo, tagline, children, style }) {
 }
 
 // ---------- A2 章节总览页（深色氛围 + 白色信息岛） ----------
+/* @ds-contract
+ * intent:   章节总览页：深底 + 下半页白色大圆角信息岛，宣告「这一章讲什么」
+ * use:      每个大章节的开篇页
+ * notfor:   内容页 → Page；封面/封底 → Cover / BackCover
+ * pairs:    IslandBulletGrid（岛内容）
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R1–R13 期
+ * since:    v0.1
+ * usage:    <SectionDivider chapterNo="02" title="检测服务" lead="覆盖质粒、病毒载体与 LNP 的全流程质控">{岛内容}</SectionDivider>
+ */
 export function SectionDivider({ chapterNo, title, lead, children, style }) {
   const t = useTheme()
   return (
@@ -57,6 +77,16 @@ export function SectionDivider({ chapterNo, title, lead, children, style }) {
 }
 
 // ---------- 白色信息岛内：bullet 网格（NA p2 六宫格） ----------
+/* @ds-contract
+ * intent:   章节页信息岛内的 3×N 分栏网格（主题色粗体标题 + bullet 组）
+ * use:      章节总览页的「本节包含什么」；服务范围罗列
+ * notfor:   内页正文列举 → BulletList；多产品参数对照 → SpecTable
+ * pairs:    SectionDivider
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R1–R13 期
+ * since:    v0.1
+ * usage:    <IslandBulletGrid groups={[{ title: '质粒质控', bullets: ['酶切图谱', '全长测序'] }]} />
+ */
 export function IslandBulletGrid({ groups }) {
   const t = useTheme()
   return (
@@ -76,6 +106,16 @@ export function IslandBulletGrid({ groups }) {
 }
 
 // ---------- A4 封底（满版胶囊矩阵 + 联系列表 + 日期版本码） ----------
+/* @ds-contract
+ * intent:   深色封底：满版胶囊棒矩阵 + 联系列表 + 版本码，全册视觉重量最重
+ * use:      手册最后一页
+ * notfor:   内页底部联系带 → ContactFooterBand
+ * pairs:    CapsuleDecor（内置，preset=backcover）
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R1–R13 期
+ * since:    v0.1
+ * usage:    <BackCover contacts={[{ type: 'mail', text: 'service@yuantai.com' }]} version="v2.0 · 2026.09" />
+ */
 export function BackCover({ contacts, version, heading = '更多详情，欢迎访问', style }) {
   const t = useTheme()
   const icons = { web: 'globe', phone: 'phone', mail: 'mail', addr: 'pin' }

@@ -15,6 +15,16 @@ function FigCaption({ children, align = 'center' }) {
 
 // ---------- P1 阶段管线链：横向圆形节点 + › 箭头（可选底部长条承载"服务边界"） ----------
 // 用途：能力总览页的"总图"。每个节点名应与后续每页的 L2 标题一一对应，形成总-分锚定。
+/* @ds-contract
+ * intent:   阶段管线链：横向圆形节点 + › 箭头，可选底部 spectrum 服务边界条（总图首选）
+ * use:      全册总流程页；「总-分锚定」的锚
+ * notfor:   多入口汇聚的网络 → ServiceNetworkMap；实验动作 → BeadChain
+ * pairs:    PhaseBand, FlowChain
+ * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * evidence: MCE 五册逆向 · v0.3 批
+ * since:    v0.3
+ * usage:    <StagePipelineChain stages={['设计', '合成', '包封', '放行']} spectrum={['CRO', 'CDMO']} />
+ */
 export function StagePipelineChain({ stages = [], spectrum, caption, nodeSize = 18, style }) {
   const t = useTheme()
   return (
@@ -73,6 +83,16 @@ export function StagePipelineChain({ stages = [], spectrum, caption, nodeSize = 
 
 // ---------- P2 漏斗（量化收敛）：逐层收窄 + 左引线方法名 + 右量化数字 ----------
 // 用途：表达"从海量到精筛"的收敛过程。右侧数字即承诺，必须有真实依据，禁止编造。
+/* @ds-contract
+ * intent:   量化收敛漏斗：逐层收窄横条 + 左侧虚线引线方法名 + 右侧量化数字
+ * use:      筛选 / 收敛过程并带量化
+ * notfor:   等量并列的多步 → NumberedStepFlow
+ * pairs:    DataChart, TargetBarChart
+ * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * evidence: MCE 五册逆向 · v0.3 批
+ * since:    v0.3
+ * usage:    <FunnelStages stages={[{ method: 'DEL', label: '初筛', value: '10⁹' }]} />
+ */
 export function FunnelStages({ stages = [], caption, minWidth = 42, style }) {
   const t = useTheme(); const n = useNeutral()
   const total = stages.length
@@ -115,6 +135,16 @@ export function FunnelStages({ stages = [], caption, minWidth = 42, style }) {
 
 // ---------- P3 环形迭代图：渐变环 + 四角节点（DMTA / PDCA 类"循环而非流水线"） ----------
 // 用途：强调迭代/闭环。与 P1 线性链形成语义对照——流程用链，优化用环。
+/* @ds-contract
+ * intent:   环形迭代图：≤4 节点、渐变粗环、四角图标（仪表盘式，结构化）
+ * use:      闭环迭代、回到起点
+ * notfor:   3–8 节点的叙述式闭环 → AnnotatedCycle（本组件最多 4 个节点）
+ * pairs:    ComboEquationDiagram
+ * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * evidence: MCE 五册逆向 · v0.3 批
+ * since:    v0.3
+ * usage:    <CycleFlowDiagram nodes={[{ label: '设计', icon: 'gear' }]} center={{ label: '迭代优化' }} />
+ */
 export function CycleFlowDiagram({ nodes = [], center, caption, size = 52, strokeWidth = 1.9, style }) {
   const t = useTheme()
   const gid = 'bdsCycle' + useId().replace(/[^a-zA-Z0-9]/g, '')
@@ -178,6 +208,16 @@ export function CycleFlowDiagram({ nodes = [], center, caption, size = 52, strok
 
 // ---------- P4 组合公式图：A ＋ B » 产物（用"公式感"表达组合/偶联能力） ----------
 // 用途：平台类能力页——如"载体 ＋ 载荷 » 偶联产物"，或"原料 ＋ 工艺 » 成品"。
+/* @ds-contract
+ * intent:   组合公式图「A ＋ B » 产物」三栏式（每栏 = 胶囊标题 + 药丸清单）
+ * use:      由若干要素组合成产物（A＋B»C）
+ * notfor:   并列条件（A 且 B 且 C，无产物）→ HexChain
+ * pairs:    CycleFlowDiagram
+ * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * evidence: MCE 五册逆向 · v0.3 批
+ * since:    v0.3
+ * usage:    <ComboEquationDiagram left={{ title: '脂质组分', items: ['可电离脂质'] }} right={{ title: 'mRNA', items: ['IVT 产物'] }} result={{ title: 'mRNA-LNP', items: ['成品'] }} />
+ */
 export function ComboEquationDiagram({ left, right, result, caption, style }) {
   const t = useTheme(); const n = useNeutral()
 

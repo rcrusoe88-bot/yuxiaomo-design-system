@@ -30,6 +30,16 @@ const rampOf = (base, n, palette) => pastelRamp(base, n, { spread: palette === '
  *
  * steps: [{ no, title, en, desc, color }]
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   编号步骤流：大号实心圆（01–06，骑在盒顶）+ 同色描边盒 + 步间 ›
+ * use:      分几步、有先后（流程页主力）
+ * notfor:   无先后的并列 → HexChain；顶部实色条的正统框链 → FlowChain
+ * pairs:    FigCaption, NoteBand
+ * hue:      MCE 化合物库手册 深蓝 #2C6BAA（编号圆用橙 #F09B40）
+ * evidence: MCE library p89「DEL 建库和筛选的流程」
+ * since:    v0.4
+ * usage:    <NumberedStepFlow steps={[{ no: '01', title: '序列设计', en: 'Design', desc: '密码子优化' }]} />
+ */
 export function NumberedStepFlow({ steps = [], palette = 'tone', size = 'md', caption, style }) {
   const t = useTheme(); const n = useNeutral()
   const ramp = rampOf(t.functional, Math.max(steps.length, 1), palette)
@@ -91,6 +101,16 @@ export function NumberedStepFlow({ steps = [], palette = 'tone', size = 'md', ca
  *
  * items: [{ icon, label, en, color }]
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   六边形图标链 + ⊕ 连接符，语义 = 并列的条件项（A + B + C，无先后，缺一不可）
+ * use:      「套餐包含什么」 / 产品组成 / 订购须知
+ * notfor:   有先后 → NumberedStepFlow；线性单一流程 → IconFlowBar（用 ›）
+ * pairs:    FigCaption
+ * hue:      MCE 化合物库手册 深蓝 #2C6BAA
+ * evidence: MCE library p06 / p40 / p43「产品组成 / 订购须知」
+ * since:    v0.4
+ * usage:    <HexChain items={[{ icon: 'flask', label: '质粒构建', en: 'Plasmid' }]} />
+ */
 export function HexChain({ items = [], connector = '+', palette = 'tone', size = 19, caption, style }) {
   const t = useTheme(); const n = useNeutral()
   const ramp = rampOf(t.functional, Math.max(items.length, 1), palette)
@@ -144,6 +164,16 @@ export function HexChain({ items = [], connector = '+', palette = 'tone', size =
  *
  * steps: [{ label, color }]
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   珠链：浅色粗轨道 + 一串实底圆珠骑在轨道上，标签在珠内
+ * use:      线性的实验动作序列（「我们是怎么做的」，亲和、过程感）
+ * notfor:   交付阶段 → StagePipelineChain；分几步 → NumberedStepFlow
+ * pairs:    FigCaption
+ * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * evidence: MCE 筛选流程页（实验动作形态）· v0.4 批
+ * since:    v0.4
+ * usage:    <BeadChain steps={[{ label: '裂解', en: 'Lysis' }]} />
+ */
 export function BeadChain({ steps = [], size = 15, palette = 'tone', caption, style }) {
   const t = useTheme(); const n = useNeutral()
   const ramp = rampOf(t.functional, Math.max(steps.length, 1), palette)
@@ -185,6 +215,16 @@ export function BeadChain({ steps = [], size = 15, palette = 'tone', caption, st
  *
  * nodes: [{ label, sub }]   center: { label, sub }
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   标注环：N 节点沿圆周落位 + 顺时针弧箭头 + 中心标签（插图式，叙述性）
+ * use:      闭环迭代，节点数 3–8 且需要主副标签
+ * notfor:   ≤4 节点的仪表盘式渐变环 → CycleFlowDiagram
+ * pairs:    FigCaption, AnnotationPair
+ * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <AnnotatedCycle nodes={[{ label: '基因合成', sub: 'Synthesis' }]} center={{ label: '闭环交付' }} />
+ */
 export function AnnotatedCycle({ nodes = [], center, radius = 36, nodeWidth = 32, caption, style }) {
   const t = useTheme(); const n = useNeutral()
   const uid = String(useId()).replace(/[^a-zA-Z0-9]/g, '')
@@ -267,6 +307,16 @@ export function AnnotatedCycle({ nodes = [], center, radius = 36, nodeWidth = 32
  * nodes:    [{ col, row, label, en, span, arrow, tone }]   arrow: 'right'|'down'|'both'
  * captions: [{ col, row, span, cn, en, align }]            纯文字注解块（无框）
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   服务网络图：网格化节点盒 + 边缘挂箭头，语义 = 上下游依赖（多入口 → 汇聚中枢 → 再分出）
+ * use:      「我们能做哪些环节」的总图；枢纽型业务结构
+ * notfor:   一条线的流程 → StagePipelineChain；链与环都表达不了时才用它
+ * pairs:    AnnotationPair, CategoryTagRow
+ * hue:      MCE PROTAC 手册 深紫 #5A3A7D（类目条玫红 #DC5973）
+ * evidence: MCE PROTAC p11 / 药物发现服务册「Building Blocks of Conjugates」
+ * since:    v0.4
+ * usage:    <ServiceNetworkMap columns={3} nodes={[{ col: 1, row: 1, label: '质粒', arrow: 'right' }]} />
+ */
 export function ServiceNetworkMap({ columns = 3, nodes = [], captions = [], caption, style }) {
   const t = useTheme(); const n = useNeutral()
   const grid = (o) => ({
@@ -337,6 +387,16 @@ export function ServiceNetworkMap({ columns = 3, nodes = [], captions = [], capt
  * phases: [{ label, span }]              上方括注（span 为跨段数，可含 startCol）
  * axis:   string                         轴右侧的终点说明（如"上市"）
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   阶段带：多段色带 + 上方括注（把若干段归入大阶段）+ 下方细轴 + 末端箭头
+ * use:      时间轴上的位置（「我们的服务覆盖第 3–5 段」）
+ * notfor:   流程步骤 → NumberedStepFlow / FlowChain（本组件表达「位置」，不是「步骤」）
+ * pairs:    StagePipelineChain
+ * hue:      MCE 化合物库手册 p44 七色相带（青绿→橙 递进）
+ * evidence: MCE library p44 中带
+ * since:    v0.4
+ * usage:    <PhaseBand stages={['发现', '临床前', '临床 I', '上市']} active={2} />
+ */
 export function PhaseBand({ stages = [], phases = [], active, axis = true, caption, style }) {
   const t = useTheme(); const n = useNeutral()
   const ramp = rampOf(t.functional, Math.max(stages.length, 1), 'tone')

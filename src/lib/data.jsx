@@ -20,6 +20,16 @@ function niceMax(v, ticks) {
 
 // ---------- D1 排序条形图：顶部轴 + 右对齐类别标签 + 单色横条 + 右下加粗图注 ----------
 // 用途：靶点举例 / 参数分布 / 品类计数。比饼图更易读，比 DataChart 更适合"单序列排行"。
+/* @ds-contract
+ * intent:   排序条形图：轴在顶部 + 右侧类标列 + 单色横条（替代饼图）
+ * use:      单序列排行：靶点举例、参数分布、品类计数
+ * notfor:   多面板小倍数 → PanelBarChart；构成占比 → AnnotatedDonut
+ * pairs:    FigCaption
+ * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * evidence: MCE 五册逆向 · v0.3 批
+ * since:    v0.3
+ * usage:    <TargetBarChart items={[{ label: 'KRAS', value: 42 }]} caption="图 2  靶点分布" />
+ */
 export function TargetBarChart({ items = [], ticks = 5, caption, barColor, labelWidth = '46mm', style }) {
   const t = useTheme(); const n = useNeutral()
   if (!items.length) return null
@@ -68,6 +78,16 @@ export function TargetBarChart({ items = [], ticks = 5, caption, barColor, label
 // 用途：QC 检测 / 方法学验证页——"色谱图 + 积分表"这类仪器输出。规则：保留仪器原生样式，只用统一色框"装框"。
 // blocks: [{ label, chart } | { label, columns, rows, total }]
 // 单元格支持 { v, rowSpan, colSpan } 以表达纵向合并（如 NO. 列）。
+/* @ds-contract
+ * intent:   仪器报告面板：浅色标题条 + 图与数据表同框，表内无竖线（技术语体）
+ * use:      QC 检测数据、方法学、仪器报告页
+ * notfor:   营销参数表 → SpecTable（R16：两种语体按页型选用，不可混页）
+ * pairs:    MethodTable
+ * hue:      MCE 五册 · 技术语体（浅底细线，不做实底反白）
+ * evidence: MCE 五册逆向 · v0.3 批
+ * since:    v0.3
+ * usage:    <InstrumentReportPanel blocks={[{ label: '粒径与 PDI', columns: ['批次', 'Z-avg'], rows: [['L1', '92 nm']] }]} />
+ */
 export function InstrumentReportPanel({ blocks = [], style }) {
   const t = useTheme(); const n = useNeutral()
   return (
@@ -147,6 +167,16 @@ function ReportTable({ columns = [], rows = [], total }) {
 // ---------- D3 文献引用块：标题 + 多栏流式引用（期刊名加粗、卷期页次级灰） ----------
 // 用途：信任页——用同行评议背书，而不是 logo 墙。
 // items: [{ journal, text }]
+/* @ds-contract
+ * intent:   文献引用块：期刊名加粗深灰 + 卷期页次级灰，CSS 多栏流式
+ * use:      信任页的同行评议引用（R19：信任靠引用，不做 logo 墙）
+ * notfor:   客户评价 → TestimonialCard
+ * pairs:    TestimonialCard
+ * hue:      MCE 化合物库手册 橙 #F09B40（编号 / 文献专用）
+ * evidence: MCE 五册逆向 · R19
+ * since:    v0.3
+ * usage:    <CitationBlock items={[{ journal: 'Nat Rev Drug Discov', text: '2023;22:1–18' }]} />
+ */
 export function CitationBlock({ title, items = [], columns = 2, icon = true, style }) {
   const t = useTheme(); const n = useNeutral()
   return (
@@ -199,6 +229,16 @@ export function CitationBlock({ title, items = [], columns = 2, icon = true, sty
  *
  * panels: [{ title, items: [{ label, value, color }], note }]
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   小倍数面板条形图：竖基线 + 顶部刻度 + 左类标的多面板（同构多图）
+ * use:      理化参数分布页；需要多个同构图并排
+ * notfor:   单图排行 → TargetBarChart；注意多面板必须开 sharedScale
+ * pairs:    FigCaption, NoteBand
+ * hue:      MCE 化合物库手册 深蓝 #2C6BAA
+ * evidence: MCE library p45「片段化合物库相关参数」
+ * since:    v0.4
+ * usage:    <PanelBarChart panels={[{ title: '分子量', items: [{ label: 'A', value: 12 }] }]} sharedScale />
+ */
 export function PanelBarChart({
   panels = [], columns = 2, ticks = 4, barColor, labelWidth = '15mm',
   sharedScale = false, barHeight = '4.4mm', caption, style,
@@ -283,6 +323,16 @@ function BarPanel({ panel, ticks, barColor, labelWidth, barHeight, sharedMax }) 
  *
  * segments: [{ label, points: [], side: 'left'|'right', color }]
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   注释甜甜圈：中心双行标签 + N 段环 + 环外侧同色标题注解块（注解块标题色 == 扇区色）
+ * use:      构成占比 + 逐块解释（「我们有什么」的总览页）
+ * notfor:   排序比较 → TargetBarChart；palette 默认 category 是 R22 的显式例外
+ * pairs:    FigCaption, AnnotationPair
+ * hue:      MCE 化合物库手册 深蓝 #2C6BAA
+ * evidence: MCE library p3「药物发现」
+ * since:    v0.4
+ * usage:    <AnnotatedDonut segments={[{ label: '质粒服务', points: ['酶切图谱', '全长测序'] }]} />
+ */
 export function AnnotatedDonut({
   segments = [], center, size = 62, thickness = 20, palette = 'category', caption, style,
 }) {
@@ -372,6 +422,16 @@ function arcPath(cx, cy, rO, rI, a0, a1) {
  * clusters: [{ x, y, r, color }]     半透明聚类色块
  * legend:   [{ label, color }]
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   散点聚类面板：散点云 + 半透明聚类色块 + 色块图例（分布形态本身就是信息）
+ * use:      化学空间、分布形态、聚类与离散
+ * notfor:   精确数值比较 → TargetBarChart / DataChart；points 省略时按 seed 确定性生成
+ * pairs:    SwatchLegend, FigCaption
+ * hue:      MCE 化合物库手册 深蓝 #2C6BAA
+ * evidence: MCE library p44 上带
+ * since:    v0.4
+ * usage:    <ScatterClusterPanel clusters={[{ x: 40, y: 55, r: 18 }]} legend={[{ label: 'A 类', color: '#7EC0EE' }]} seed={7} />
+ */
 export function ScatterClusterPanel({
   points, clusters = [], legend = [], height = 46, dot = 1.5,
   palette = 'category', seed = 7, caption, style,

@@ -5,6 +5,7 @@
 > 源自 MCE 手册 11 页版式细读 —— 见 `行业参考手册库/MCE_皓元/设计元素完整清单_MCE.md`。
 > **选组件的入口是 `taxonomy.md`（按"层"定位）**；本文件按"族"组织，用于查签名。
 > **计数口径**：`src/lib/index.js` 的全部组件导出（含 `Icon`、`CapsuleDecor`），不含色彩工具函数与常量。可用 `npm run audit` 自动核对。
+> **要"照抄即用"请走 `registry.json` 与 `references/prompt-pack.md`** —— 两者由组件源码（`@ds-contract`）自动生成，含每个组件的语义契约、**来源配色**、真实 props 与可运行用法示例。本文件保留为"按族查签名"的索引。
 
 ```jsx
 import { ThemeProvider, Cover, Page, PillTitle, SpecTable /* … */ } from './src/lib'
@@ -51,13 +52,13 @@ import { ThemeProvider, Cover, Page, PillTitle, SpecTable /* … */ } from './sr
 
 | 组件 | 签名 | 说明 |
 |---|---|---|
-| `EyebrowTitle` | `cn en size` | **眉标**：小字 + 短色条，标章节归属，放在页题之上 |
+| `EyebrowTitle` | `items align divider tone` | **眉标**：小字 + 短色条，标章节归属，放在页题之上 |
 | `PairTitle` | `cn en size` | **中英对照页题**（服务型手册主力）：中文实标题 + 英文浅色副题左对齐 |
-| `BlockTitle` | `text en size` | **方块实底**页题：直角实底白字左对齐，技术感 / 硬朗 |
-| `OutlineTitle` | `text en size` | **描边空心**页题：描边 + 主色字，轻量化 |
-| `BarTitle` | `cn en` | **左色条小节标题**（H2 级）：左粗色条 + 黑字 |
-| `RuleTitle` | `cn en` | **细线夹小节标题**（H2 级，最轻）：上下细线夹字 |
-| `NumberedTitle` | `no text en` | **编号页题**：大号数字 + 标题，用于有序章节 |
+| `BlockTitle` | `children en tone size` | **方块实底**页题：直角实底白字左对齐，技术感 / 硬朗 |
+| `OutlineTitle` | `children en size inline` | **描边空心**页题：描边 + 主色字，轻量化 |
+| `BarTitle` | `children sub en level` | **左色条小节标题**（H2 级）：左粗色条 + 黑字 |
+| `RuleTitle` | `children en note ruleWidth` | **细线夹小节标题**（H2 级，最轻）：上下细线夹字 |
+| `NumberedTitle` | `index total children en` | **编号页题**：大号数字 + 标题，用于有序章节 |
 
 **纪律**：H1 一页一个；一份手册的 H2 只用一种（全用 `BarTitle` 或全用 `RuleTitle`）；H1 形态 ≤2 种。
 
@@ -86,7 +87,7 @@ import { ThemeProvider, Cover, Page, PillTitle, SpecTable /* … */ } from './sr
 并列、**有先后**。数字为主题色等宽右对齐成列 —— **第 10 项不会把文字推歪**。
 
 ### `DefinitionList` 定义列表
-`<DefinitionList items={[{ term, en, desc }]} divided />`
+`<DefinitionList items={[{ term, en, desc }]} rule />`
 "术语 → 释义"连续阅读块，**无底色**（与 `KeyValueTable` 的分工见族 C）。
 
 ### `NoteBand` 提示带
@@ -95,7 +96,7 @@ import { ThemeProvider, Cover, Page, PillTitle, SpecTable /* … */ } from './sr
 用于"注意 / 用哪个 / 为什么这样做"这类编者提示。`text` 支持 `**加粗**`。
 
 ### `AnnotationPair` 注解对
-`<AnnotationPair left={{cn,en}} right={{cn,en}} ratio />`
+`<AnnotationPair cn="现象" en="Explanation" divider />`
 左右对照的两栏注解（左=现象、右=解释），中间细竖线分隔。
 
 ---
@@ -131,16 +132,16 @@ import { ThemeProvider, Cover, Page, PillTitle, SpecTable /* … */ } from './sr
 `<ProductHeaderRow title colSpan />`（放进 `SpecTable` 的 rows 里当产品名分隔行）
 
 ### `RowLabelMatrixTable` 行标签矩阵表（v0.4）
-`<RowLabelMatrixTable columns={[]} rows={[{ label, en, cells: [] }]} headerImage caption />`
+`<RowLabelMatrixTable columns={[{ label, sub, image }]} rows={[{ label, cells: [] }]} divider />`
 **行标签在左、列 = 产品/方案**，列头可挂图（`headerImage`）。
 用于"多产品 × 多维度"的选型对照——比把产品放在首列更易横向比较。
 
 ### `MethodTable` 方法学表（v0.4）
-`<MethodTable columns={[]} rows={[{ cn, abbr, en, desc }]} caption />`
+`<MethodTable rows={[{ cn, abbr, en, desc }]} headers={['方法','用途']} caption />`
 左列**中文名 + 英文缩写分行**（技术服务页的主力表）。用于方法学清单、检测项目清单。
 
 ### `KeyValueTable` 键值属性表（v0.4）
-`<KeyValueTable items={[{ k, v }]} labelWidth="32mm" size divided caption />`
+`<KeyValueTable items={[{ k, v }]} labelWidth="32mm" divided />`
 **无列头**两列纵排：左键（tint 底加粗）右值。
 **与 `DefinitionList` 的分工**：`DefinitionList` = "术语→释义"的连续阅读块（无底色）；
 本组件 = "属性→取值"的**清单**（有底色、可读性优先，用于选型决策）。
@@ -155,9 +156,9 @@ import { ThemeProvider, Cover, Page, PillTitle, SpecTable /* … */ } from './sr
 | `TierCards` | `tiers={[{ name, cycle, price, desc }]} footnote` | 三档套餐卡，顶部 header 色实条 + 主题色"周期，价格" |
 | `TestimonialCard` | `quote name org avatar` | 渐变面板 + 超大引号 + 头像 + 虚线分隔 |
 | `ConclusionBanner` | `tone="tint"\|"solid"` | 通栏全圆胶囊结论横幅；`solid` 版 = CTA |
-| `ProductCardGrid` | `items={[{ tag, title, en, desc }]} columns={3} palette` | **v0.4** 产品/服务卡网格：类目条 + 标题 + 英文 + 描述（**类目条默认同色相**，见 R22） |
-| `MetricStrip` | `items={[{ value, unit, label, en }]} columns highlight` | **v0.4** 大数字指标条：细上下线夹、无框（MCE p11 惯例）；`highlight` 标关键项 |
-| `TocList` | `items={[{ no, title, en, page }]} leaders` | **v0.4** 目录条目：`leaders` 用 dotted 边框做点线引导（不用重复字符） |
+| `ProductCardGrid` | `items={[{ category, code, name, desc, en }]} columns={3} palette headerTone` | **v0.4** 产品/服务卡网格：类目条 + 标题 + 英文 + 描述（**类目条默认同色相**，见 R22） |
+| `MetricStrip` | `items={[{ value, unit, label, en }]} columns accent` | **v0.4** 大数字指标条：细上下线夹、无框（MCE p11 惯例）；`highlight` 标关键项 |
+| `TocList` | `items={[{ no, title, en, page }]} columns` | **v0.4** 目录条目：`leaders` 用 dotted 边框做点线引导（不用重复字符） |
 
 ---
 
@@ -226,7 +227,7 @@ import { ThemeProvider, Cover, Page, PillTitle, SpecTable /* … */ } from './sr
 **与 `IconFlowBar` 的分工**：`IconFlowBar` 用 `›`（有方向），本组件用 `⊕`（无方向、相加）。
 
 ### `BeadChain` 实验动作链
-`<BeadChain items={[{ label, en, icon }]} palette caption />`
+`<BeadChain steps={[{ label, en }]} palette caption />`
 带质感圆珠串成动作链，表达"我们是怎么做的"（亲和、过程感）。
 
 ### `AnnotatedCycle` 标注环形流程
@@ -273,11 +274,11 @@ N 节点沿圆周落位 + **顺时针弧箭头** + 中心标签。表达**闭环
 **`sharedScale` 是关键**：多面板**必须共享刻度**才能横向比较；各面板各自缩放会读出错结论。
 
 ### `AnnotatedDonut` 注释甜甜圈（v0.4）
-`<AnnotatedDonut size={48} segments={[{ label, value, note }]} center caption />`
+`<AnnotatedDonut size={48} segments={[{ label, points: [] }]} center caption />`
 构成占比 + **逐块注解**。**注解块标题色 == 扇区色** —— 这是 R21「类目色恒定」的实证用法。
 
 ### `ScatterClusterPanel` 分布聚类面板（v0.4）
-`<ScatterClusterPanel clusters={[{ label, color, points }]} axes n seed caption />`
+`<ScatterClusterPanel clusters={[{ x, y, r, color }]} legend={[{ label, color }]} seed={7} />`
 **分布形态本身就是信息**（聚类 / 离散 / 分层）。用确定性种子生成，同一 `seed` 每次渲染一致。
 
 ---
@@ -288,15 +289,15 @@ N 节点沿圆周落位 + **顺时针弧箭头** + 中心标签。表达**闭环
 > **`LegendFigure` 缺图时渲染"待补插图"占位框，而不是伪科学图** —— 宁可留白，不可编造。
 
 ### `FigurePanel` 图解外壳
-`<FigurePanel title en caption notes height>{内容或图}</FigurePanel>`
+`<FigurePanel title="LNP 结构" caption="图 3" tone="tint">{内容或图}</FigurePanel>`
 统一的图框：标题 + 英文副题 + 内容区 + 图注 + 备注行。
 
 ### `LegendFigure` 带图例的三栏图
-`<LegendFigure center={{ title, sub }} items={[{ side, title, en, desc }]} height />`
+`<LegendFigure title="靶点" items={[{ label, side }]} artWidth="58mm" />`
 `1fr / auto / 1fr` 三栏网格：左右各列若干标注项，中间放图（或占位框）。
 
 ### `SwatchLegend` 色卡图例
-`<SwatchLegend items={[{ color, label, en }]} columns caption />`
+`<SwatchLegend items={[{ color, label }]} direction="row" />`
 色块 + 标签 + 英文的图例网格（用于配方 / 分组 / 分级说明）。
 
 ---
@@ -307,7 +308,7 @@ N 节点沿圆周落位 + **顺时针弧箭头** + 中心标签。表达**闭环
 > 色相由主题主色经 `toneRamp()` 派生 —— 因此**换主题自动换肤**，组件内不出现任何硬编码色值。
 
 ### `CategoryTagRow` 类目胶囊标签行
-`<CategoryTagRow items={[]} size="md"|"sm" palette />`
+`<CategoryTagRow items={[{ label, color }]} size="md"|"sm" />`
 水平自动换行的圆角胶囊；元素可为字符串或 `{ label, color, fg }`。
 **规则「类目色恒定」（R21）**：同一类目在全册任何页应保持同一色 —— 若要固定，用 `color` 显式指定。
 
@@ -326,8 +327,8 @@ N 节点沿圆周落位 + **顺时针弧箭头** + 中心标签。表达**闭环
 
 | 组件 | 签名 | 说明 |
 |---|---|---|
-| `BrandHeaderBar` | `logo brand en pageNo rule` | **内页页眉品牌条**：左 LOGO/品牌名、右页码，可加下细线（`rule`）。**注意 `@page` 无 margin box**，页眉必须画在 `.page` 内部 |
-| `ContactFooterBand` | `contacts={[{ type, text }]} tone="tint"\|"line"\|"solid" note` | **内页联系带**：网页/电话/邮箱/地址 + 备注。三种语体同 `NoteBand` |
+| `BrandHeaderBar` | `brand tagline meta right rule` | **内页页眉品牌条**：左 LOGO/品牌名、右页码，可加下细线（`rule`）。**注意 `@page` 无 margin box**，页眉必须画在 `.page` 内部 |
+| `ContactFooterBand` | `heading items={[{ type, text }]} tone columns` | **内页联系带**：网页/电话/邮箱/地址 + 备注。三种语体同 `NoteBand` |
 
 ---
 

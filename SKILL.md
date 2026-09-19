@@ -1,6 +1,6 @@
 ---
 name: yuxiaomo-design-system
-description: 公司产品服务手册设计系统（余小莫）。当需要为公司与产品或服务设计 A4 印刷手册 / 服务手册 / 产品宣传册（PDF 交付）时使用。系统提供 71 个可复用组件、5 套品牌主题令牌、22 条可命名审美规则、7 个版式原型、整页模板与 anti-slop 反模式清单，保证不同公司、不同项目的输出风格统一且不产生 AI slop。
+description: 公司产品服务手册设计系统（余小莫）。当需要为公司与产品或服务设计 A4 印刷手册 / 服务手册 / 产品宣传册（PDF 交付）时使用。系统提供 71 个可复用组件、5 套品牌主题令牌、23 条可命名审美规则、7 个版式原型、整页模板与 anti-slop 反模式清单，保证不同公司、不同项目的输出风格统一且不产生 AI slop。
 ---
 
 # 公司产品服务手册设计系统 · Yuxiaomo Design System
@@ -20,8 +20,8 @@ AI 从零设计产品页时会"发散"：每次配色、字阶、版式都重新
 | 0 | 理解设计基因与底线 | `design-language.md` |
 | 1 | 选定/新建品牌主题（色相家族） | `references/tokens.md` |
 | 2 | 从 7 个版式原型（L1–L7）挑页、排叙事顺序 | `references/layouts.md` |
-| 3 | **按"层"选组件**，再用 71 个组件（14 族）拼装每一页 | `references/taxonomy.md` → `references/components.md` |
-| 4 | 遵守 22 条审美规则（R1–R22） | `references/rules.md` |
+| 3 | **按"层"选组件**，再用 71 个组件（14 族）拼装每一页。**精确复现请读 `registry.json`**（每个组件的语义 / 何时不用 / 来源配色 / 真实 props / 可运行用法） | `references/taxonomy.md` → `registry.json`（或 `references/prompt-pack.md`） |
+| 4 | 遵守 23 条审美规则（R1–R23） | `references/rules.md` |
 | 5 | 交付前逐条自检 + 扫反模式 | `references/checklist.md`、`references/anti-patterns.md` |
 | 6 | **A4 双机械校验**：溢出 + 密度（`build` 查不出这两个） | `npm run verify`、`npm run density` |
 | 7 | 改了本系统自身？跑一致性校验 | `npm run audit` |
@@ -34,7 +34,7 @@ AI 从零设计产品页时会"发散"：每次配色、字阶、版式都重新
 
 | 命名空间 | 含义 | 定义处 |
 |---|---|---|
-| `R1–R22` | 可命名审美规则 | `references/rules.md` |
+| `R1–R23` | 可命名审美规则 | `references/rules.md` |
 | 族 `A–O` | 组件族（71 个组件 / 14 族） | `references/components.md` |
 | `L1–L7` | 版式原型（页面**句型**） | `references/layouts.md` |
 | `T01–T07` | 整页模板（装配好的**成品页**） | `templates/README.md` |
@@ -49,6 +49,8 @@ AI 从零设计产品页时会"发散"：每次配色、字阶、版式都重新
 4. **只从已定义的主题取色**：禁止在页面里写死十六进制色值，一律用 `theme` 角色的令牌（见 `references/tokens.md`）。需要浅色系时用 `pastelRamp(theme.functional, n)` **派生**，不要手填。
 5. **证据优先**（R7）：任何数字承诺必须可核查——卖点用卡、参数用表、证明用原始数据图。
 6. **表格语体按页型选**（R16）：营销参数页用 `SpecTable`（实底反白表头）；技术数据页用 `InstrumentReportPanel`（浅底细线表头）。**两者不可互换、不可混在一页**。无论哪种，**一律无竖线**。
+7. **配色随来源，不随默认**（R23）：组件的颜色由**其来源手册的色相**或**调用页的主题**决定（见 `registry.json` 的 `contract.hue`）。**不得把所有组件统一成同一种颜色（尤其默认蓝）** —— MCE 五册同一套组件、五种色相，归一化会丢掉来源辨识度。
+8. **照抄即用只信 `registry.json`**：它的属性名由源码提取、并经 `npm run audit` 反查。`references/components.md` 是"按族查签名"的索引；两者不一致时以 `registry.json` 为准（并跑 `npm run audit` 修文档）。
 
 ## 反模式（见到即删，详见 references/anti-patterns.md）
 
@@ -60,6 +62,7 @@ AI 从零设计产品页时会"发散"：每次配色、字阶、版式都重新
 - 深色底出现在内页正文区
 - 同一个"流程/收敛/迭代"语义全册复用同一种图（违反 R14 一站一拓扑）
 - **多档配色组件跨色相、但这些颜色并不代表类目**（违反 R22 类目色纪律）—— 不传 `palette` 默认就是同色相多档
+- **把所有组件刷成同一种颜色（尤其通用蓝）**（违反 R23 配色随来源）—— 每个组件都有来源色相，见 `registry.json`
 - 一页出现 3 种以上标题形态，或全册 H2 时而色条、时而细线夹（违反族 B 的形态纪律）
 
 ## 技术栈与产物

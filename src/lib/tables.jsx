@@ -11,6 +11,16 @@ import { renderRich } from './text'
  * labelColumn: 首列渲染为标签列（tint 底、黑粗）
  * zebra: 斑马纹（默认开）
  */
+/* @ds-contract
+ * intent:   实底反白表头的参数表（营销语体），R5 无竖线 + 斑马纹
+ * use:      卖点、档位、承诺数字、产品参数（营销语境）
+ * notfor:   技术检测数据 → InstrumentReportPanel（R16 两种语体不可混页）
+ * pairs:    ProductHeaderRow, TierMatrixTable
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R5 / R8
+ * since:    v0.1
+ * usage:    <SpecTable columns={['项目', '规格']} rows={[['粒径', '80–120 nm']]} labelColumn />
+ */
 export function SpecTable({ columns, rows, labelColumn = false, zebra = true, fontSize = '8.5pt', style }) {
   const t = useTheme(); const n = useNeutral()
   return (
@@ -57,6 +67,16 @@ export function SpecTable({ columns, rows, labelColumn = false, zebra = true, fo
 }
 
 /** C3 三档色阶矩阵表：列头同色系深浅递进（颜色深浅 = 承诺强度）*/
+/* @ds-contract
+ * intent:   三档色阶矩阵表：列头同色系深浅递进（深浅 = 承诺强度）
+ * use:      RUO / IND / cGMP 这类档位 × 特性的对照
+ * notfor:   单档参数清单 → SpecTable；三档套餐报价 → TierCards
+ * pairs:    SpecTable
+ * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * evidence: GenScript 三册逆向 · R6
+ * since:    v0.1
+ * usage:    <TierMatrixTable tiers={['RUO', 'IND', 'cGMP']} features={[{ name: '方法学验证', values: [false, true, true] }]} />
+ */
 export function TierMatrixTable({ tiers, features, check = '✓', cross = '—' }) {
   const t = useTheme(); const n = useNeutral()
   const shades = [t.capsuleLight, t.header, t.functional, t.capsuleDeep]
@@ -95,6 +115,16 @@ export function TierMatrixTable({ tiers, features, check = '✓', cross = '—' 
 }
 
 /** C2 变体：通栏产品名合并头行（CE p8 五阶段表）*/
+/* @ds-contract
+ * intent:   通栏产品名合并头行（放进 SpecTable 的 rows 里作分段）
+ * use:      大表内按产品分段
+ * notfor:   独立成表；跨页续表头 → 用表头本身
+ * pairs:    SpecTable
+ * hue:      GenScript 手册 p8 五阶段表
+ * evidence: GenScript 手册 p8 五阶段表
+ * since:    v0.1
+ * usage:    <ProductHeaderRow title="mRNA 疫苗" colSpan={4} />
+ */
 export function ProductHeaderRow({ title, colSpan }) {
   const t = useTheme()
   return (
@@ -132,6 +162,16 @@ export function ProductHeaderRow({ title, colSpan }) {
  * rows:    [{ label, en, cells: [] }]    —— cell 支持 { v,rowSpan,colSpan,highlight,bold,align }
  * divider: 默认 false（守 R5 无竖线）；列数 >3 的宽矩阵可开，用 0.4pt 极浅竖线辅助对齐
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   行标签矩阵表：行 = 参数（左列 tint 底加粗），列 = 被测产品，列头可挂图
+ * use:      多产品 × 多参数的横向选型对照
+ * notfor:   逐行读一家的参数清单 → SpecTable（SpecTable 的行是产品，列是参数）
+ * pairs:    SpecTable（相邻页互为补充）
+ * hue:      MCE 化合物库手册 深蓝 #2C6BAA
+ * evidence: MCE library p7「化合物库常规参数」
+ * since:    v0.4
+ * usage:    <RowLabelMatrixTable columns={[{ label: 'A 产品' }]} rows={[{ label: '粒径', cells: ['92 nm'] }]} />
+ */
 export function RowLabelMatrixTable({
   labelHeader = '', labelWidth = '34mm', columns = [], rows = [],
   fontSize = '8pt', divider = false, style,
@@ -223,6 +263,16 @@ export function RowLabelMatrixTable({
  * 语言纪律（本系统核心）：中文与英文缩写**分行**，绝不写成 `时间分辨荧光共振能量转移(TR-FRET)`
  *   这样把括号塞在中文中间——那会让整列参差不齐。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   方法对照表：左列中文方法名 + 英文缩写分行，右列用途描述
+ * use:      方法学清单、检测项目清单（技术服务页）
+ * notfor:   营销参数 → SpecTable；缩写对照（无描述）→ DefinitionList
+ * pairs:    InstrumentReportPanel
+ * hue:      MCE 化合物库手册 深蓝 #2C6BAA
+ * evidence: MCE library p8「常用分子水平检测方法」
+ * since:    v0.4
+ * usage:    <MethodTable rows={[{ cn: '时间分辨荧光', abbr: 'TR-FRET', desc: '结合亲和力检测' }]} />
+ */
 export function MethodTable({ rows = [], headers = ['方法', '用途'], nameWidth = '46mm', size = '8.5pt', caption, style }) {
   const t = useTheme(); const n = useNeutral()
   return (
@@ -278,6 +328,16 @@ export function MethodTable({ rows = [], headers = ['方法', '用途'], nameWid
  * 与 DefinitionList 的分工：DefinitionList 是"术语 → 释义"的连续阅读块（无底色）；
  *   本组件是"属性 → 取值"的**清单**（有底色、可读性优先、用于选型决策）。
  * --------------------------------------------------------------- */
+/* @ds-contract
+ * intent:   无列头两列纵排的键值表：左键（tint 底加粗）右值
+ * use:      产品页左栏的属性→取值清单（选型决策用）
+ * notfor:   术语→释义的连续阅读块 → DefinitionList（无底色）
+ * pairs:    FigurePanel
+ * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * evidence: MCE 五册逆向 · v0.4 批
+ * since:    v0.4
+ * usage:    <KeyValueTable items={[{ k: '纯度', v: '≥ 95%' }]} />
+ */
 export function KeyValueTable({ items = [], labelWidth = '32mm', size = '8.5pt', divided = true, style }) {
   const t = useTheme(); const n = useNeutral()
   return (

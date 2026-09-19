@@ -44,6 +44,11 @@
 - [x] 文本层建族 K（7 个）：此前只有 `Lead` / `Sub` / `Footnotes`，而文本是占比最大的内容层
 - [x] 拓扑从 4 种补到 **10 种**：新增 `NumberedStepFlow` / `HexChain` / `BeadChain` / `AnnotatedCycle` / `ServiceNetworkMap` / `PhaseBand`
 - [x] 新增规则 **R22 类目色纪律** + `toneRamp` / `categoryRamp` 语义化别名
+- [x] **组件契约层**：71 个组件加 `@ds-contract`（语义 / 禁用 / 来源配色 / 用法）
+- [x] **生成物**：`scripts/registry.mjs` → `registry.json` + `references/prompt-pack.md`
+- [x] **提示词实验室**（`/?app=registry`）：复制提示词 / 配置代码 / 源码 / import
+- [x] 新增规则 **R23 配色随来源，不随默认**（组件保持来源手册色相，不得统一成蓝）
+- [x] `audit` 增加 4 条防漂移校验（契约覆盖 / usage 属性 / 生成物新鲜度 / 文档签名漂移）
 - [x] 新增 `references/taxonomy.md`：按"层"选组件的入口（含语义→拓扑对照表）
 - [x] 新增 `scripts/verify.cjs`（`npm run verify`）：把"静默裁切"变成退出码
 - [x] 12 页组件陈列 Demo + 逐页密度实测（75.6%–89.9%，无溢出）
