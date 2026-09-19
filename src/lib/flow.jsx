@@ -10,6 +10,7 @@ import { Icon } from './icons'
  * notfor:   实验步骤（要更亲和）→ NumberedStepFlow；注意 R9：流程下必须跟 TimelineBar
  * pairs:    TimelineBar（R9 必配）, TimelineBar 之后可接 StagePipelineChain
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R9
  * since:    v0.1
  * usage:    <FlowChain steps={[{ name: '序列设计', cycle: '3 天', desc: '密码子优化' }]} numbered />
@@ -60,6 +61,7 @@ export function FlowChain({ steps, numbered = false }) {
  * notfor:   并列相加（无方向）→ HexChain（HexChain 用 ⊕，本组件用 ›）
  * pairs:    IconFeatureList
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <IconFlowBar steps={[{ icon: 'dna', name: '序列设计' }]} />
@@ -93,6 +95,7 @@ export function IconFlowBar({ steps }) {
  * notfor:   纯顺序但无时长 → FlowChain；阶段归档（时间轴上的位置）→ PhaseBand
  * pairs:    FlowChain
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R9
  * since:    v0.1
  * usage:    <TimelineBar segments={[{ label: '设计', weeks: 1 }, { label: '合成', weeks: 1.5 }]} total="快至 2.5 周交付" />
@@ -132,6 +135,7 @@ export function TimelineBar({ segments, total }) {
  * notfor:   多入口汇聚的网络 → ServiceNetworkMap；量化收敛漏斗 → FunnelStages
  * pairs:    PhaseBand
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <ChevronFlow steps={['初筛', '复筛', '验证']} variant="funnel" />

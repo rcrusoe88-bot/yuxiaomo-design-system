@@ -1,7 +1,7 @@
 {
   "name": "yuxiaomo-design-system",
   "private": true,
-  "version": "0.4.1",
+  "version": "0.5.0",
   "type": "module",
   "description": "公司产品服务手册设计系统：一套设计语言 × 无限品牌主题。React 组件库 + 审美规则 + 版式原型 + anti-slop 反模式清单。",
   "scripts": {

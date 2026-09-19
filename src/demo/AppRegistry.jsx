@@ -182,6 +182,30 @@ function Card({ c }) {
             {hueText && <span style={{ color: '#6A6A6A' }}>{hueText}</span>}
           </span>
         </Field>
+        {c.contract.src && (
+          /* 来源脉 = R23 的机器可读依据。卡片上要能直接看出「这个组件属于哪条脉、可换哪几册」——
+             否则复用时不知道该给它套哪套主题，"全部变蓝"就是这么发生的。 */
+          <Field k="来源脉">
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: MONO, fontSize: '11.5px', fontWeight: 700, color: '#2E2E30' }}>{c.contract.src}</span>
+              <span style={{ color: '#6A6A6A' }}>
+                {(registry.corpora[c.contract.src] || {}).label || ''}
+                {' · '}
+                {((registry.corpora[c.contract.src] || {}).manuals || []).map((m) => m.key).join(' / ') || '随调用页主题'}
+              </span>
+              {c.contract.manual && (
+                <span
+                  title="该组件在来源册里就是这个色，不随册切换"
+                  style={{
+                    fontFamily: MONO, fontSize: '11px', fontWeight: 700, padding: '1px 7px',
+                    borderRadius: '999px', background: '#FFF4E5', border: '1px solid #F0C88A', color: '#8A5200',
+                  }}>
+                  锁定 {c.contract.manual}
+                </span>
+              )}
+            </span>
+          </Field>
+        )}
         {c.contract.evidence && <Field k="来源证据" v={c.contract.evidence} />}
       </div>
 

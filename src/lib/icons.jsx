@@ -61,6 +61,7 @@ const PATHS = {
  * notfor:   裸放作装饰（R17 图标必入容器）；大幅装饰插画 → FigurePanel
  * pairs:    StatCardRow, IconFlowBar, IconFeatureList, ChipPillGrid
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <Icon name="flask" size={22} />

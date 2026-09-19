@@ -8,6 +8,7 @@ import { useTheme, useNeutral } from './theme'
  * notfor:   封面 / 封底（Cover / BackCover 自带页面，不要再套 Page）
  * pairs:    BrandHeaderBar, ContactFooterBand, Folio（内置）
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <Page number={4} folioSide="right">{页面内容}</Page>
@@ -31,6 +32,7 @@ export function Page({ children, theme, number, folioSide = 'right', style }) {
  * notfor:   手写页码（会与 Page 内置的重复）
  * pairs:    Page
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <Folio num={4} side="right" />
@@ -55,6 +57,7 @@ export function Folio({ num, side = 'right', color, style }) {
  * notfor:   内页正文区当装饰（破坏 R2 内页不出深色块）
  * pairs:    Cover, BackCover, SectionDivider
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <CapsuleDecor preset="divider" />
@@ -107,6 +110,7 @@ export function CapsuleDecor({ theme: t, preset = 'cover', style }) {
  * notfor:   一页出现第 2 个（R3 一页一胶囊）；分栏并列可重复的段落标题 → BlockTitle
  * pairs:    Lead, Sub
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <PillTitle width="120mm">端到端 mRNA-LNP 开发服务</PillTitle>
@@ -131,6 +135,7 @@ export function PillTitle({ children, width, style }) {
  * notfor:   左对齐正文流里的小节 → BarTitle；页题 → H1 系列（PillTitle/BlockTitle/PairTitle）
  * pairs:    Sub
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <H2>服务流程</H2>
@@ -152,6 +157,7 @@ export function H2({ children, style }) {
  * notfor:   独立段落 → Lead / BodyText
  * pairs:    H2
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <Sub>从序列设计到制剂灌装</Sub>
@@ -172,6 +178,7 @@ export function Sub({ children, style }) {
  * notfor:   多段落正文 → BodyText（Lead 一段就够）
  * pairs:    PillTitle, H2
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <Lead>作为一站式 CDMO 服务商，我们覆盖质粒、mRNA 与 LNP 全链条。</Lead>
@@ -193,6 +200,7 @@ export function Lead({ children, style }) {
  * notfor:   版心内的关键提醒 → NoteBand（Footnotes 只在页脚，且最轻）
  * pairs:    Page
  * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * src:       neutral
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <Footnotes items={['* 数据为示例，不构成承诺。']} />

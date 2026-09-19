@@ -17,6 +17,7 @@ import { renderRich } from './text'
  * notfor:   技术检测数据 → InstrumentReportPanel（R16 两种语体不可混页）
  * pairs:    ProductHeaderRow, TierMatrixTable
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R5 / R8
  * since:    v0.1
  * usage:    <SpecTable columns={['项目', '规格']} rows={[['粒径', '80–120 nm']]} labelColumn />
@@ -73,6 +74,7 @@ export function SpecTable({ columns, rows, labelColumn = false, zebra = true, fo
  * notfor:   单档参数清单 → SpecTable；三档套餐报价 → TierCards
  * pairs:    SpecTable
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R6
  * since:    v0.1
  * usage:    <TierMatrixTable tiers={['RUO', 'IND', 'cGMP']} features={[{ name: '方法学验证', values: [false, true, true] }]} />
@@ -121,6 +123,7 @@ export function TierMatrixTable({ tiers, features, check = '✓', cross = '—' 
  * notfor:   独立成表；跨页续表头 → 用表头本身
  * pairs:    SpecTable
  * hue:      GenScript 手册 p8 五阶段表
+ * src:       genscript
  * evidence: GenScript 手册 p8 五阶段表
  * since:    v0.1
  * usage:    <ProductHeaderRow title="mRNA 疫苗" colSpan={4} />
@@ -168,6 +171,8 @@ export function ProductHeaderRow({ title, colSpan }) {
  * notfor:   逐行读一家的参数清单 → SpecTable（SpecTable 的行是产品，列是参数）
  * pairs:    SpecTable（相邻页互为补充）
  * hue:      MCE 化合物库手册 深蓝 #2C6BAA
+ * src:       mce
+ * manual:    mce-library
  * evidence: MCE library p7「化合物库常规参数」
  * since:    v0.4
  * usage:    <RowLabelMatrixTable columns={[{ label: 'A 产品' }]} rows={[{ label: '粒径', cells: ['92 nm'] }]} />
@@ -269,6 +274,8 @@ export function RowLabelMatrixTable({
  * notfor:   营销参数 → SpecTable；缩写对照（无描述）→ DefinitionList
  * pairs:    InstrumentReportPanel
  * hue:      MCE 化合物库手册 深蓝 #2C6BAA
+ * src:       mce
+ * manual:    mce-library
  * evidence: MCE library p8「常用分子水平检测方法」
  * since:    v0.4
  * usage:    <MethodTable rows={[{ cn: '时间分辨荧光', abbr: 'TR-FRET', desc: '结合亲和力检测' }]} />
@@ -334,6 +341,7 @@ export function MethodTable({ rows = [], headers = ['方法', '用途'], nameWid
  * notfor:   术语→释义的连续阅读块 → DefinitionList（无底色）
  * pairs:    FigurePanel
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <KeyValueTable items={[{ k: '纯度', v: '≥ 95%' }]} />

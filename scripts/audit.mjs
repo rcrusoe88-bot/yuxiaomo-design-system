@@ -14,6 +14,7 @@ import { readFileSync, existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { build as buildRegistry } from './registry.mjs'
+import { CORPORA, ORIGIN_KEYS, THEMES } from '../src/lib/themes.js'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const read = (p) => readFileSync(join(ROOT, p), 'utf8').replace(/\r\n/g, '\n')
@@ -28,6 +29,7 @@ const warn = (m) => warns.push(m)
 
 const NON_COMPONENT = new Set([
   'THEMES', 'NEUTRAL', 'getTheme', 'ThemeProvider', 'useTheme', 'useNeutral', 'ICON_NAMES',
+  'CORPORA', 'ORIGIN_KEYS', 'BRAND_THEME_KEYS', 'manualLabel', 'defaultManualOf',
   'pastelRamp', 'toneRamp', 'categoryRamp', 'mixWhite', 'mixBlack', 'shiftHue',
   'hexToRgb', 'rgbToHex', 'rgbToHsl', 'hslToRgb', 'renderRich',
 ])
@@ -209,6 +211,32 @@ const packPath = 'references/prompt-pack.md'
 if (!existsSync(join(ROOT, packPath))) fail(`${packPath} 不存在 —— 跑 npm run registry`)
 else if (read(packPath) !== reg.md) fail(`${packPath} 与源码不一致 —— 跑 npm run registry 重新生成`)
 if (regDisk !== null && read(packPath) === reg.md) info.push('registry.json 与 prompt-pack.md 均与源码同步')
+
+// 7.3 来源脉闭环：脉 → 册 → 主题，三层必须互相对得上（R23 的可执行化）
+//
+// 这一条正是「组件全部变蓝」事故的根因检查：v0.4 时 themes.js 只实现了 GenScript 一条脉，
+// MCE 脉的 39 个组件在 registry 里被声明为「源自 MCE 五册」，却没有任何主题可渲染它们 ——
+// 于是全部落到默认蓝。光看代码看不出来，只有把「声明的脉」与「存在的主题」对撞才暴露。
+const originCount = {}
+for (const c of reg.json.components) originCount[c.contract.src] = (originCount[c.contract.src] || 0) + 1
+for (const k of ORIGIN_KEYS) {
+  for (const m of CORPORA[k].manuals) {
+    const t = THEMES[m.key]
+    if (!t) fail(`themes.js 缺主题 ${m.key}（CORPORA.${k}.manuals 声明了它）`)
+    else if (t.corpus !== k) fail(`主题 ${m.key} 的 corpus 是 ${t.corpus}，但 CORPORA.${k} 把它列作自己的册`)
+  }
+}
+const orphanThemes = Object.keys(THEMES).filter(
+  (k) => !ORIGIN_KEYS.includes(THEMES[k].corpus) && THEMES[k].corpus !== 'brand'
+)
+if (orphanThemes.length) warn(`主题的 corpus 无效（既不属于任何来源脉、也不是 brand）：${orphanThemes.join(', ')}`)
+const stray = Object.keys(originCount).filter((k) => !ORIGIN_KEYS.includes(k))
+if (stray.length) fail(`组件声明了不存在的来源脉：${stray.join(', ')}`)
+const pinned = reg.json.components.filter((c) => c.contract.manual)
+info.push(
+  `来源脉闭环：${ORIGIN_KEYS.map((k) => `${CORPORA[k].label} ${originCount[k] || 0}`).join(' · ')}；` +
+    `锁定具体册 ${pinned.length} 个（${Object.keys(THEMES).length} 个主题全部可达）`
+)
 
 /* ---------- 8. 文档里的签名漂移（文档写了源码中不存在的属性） ---------- */
 

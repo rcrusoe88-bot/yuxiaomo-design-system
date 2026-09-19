@@ -26,6 +26,7 @@ function niceMax(v, ticks) {
  * notfor:   多面板小倍数 → PanelBarChart；构成占比 → AnnotatedDonut
  * pairs:    FigCaption
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.3 批
  * since:    v0.3
  * usage:    <TargetBarChart items={[{ label: 'KRAS', value: 42 }]} caption="图 2  靶点分布" />
@@ -84,6 +85,7 @@ export function TargetBarChart({ items = [], ticks = 5, caption, barColor, label
  * notfor:   营销参数表 → SpecTable（R16：两种语体按页型选用，不可混页）
  * pairs:    MethodTable
  * hue:      MCE 五册 · 技术语体（浅底细线，不做实底反白）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.3 批
  * since:    v0.3
  * usage:    <InstrumentReportPanel blocks={[{ label: '粒径与 PDI', columns: ['批次', 'Z-avg'], rows: [['L1', '92 nm']] }]} />
@@ -173,6 +175,8 @@ function ReportTable({ columns = [], rows = [], total }) {
  * notfor:   客户评价 → TestimonialCard
  * pairs:    TestimonialCard
  * hue:      MCE 化合物库手册 橙 #F09B40（编号 / 文献专用）
+ * src:       mce
+ * manual:    mce-library
  * evidence: MCE 五册逆向 · R19
  * since:    v0.3
  * usage:    <CitationBlock items={[{ journal: 'Nat Rev Drug Discov', text: '2023;22:1–18' }]} />
@@ -235,6 +239,8 @@ export function CitationBlock({ title, items = [], columns = 2, icon = true, sty
  * notfor:   单图排行 → TargetBarChart；注意多面板必须开 sharedScale
  * pairs:    FigCaption, NoteBand
  * hue:      MCE 化合物库手册 深蓝 #2C6BAA
+ * src:       mce
+ * manual:    mce-library
  * evidence: MCE library p45「片段化合物库相关参数」
  * since:    v0.4
  * usage:    <PanelBarChart panels={[{ title: '分子量', items: [{ label: 'A', value: 12 }] }]} sharedScale />
@@ -329,6 +335,8 @@ function BarPanel({ panel, ticks, barColor, labelWidth, barHeight, sharedMax }) 
  * notfor:   排序比较 → TargetBarChart；palette 默认 category 是 R22 的显式例外
  * pairs:    FigCaption, AnnotationPair
  * hue:      MCE 化合物库手册 深蓝 #2C6BAA
+ * src:       mce
+ * manual:    mce-library
  * evidence: MCE library p3「药物发现」
  * since:    v0.4
  * usage:    <AnnotatedDonut segments={[{ label: '质粒服务', points: ['酶切图谱', '全长测序'] }]} />
@@ -428,6 +436,8 @@ function arcPath(cx, cy, rO, rI, a0, a1) {
  * notfor:   精确数值比较 → TargetBarChart / DataChart；points 省略时按 seed 确定性生成
  * pairs:    SwatchLegend, FigCaption
  * hue:      MCE 化合物库手册 深蓝 #2C6BAA
+ * src:       mce
+ * manual:    mce-library
  * evidence: MCE library p44 上带
  * since:    v0.4
  * usage:    <ScatterClusterPanel clusters={[{ x: 40, y: 55, r: 18 }]} legend={[{ label: 'A 类', color: '#7EC0EE' }]} seed={7} />

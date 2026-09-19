@@ -82,6 +82,8 @@
 - [ ] **网络图配比**：用了 `ServiceNetworkMap` 时，中枢**独占一整行并跨满列数**（否则"汇聚"语义不成立）；节点箭头只挂右缘/下缘，无悬空箭头
 - [ ] **类目色纪律（R22）**：多档配色组件**未传 `palette` 即默认同色相**；凡用了 `palette="category"` 的地方，都能说清"这些颜色各代表哪个类目"，且该类目色全册一致（联动 R21）
 - [ ] **配色随来源（R23）**：全册的色相来自**品牌色/来源手册色相**，**没有一个组件被刷成通用蓝**；凡从别处借来的版式（MCE / GenScript），其来源配色已按 `registry.json` 的 `contract.hue` 核对过
+  - 查法：`registry.json → components[].contract.src`（来源脉）+ `.manual`（锁定册）。**`src` 是 `mce` 的组件，不许用 GenScript 的册渲染，反之亦然** —— "全部变蓝"就是这么来的
+  - 成稿视角的自检：打开陈列页 `/?mode=brand&brand=yuantai`，若各处色相互相打架，说明有组件没走主题令牌（违反 R4）
 - [ ] **小倍数图共享刻度**：用了 `PanelBarChart` 时确认 `sharedScale` 已开（各面板各自缩放会读出错结论）
 - [ ] **图不编造**：`LegendFigure` 等图解缺真实插图时，保留"待补插图"占位框，**没有用伪科学图填满**
 - [ ] **页眉页脚在页内**：`@page` 无 margin box，`BrandHeaderBar` / `ContactFooterBand` 必须画在 `.page` 内部

@@ -13,6 +13,8 @@ import { pastelRamp } from './color'
  * notfor:   子能力的长清单 → ChipPillGrid；图例色标 → SwatchLegend
  * pairs:    ProductCardGrid, ServiceNetworkMap
  * hue:      MCE 质量管理体系 青 tint #C1E7ED（源色 青 #41B3B9）
+ * src:       mce
+ * manual:    mce-qms
  * evidence: MCE 五册逆向 · R21
  * since:    v0.3
  * usage:    <CategoryTagRow items={[{ label: '质粒服务', color: '#C1E7ED' }]} />
@@ -49,6 +51,7 @@ export function CategoryTagRow({ items = [], size = 'md', style }) {
  * notfor:   需要图标 + 详细说明的特性 → IconFeatureList
  * pairs:    IconFeatureList
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.3 批
  * since:    v0.3
  * usage:    <ChipPillGrid items={[{ label: '无菌灌装', icon: 'shield' }]} />
@@ -88,6 +91,7 @@ export function ChipPillGrid({ items = [], columns = 3, style }) {
  * notfor:   短标签 → ChipPillGrid；卖点卡 → StatCardRow
  * pairs:    ChipPillGrid
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · R17
  * since:    v0.3
  * usage:    <IconFeatureList items={[{ icon: 'flask', title: '工艺开发', points: ['DOE 优化'] }]} />

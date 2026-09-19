@@ -20,7 +20,7 @@ AI 从零设计产品页时会"发散"：每次配色、字阶、版式都重新
 | 0 | 理解设计基因与底线 | `design-language.md` |
 | 1 | 选定/新建品牌主题（色相家族） | `references/tokens.md` |
 | 2 | 从 7 个版式原型（L1–L7）挑页、排叙事顺序 | `references/layouts.md` |
-| 3 | **按"层"选组件**，再用 71 个组件（14 族）拼装每一页。**精确复现请读 `registry.json`**（每个组件的语义 / 何时不用 / 来源配色 / 真实 props / 可运行用法） | `references/taxonomy.md` → `registry.json`（或 `references/prompt-pack.md`） |
+| 3 | **按"层"选组件**，再用 71 个组件（14 族）拼装每一页。**精确复现请读 `registry.json`**（每个组件的语义 / 何时不用 / 来源脉 `src` 与锁定册 `manual` / 真实 props / 可运行用法） | `references/taxonomy.md` → `registry.json`（或 `references/prompt-pack.md`） |
 | 4 | 遵守 23 条审美规则（R1–R23） | `references/rules.md` |
 | 5 | 交付前逐条自检 + 扫反模式 | `references/checklist.md`、`references/anti-patterns.md` |
 | 6 | **A4 双机械校验**：溢出 + 密度（`build` 查不出这两个） | `npm run verify`、`npm run density` |
@@ -49,7 +49,7 @@ AI 从零设计产品页时会"发散"：每次配色、字阶、版式都重新
 4. **只从已定义的主题取色**：禁止在页面里写死十六进制色值，一律用 `theme` 角色的令牌（见 `references/tokens.md`）。需要浅色系时用 `pastelRamp(theme.functional, n)` **派生**，不要手填。
 5. **证据优先**（R7）：任何数字承诺必须可核查——卖点用卡、参数用表、证明用原始数据图。
 6. **表格语体按页型选**（R16）：营销参数页用 `SpecTable`（实底反白表头）；技术数据页用 `InstrumentReportPanel`（浅底细线表头）。**两者不可互换、不可混在一页**。无论哪种，**一律无竖线**。
-7. **配色随来源，不随默认**（R23）：组件的颜色由**其来源手册的色相**或**调用页的主题**决定（见 `registry.json` 的 `contract.hue`）。**不得把所有组件统一成同一种颜色（尤其默认蓝）** —— MCE 五册同一套组件、五种色相，归一化会丢掉来源辨识度。
+7. **配色随来源，不随默认**（R23）：组件的颜色由**其来源脉的主题**决定（`registry.json` 的 `contract.src` = `genscript` / `mce` / `neutral`；有 `contract.manual` 时按它锁定到具体一册）。**不得把所有组件统一成同一种颜色（尤其默认蓝）** —— MCE 五册同一套组件、五种色相，归一化会丢掉来源辨识度。**同脉内换册只换主色、不换结构；跨脉取色是错的。**
 8. **照抄即用只信 `registry.json`**：它的属性名由源码提取、并经 `npm run audit` 反查。`references/components.md` 是"按族查签名"的索引；两者不一致时以 `registry.json` 为准（并跑 `npm run audit` 修文档）。
 
 ## 反模式（见到即删，详见 references/anti-patterns.md）

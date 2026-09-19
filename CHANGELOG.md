@@ -2,6 +2,64 @@
 
 遵循「只加不改语义」（additive-first）：新增能力升**次版本**；修改既有组件 / 令牌的语义或默认值属破坏性变更，必须在此记明并检查 `examples/` 全部样例是否仍成立。
 
+## v0.5.0 — 2026-09-19
+
+**主题：让组件回到它本来的颜色 —— 把 R23 从愿望变成校验**
+
+报告的问题：陈列页（v0.4「组件模板」）**13 页全是 `#019EDB` 一种蓝**。
+用户的诉求原话是"组件保留原有的风格及配色，来源是什么色就是什么色"。
+
+**根因不是"忘了换主题"**，而是缺一整条来源脉：
+
+```
+contract.hue 里写着：36 个组件源自「MCE 五册」
+themes.js 里只有    ：blue / red / purple / wine / yuantai  ← 全部来自 GenScript 三册
+                    → MCE 这五个色相在系统里**根本不存在**，这些组件只能落到默认 blue
+```
+
+`npm run build` 通过、`npm run audit` 全绿 —— **没有任何检查会去对撞"契约声明的脉"与"主题里存在的色"**。
+这就是这类缺陷的可怕之处：它不是"写错了"，而是"少写了一整块，而所有检查都不问这块"。
+
+### 新增
+
+- **5 套 MCE 来源主题**（`src/lib/themes.js`）：`mce-library` `#2C6BAA` / `mce-discovery` `#574DA0` /
+  `mce-protac` `#5A3A7D` / `mce-qms` `#F16366` / `mce-biochem` `#2995B3`。
+  实测值取自《设计元素完整清单_MCE.md》第〇节；该表未覆盖的角色由 `derived(f)` 统一派生
+  （tint 7% 白 / zebra 3.5% 白 / capsuleDeep 35% 黑 / ramp 4 阶），**不手工编 hex、也不把派生值当实测值**。
+- **`CORPORA` 来源脉索引**：脉 → 册 → 主题 key 的单一真相源，`registry.mjs` 与 `audit.mjs` 直接 import 它，
+  不再各抄一份。新增 `ORIGIN_KEYS` / `BRAND_THEME_KEYS` / `manualLabel()` / `defaultManualOf()`。
+- **契约新增两个字段**：`src`（来源脉，必填）与 `manual`（锁定册，可选）。
+  71 个组件全部补齐：`genscript` 28 / `mce` 35 / `neutral` 8，其中 16 个锁定到具体册
+  （library 13 / PROTAC 2 / qms 1）。由 `scripts/contract-src.py` 从既有 `hue` 文本派生，幂等可重跑。
+- **`npm run audit` 新增「来源脉闭环」检查**：每条脉的每一册都必须有对应主题，且 `theme.corpus` 必须回指该脉；
+  组件声明的 `src` 必须合法、`manual` 必须与 `src` 同脉。**这条检查在 v0.4 会当场报错**。
+- **陈列页改为两种配色视角**（`src/demo/AppTaxonomy.jsx`）：
+  - **来源模式**（默认）：每个演示块按自己的来源脉取色，块内徽标显示「脉 · 册 · 主色 hex」，锁定的标「（锁定）」；
+  - **品牌模式**：全册统一换肤（含锁定组件），用于看成稿效果。
+  - 状态写入 URL（`?gs=red&mce=mce-qms`、`?mode=brand&brand=yuantai`），可分享、可复现。
+- **`src` / `manual` 进入提示词包**：每个组件的提示词自带「来源脉」行与「锁定册」行，
+  并新增「组件来源脉」总表；R23 那行改成可执行表述（先读 `src`，再从该脉选册，整册只用所选那一册）。
+
+### 变更
+
+- `shot.cjs` 支持 `[outDir]` 与 `[path]` 参数（原来写死相对路径 `preview/`，而本机 `cd` 是坏的，无法控制输出位置）。
+- `export-pdf.cjs` 支持 `[path]` 参数（原来写死 `/`，导不出换色状态）——现可一条命令导出品牌版。
+- 新增样例：`examples/components-v0.5-source.pdf`（来源模式）与 `examples/components-v0.5-brand-yuantai.pdf`（品牌模式）。
+- 陈列页「纯来源徽标」（该单元本无 API 提示）用更紧的下边距 —— 满档会把这页顶溢出（实测 2.7mm，被 `verify` 抓到）。
+- `package.json` → `0.5.0`。
+
+### 兼容性
+
+- **组件 API 零变更**，页面写法零变更。既有主题 key（`blue`/`red`/`purple`/`wine`/`yuantai`）的色值**未改动**。
+- 唯一影响：`themes.js` 的 `./color` 导入改为 `./color.js`（带扩展名）——
+  Vite 两种都认，但 `scripts/*.mjs` 要直接 import 它，Node ESM 不认无扩展名。
+
+### 顺手发现、**故意没改**的两处
+
+`themes.js` 的 `purple` 与逆向清单实测值有 2 处出入（`dark` 用的是 `#2C1736`，清单记 `#682E79`；
+`tint` 用 `#F2F0F5`，清单记 `#E8D8E8`）。改它会动到既有多主题样例的观感，**不在本次诉求范围内**，
+故只记录、不擅自改。（同类问题：清单里 MCE 的第二色 `accent` 也未接进组件 —— R1 优先。）
+
 ## v0.4.1 — 2026-09-19
 
 **主题：把组件"代码化 + 提示词化" —— 让精确复用不靠自觉，靠校验**

@@ -36,6 +36,8 @@ const rampOf = (base, n, palette) => pastelRamp(base, n, { spread: palette === '
  * notfor:   无先后的并列 → HexChain；顶部实色条的正统框链 → FlowChain
  * pairs:    FigCaption, NoteBand
  * hue:      MCE 化合物库手册 深蓝 #2C6BAA（编号圆用橙 #F09B40）
+ * src:       mce
+ * manual:    mce-library
  * evidence: MCE library p89「DEL 建库和筛选的流程」
  * since:    v0.4
  * usage:    <NumberedStepFlow steps={[{ no: '01', title: '序列设计', en: 'Design', desc: '密码子优化' }]} />
@@ -107,6 +109,8 @@ export function NumberedStepFlow({ steps = [], palette = 'tone', size = 'md', ca
  * notfor:   有先后 → NumberedStepFlow；线性单一流程 → IconFlowBar（用 ›）
  * pairs:    FigCaption
  * hue:      MCE 化合物库手册 深蓝 #2C6BAA
+ * src:       mce
+ * manual:    mce-library
  * evidence: MCE library p06 / p40 / p43「产品组成 / 订购须知」
  * since:    v0.4
  * usage:    <HexChain items={[{ icon: 'flask', label: '质粒构建', en: 'Plasmid' }]} />
@@ -170,6 +174,7 @@ export function HexChain({ items = [], connector = '+', palette = 'tone', size =
  * notfor:   交付阶段 → StagePipelineChain；分几步 → NumberedStepFlow
  * pairs:    FigCaption
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 筛选流程页（实验动作形态）· v0.4 批
  * since:    v0.4
  * usage:    <BeadChain steps={[{ label: '裂解', en: 'Lysis' }]} />
@@ -221,6 +226,7 @@ export function BeadChain({ steps = [], size = 15, palette = 'tone', caption, st
  * notfor:   ≤4 节点的仪表盘式渐变环 → CycleFlowDiagram
  * pairs:    FigCaption, AnnotationPair
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <AnnotatedCycle nodes={[{ label: '基因合成', sub: 'Synthesis' }]} center={{ label: '闭环交付' }} />
@@ -313,6 +319,8 @@ export function AnnotatedCycle({ nodes = [], center, radius = 36, nodeWidth = 32
  * notfor:   一条线的流程 → StagePipelineChain；链与环都表达不了时才用它
  * pairs:    AnnotationPair, CategoryTagRow
  * hue:      MCE PROTAC 手册 深紫 #5A3A7D（类目条玫红 #DC5973）
+ * src:       mce
+ * manual:    mce-protac
  * evidence: MCE PROTAC p11 / 药物发现服务册「Building Blocks of Conjugates」
  * since:    v0.4
  * usage:    <ServiceNetworkMap columns={3} nodes={[{ col: 1, row: 1, label: '质粒', arrow: 'right' }]} />
@@ -393,6 +401,8 @@ export function ServiceNetworkMap({ columns = 3, nodes = [], captions = [], capt
  * notfor:   流程步骤 → NumberedStepFlow / FlowChain（本组件表达「位置」，不是「步骤」）
  * pairs:    StagePipelineChain
  * hue:      MCE 化合物库手册 p44 七色相带（青绿→橙 递进）
+ * src:       mce
+ * manual:    mce-library
  * evidence: MCE library p44 中带
  * since:    v0.4
  * usage:    <PhaseBand stages={['发现', '临床前', '临床 I', '上市']} active={2} />

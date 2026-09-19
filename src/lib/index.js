@@ -3,7 +3,7 @@
 // 分类体系（层 × 族）见 references/taxonomy.md：
 //   骨架 → 标题 → 文本 → 表格 / 卡片 → 图形（拓扑·图表·图解）→ 标签 → 页眉页脚
 // 本文件按"族"分组导出，一族一个源文件；族字母不占用 L（L1–L7 是版式原型）。
-export { THEMES, NEUTRAL, getTheme } from './themes'
+export { THEMES, NEUTRAL, getTheme, CORPORA, ORIGIN_KEYS, BRAND_THEME_KEYS, manualLabel, defaultManualOf } from './themes'
 export { ThemeProvider, useTheme, useNeutral } from './theme'
 
 // —— 族 A 结构页（唯一允许满版深底）

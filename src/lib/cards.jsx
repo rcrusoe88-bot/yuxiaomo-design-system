@@ -15,6 +15,7 @@ const SCOOP = { borderRadius: '3mm', borderTopRightRadius: '9mm' }
  * notfor:   纯数字指标组 → MetricStrip（MetricStrip 无图标无底）
  * pairs:    PillTitle, Lead
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R6
  * since:    v0.1
  * usage:    <StatCardRow items={[{ icon: 'flask', title: '一站式', desc: '质粒到 LNP' }]} />
@@ -44,6 +45,7 @@ export function StatCardRow({ items }) {
  * notfor:   特性 × 档位对照矩阵 → TierMatrixTable
  * pairs:    SpecTable
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R6
  * since:    v0.1
  * usage:    <TierCards tiers={[{ name: '标准', cycle: '4 周', price: '¥ 面议' }]} />
@@ -79,6 +81,7 @@ export function TierCards({ tiers, footnote }) {
  * notfor:   页中的过程性提醒 → NoteBand
  * pairs:    NoteBand
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <ConclusionBanner tone="tint">把质控前置，是缩短 IND 周期的唯一办法。</ConclusionBanner>
@@ -105,6 +108,7 @@ export function ConclusionBanner({ children, tone = 'tint', style }) {
  * notfor:   案例的完整叙述（难点/方案/结果）→ CaseBlock
  * pairs:    CitationBlock
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <TestimonialCard quote="交付节奏比预期快两周。" name="张博士" org="某生物技术公司" />
@@ -162,6 +166,8 @@ export function TestimonialCard({ quote, name, org, avatar }) {
  * notfor:   逐行参数对照 → SpecTable / RowLabelMatrixTable
  * pairs:    BarTitle, FigCaption
  * hue:      MCE PROTAC 手册 深紫 #5A3A7D（类目条玫红 #DC5973）
+ * src:       mce
+ * manual:    mce-protac
  * evidence: MCE PROTAC p5「Ligands for Target Proteins for PROTACs」
  * since:    v0.4
  * usage:    <ProductCardGrid items={[{ category: 'Kinases', code: 'YT-1021', name: 'EGFR 抑制剂', desc: '**靶点** 明确' }]} />
@@ -246,6 +252,7 @@ const mixAlpha = (hex) => {
  * notfor:   带图标与描述的卖点卡 → StatCardRow
  * pairs:    TargetBarChart
  * hue:      MCE 各册首屏优势条 · 随册主题
+ * src:       mce
  * evidence: MCE 各册首屏优势条（数值形态）· v0.4 批
  * since:    v0.4
  * usage:    <MetricStrip items={[{ value: '60,000+', unit: '种', label: '活性化合物' }]} />
@@ -294,6 +301,7 @@ export function MetricStrip({ items = [], columns, accent = true, style }) {
  * notfor:   章节页导览（带分组标题的岛）→ IslandBulletGrid
  * pairs:    NumberedTitle
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <TocList items={[{ no: '01', title: '服务总览', en: 'Overview', page: 4 }]} />

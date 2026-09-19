@@ -23,6 +23,7 @@ import { Icon } from './icons'
  * notfor:   封面（Cover 自带品牌位）；注意 @page 无 margin box，页眉必须画在 .page 内部
  * pairs:    Page, ContactFooterBand
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <BrandHeaderBar brand="远泰生物" tagline="Yuantai Bio" meta="mRNA-LNP CDMO" rule />
@@ -73,6 +74,7 @@ export function BrandHeaderBar({ brand, tagline, meta, right, rule = true, style
  * notfor:   封底的整页联系页 → BackCover；tone=solid 慎用（内页实底深色破坏 R2）
  * pairs:    BrandHeaderBar, Page
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <ContactFooterBand heading="联系我们" items={[{ type: 'mail', text: 'service@yuantai.com' }]} />

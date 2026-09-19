@@ -13,7 +13,18 @@
 | R14 | 一站一拓扑 | 同一语义全册只用一种拓扑；不同语义绝不共用 |
 | R16 | 两种表格语体不混 | 营销参数表 `SpecTable` ↔ 技术数据表 `InstrumentReportPanel` |
 | R22 | 类目色纪律 | 多档配色默认同色相（`tone`）；跨色相须显式且全册锁定 |
-| **R23** | **配色随来源，不随默认** | **组件保持其来源手册的色相（见每节「来源配色」）；不得把所有组件统一成蓝色** |
+| **R23** | **配色随来源，不随默认** | **组件的配色由它的来源脉（`src`）决定；不得把所有组件统一成蓝色。每条组件的来源脉见下表** |
+
+### 组件来源脉（`src`）—— R23 的机器可读依据
+
+| `src` | 来源 | 该脉可选主题（「脉内换册」只换主色、不换结构） |
+|---|---|---|
+| `genscript` | GenScript 金斯瑞 | `blue` 核酸服务手册 · `red` 细胞工程服务手册 · `purple` 蛋白&抗体服务手册 · `wine` 蛋白手册 · 抗体章 |
+| `mce` | MCE 皓元 | `mce-library` 化合物库手册 · `mce-discovery` 药物发现服务 · `mce-protac` PROTAC 手册 · `mce-qms` 质量管理体系 · `mce-biochem` 生化试剂 |
+| `neutral` | 中性文本层 | —（不引入色相，随调用页主题） |
+
+> 用法：先读组件的 `src`，再从该脉选一册主题，**整份文档只用所选那一册**（R1 一册一色相）。
+> 不要用 A 脉的册去渲染 B 脉的组件 —— 那正是「全部变蓝」的成因。
 
 ---
 
@@ -28,6 +39,7 @@
 | 何时不用 | 内页底部联系带 → ContactFooterBand |
 | 配套 | CapsuleDecor（内置，preset=backcover） |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -40,9 +52,10 @@
 何时不用：内页底部联系带 → ContactFooterBand
 配套：CapsuleDecor（内置，preset=backcover）
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -98,6 +111,7 @@ export function BackCover({ contacts, version, heading = '更多详情，欢迎�
 | 何时不用 | 内页（内页禁止满版深底 R2）→ Page；章节开篇 → SectionDivider；封底 → BackCover |
 | 配套 | CapsuleDecor（内置，preset=cover） |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -110,9 +124,10 @@ export function BackCover({ contacts, version, heading = '更多详情，欢迎�
 何时不用：内页（内页禁止满版深底 R2）→ Page；章节开篇 → SectionDivider；封底 → BackCover
 配套：CapsuleDecor（内置，preset=cover）
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -172,6 +187,7 @@ export function Cover({ title, enTitle, logo, tagline, children, style }) {
 | 何时不用 | 内页正文列举 → BulletList；多产品参数对照 → SpecTable |
 | 配套 | SectionDivider |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -184,9 +200,10 @@ export function Cover({ title, enTitle, logo, tagline, children, style }) {
 何时不用：内页正文列举 → BulletList；多产品参数对照 → SpecTable
 配套：SectionDivider
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -237,6 +254,7 @@ export function IslandBulletGrid({ groups }) {
 | 何时不用 | 内容页 → Page；封面/封底 → Cover / BackCover |
 | 配套 | IslandBulletGrid（岛内容） |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -249,9 +267,10 @@ export function IslandBulletGrid({ groups }) {
 何时不用：内容页 → Page；封面/封底 → Cover / BackCover
 配套：IslandBulletGrid（岛内容）
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -312,6 +331,8 @@ export function SectionDivider({ chapterNo, title, lead, children, style }) {
 | 何时不用 | 与 RuleTitle 混用（全册 H2 只用一种）；页题 → H1 系列 |
 | 配套 | RuleTitle（二选一，不可并用） |
 | **来源配色** | **MCE library p8 青色 #58C6CE（本系统改用主题主色以守 R1）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-library` · 化合物库深蓝（主色 `#2C6BAA`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE library p8（原页 12pt 青色小标题，改主色守 R1） |
 
 **提示词**（直接复制）
@@ -324,9 +345,11 @@ export function SectionDivider({ chapterNo, title, lead, children, style }) {
 何时不用：与 RuleTitle 混用（全册 H2 只用一种）；页题 → H1 系列
 配套：RuleTitle（二选一，不可并用）
 来源配色：MCE library p8 青色 #58C6CE（本系统改用主题主色以守 R1）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-library（化合物库深蓝 · 主色 #2C6BAA）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -379,6 +402,7 @@ export function BarTitle({ children, sub, en, level = 2, style }) {
 | 何时不用 | 收口式单点承诺 → PillTitle（胶囊只允许一页 1 个，方块允许 2 个） |
 | 配套 | OutlineTitle（并置形成主次对照） |
 | **来源配色** | **GenScript 胶囊型 → 直角变体 · 随主题** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -391,9 +415,10 @@ export function BarTitle({ children, sub, en, level = 2, style }) {
 何时不用：收口式单点承诺 → PillTitle（胶囊只允许一页 1 个，方块允许 2 个）
 配套：OutlineTitle（并置形成主次对照）
 来源配色：GenScript 胶囊型 → 直角变体 · 随主题
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -451,6 +476,8 @@ export function BlockTitle({ children, en, tone = 'solid', size = 'md', width, i
 | 何时不用 | 当页题使用（它是眉，不是题）→ PairTitle / BlockTitle |
 | 配套 | PairTitle |
 | **来源配色** | **MCE 化合物库手册 橙 #F09B40（编号 / 文献专用）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-library` · 化合物库深蓝（主色 `#2C6BAA`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE 五册逆向（原页橙色 10pt，本系统改主色以守 R1） |
 
 **提示词**（直接复制）
@@ -463,9 +490,11 @@ export function BlockTitle({ children, en, tone = 'solid', size = 'md', width, i
 何时不用：当页题使用（它是眉，不是题）→ PairTitle / BlockTitle
 配套：PairTitle
 来源配色：MCE 化合物库手册 橙 #F09B40（编号 / 文献专用）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-library（化合物库深蓝 · 主色 #2C6BAA）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -517,6 +546,7 @@ export function EyebrowTitle({ items = [], align = 'left', divider = '·', tone 
 | 何时不用 | 版心内的关键提醒 → NoteBand（Footnotes 只在页脚，且最轻） |
 | 配套 | Page |
 | **来源配色** | **中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）** |
+| 来源脉 `src` | `neutral` · 中性文本层 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -529,9 +559,10 @@ export function EyebrowTitle({ items = [], align = 'left', divider = '·', tone 
 何时不用：版心内的关键提醒 → NoteBand（Footnotes 只在页脚，且最轻）
 配套：Page
 来源配色：中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+来源脉：中性文本层 —— 配色必须从该脉的主题取：（无专属色相，随调用页主题）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -573,6 +604,7 @@ export function Footnotes({ items, style }) {
 | 何时不用 | 左对齐正文流里的小节 → BarTitle；页题 → H1 系列（PillTitle/BlockTitle/PairTitle） |
 | 配套 | Sub |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -585,9 +617,10 @@ export function Footnotes({ items, style }) {
 何时不用：左对齐正文流里的小节 → BarTitle；页题 → H1 系列（PillTitle/BlockTitle/PairTitle）
 配套：Sub
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -630,6 +663,7 @@ export function H2({ children, style }) {
 | 何时不用 | 多段落正文 → BodyText（Lead 一段就够） |
 | 配套 | PillTitle, H2 |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -642,9 +676,10 @@ export function H2({ children, style }) {
 何时不用：多段落正文 → BodyText（Lead 一段就够）
 配套：PillTitle, H2
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -687,6 +722,8 @@ export function Lead({ children, style }) {
 | 何时不用 | 无序内容 → BarTitle；纯粹的小节划分 → RuleTitle |
 | 配套 | TocList |
 | **来源配色** | **MCE 化合物库手册（编号色 = 分区主题色 #2C6BAA 的 tint）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-library` · 化合物库深蓝（主色 `#2C6BAA`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -699,9 +736,11 @@ export function Lead({ children, style }) {
 何时不用：无序内容 → BarTitle；纯粹的小节划分 → RuleTitle
 配套：TocList
 来源配色：MCE 化合物库手册（编号色 = 分区主题色 #2C6BAA 的 tint）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-library（化合物库深蓝 · 主色 #2C6BAA）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -758,6 +797,7 @@ export function NumberedTitle({ index, total, children, en, size = 'md', style }
 | 何时不用 | 需要强调的页题 → BlockTitle |
 | 配套 | BlockTitle |
 | **来源配色** | **BlockTitle 轻量变体 · 随主题（描边+主色字，不加新色）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -770,9 +810,10 @@ export function NumberedTitle({ index, total, children, en, size = 'md', style }
 何时不用：需要强调的页题 → BlockTitle
 配套：BlockTitle
 来源配色：BlockTitle 轻量变体 · 随主题（描边+主色字，不加新色）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -822,6 +863,7 @@ export function OutlineTitle({ children, en, size = 'md', align = 'left', width,
 | 何时不用 | 一页出现两个 H1；硬朗技术感页题 → BlockTitle |
 | 配套 | EyebrowTitle, BarTitle |
 | **来源配色** | **MCE 多册 · 色相随册（library #2C6BAA / qms #F16366），形态不变** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE library p3/p6/p7/p45/p89 与 qms 全线 |
 
 **提示词**（直接复制）
@@ -834,9 +876,10 @@ export function OutlineTitle({ children, en, size = 'md', align = 'left', width,
 何时不用：一页出现两个 H1；硬朗技术感页题 → BlockTitle
 配套：EyebrowTitle, BarTitle
 来源配色：MCE 多册 · 色相随册（library #2C6BAA / qms #F16366），形态不变
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -888,6 +931,7 @@ export function PairTitle({ cn, en, eyebrow, align = 'left', size = 'md', style 
 | 何时不用 | 一页出现第 2 个（R3 一页一胶囊）；分栏并列可重复的段落标题 → BlockTitle |
 | 配套 | Lead, Sub |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -900,9 +944,10 @@ export function PairTitle({ cn, en, eyebrow, align = 'left', size = 'md', style 
 何时不用：一页出现第 2 个（R3 一页一胶囊）；分栏并列可重复的段落标题 → BlockTitle
 配套：Lead, Sub
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -948,6 +993,7 @@ export function PillTitle({ children, width, style }) {
 | 何时不用 | 与 BarTitle 混用；页题 → H1 系列 |
 | 配套 | BarTitle（二选一，不可并用） |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -960,9 +1006,10 @@ export function PillTitle({ children, width, style }) {
 何时不用：与 BarTitle 混用；页题 → H1 系列
 配套：BarTitle（二选一，不可并用）
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1013,6 +1060,7 @@ export function RuleTitle({ children, en, note, align = 'left', ruleWidth = '14m
 | 何时不用 | 独立段落 → Lead / BodyText |
 | 配套 | H2 |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -1025,9 +1073,10 @@ export function RuleTitle({ children, en, note, align = 'left', ruleWidth = '14m
 何时不用：独立段落 → Lead / BodyText
 配套：H2
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1073,6 +1122,7 @@ export function Sub({ children, style }) {
 | 何时不用 | 术语→释义的连续阅读块 → DefinitionList（无底色） |
 | 配套 | FigurePanel |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -1085,9 +1135,10 @@ export function Sub({ children, style }) {
 何时不用：术语→释义的连续阅读块 → DefinitionList（无底色）
 配套：FigurePanel
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1150,6 +1201,8 @@ export function KeyValueTable({ items = [], labelWidth = '32mm', size = '8.5pt',
 | 何时不用 | 营销参数 → SpecTable；缩写对照（无描述）→ DefinitionList |
 | 配套 | InstrumentReportPanel |
 | **来源配色** | **MCE 化合物库手册 深蓝 #2C6BAA** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-library` · 化合物库深蓝（主色 `#2C6BAA`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE library p8「常用分子水平检测方法」 |
 
 **提示词**（直接复制）
@@ -1162,9 +1215,11 @@ export function KeyValueTable({ items = [], labelWidth = '32mm', size = '8.5pt',
 何时不用：营销参数 → SpecTable；缩写对照（无描述）→ DefinitionList
 配套：InstrumentReportPanel
 来源配色：MCE 化合物库手册 深蓝 #2C6BAA
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-library（化合物库深蓝 · 主色 #2C6BAA）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1246,6 +1301,7 @@ export function MethodTable({ rows = [], headers = ['方法', '用途'], nameWid
 | 何时不用 | 独立成表；跨页续表头 → 用表头本身 |
 | 配套 | SpecTable |
 | **来源配色** | **GenScript 手册 p8 五阶段表** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 手册 p8 五阶段表 |
 
 **提示词**（直接复制）
@@ -1258,9 +1314,10 @@ export function MethodTable({ rows = [], headers = ['方法', '用途'], nameWid
 何时不用：独立成表；跨页续表头 → 用表头本身
 配套：SpecTable
 来源配色：GenScript 手册 p8 五阶段表
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1306,6 +1363,8 @@ export function ProductHeaderRow({ title, colSpan }) {
 | 何时不用 | 逐行读一家的参数清单 → SpecTable（SpecTable 的行是产品，列是参数） |
 | 配套 | SpecTable（相邻页互为补充） |
 | **来源配色** | **MCE 化合物库手册 深蓝 #2C6BAA** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-library` · 化合物库深蓝（主色 `#2C6BAA`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE library p7「化合物库常规参数」 |
 
 **提示词**（直接复制）
@@ -1318,9 +1377,11 @@ export function ProductHeaderRow({ title, colSpan }) {
 何时不用：逐行读一家的参数清单 → SpecTable（SpecTable 的行是产品，列是参数）
 配套：SpecTable（相邻页互为补充）
 来源配色：MCE 化合物库手册 深蓝 #2C6BAA
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-library（化合物库深蓝 · 主色 #2C6BAA）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1358,6 +1419,7 @@ export function RowLabelMatrixTable({
 | 何时不用 | 技术检测数据 → InstrumentReportPanel（R16 两种语体不可混页） |
 | 配套 | ProductHeaderRow, TierMatrixTable |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R5 / R8 |
 
 **提示词**（直接复制）
@@ -1370,9 +1432,10 @@ export function RowLabelMatrixTable({
 何时不用：技术检测数据 → InstrumentReportPanel（R16 两种语体不可混页）
 配套：ProductHeaderRow, TierMatrixTable
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1450,6 +1513,7 @@ export function SpecTable({ columns, rows, labelColumn = false, zebra = true, fo
 | 何时不用 | 单档参数清单 → SpecTable；三档套餐报价 → TierCards |
 | 配套 | SpecTable |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R6 |
 
 **提示词**（直接复制）
@@ -1462,9 +1526,10 @@ export function SpecTable({ columns, rows, labelColumn = false, zebra = true, fo
 何时不用：单档参数清单 → SpecTable；三档套餐报价 → TierCards
 配套：SpecTable
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1538,6 +1603,7 @@ export function TierMatrixTable({ tiers, features, check = '✓', cross = '—' 
 | 何时不用 | 页中的过程性提醒 → NoteBand |
 | 配套 | NoteBand |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -1550,9 +1616,10 @@ export function TierMatrixTable({ tiers, features, check = '✓', cross = '—' 
 何时不用：页中的过程性提醒 → NoteBand
 配套：NoteBand
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1600,6 +1667,7 @@ export function ConclusionBanner({ children, tone = 'tint', style }) {
 | 何时不用 | 带图标与描述的卖点卡 → StatCardRow |
 | 配套 | TargetBarChart |
 | **来源配色** | **MCE 各册首屏优势条 · 随册主题** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 各册首屏优势条（数值形态）· v0.4 批 |
 
 **提示词**（直接复制）
@@ -1612,9 +1680,10 @@ export function ConclusionBanner({ children, tone = 'tint', style }) {
 何时不用：带图标与描述的卖点卡 → StatCardRow
 配套：TargetBarChart
 来源配色：MCE 各册首屏优势条 · 随册主题
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1678,6 +1747,8 @@ export function MetricStrip({ items = [], columns, accent = true, style }) {
 | 何时不用 | 逐行参数对照 → SpecTable / RowLabelMatrixTable |
 | 配套 | BarTitle, FigCaption |
 | **来源配色** | **MCE PROTAC 手册 深紫 #5A3A7D（类目条玫红 #DC5973）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-protac` · PROTAC 深紫（主色 `#5A3A7D`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE PROTAC p5「Ligands for Target Proteins for PROTACs」 |
 
 **提示词**（直接复制）
@@ -1690,9 +1761,11 @@ export function MetricStrip({ items = [], columns, accent = true, style }) {
 何时不用：逐行参数对照 → SpecTable / RowLabelMatrixTable
 配套：BarTitle, FigCaption
 来源配色：MCE PROTAC 手册 深紫 #5A3A7D（类目条玫红 #DC5973）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-protac（PROTAC 深紫 · 主色 #5A3A7D）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1780,6 +1853,7 @@ export function ProductCardGrid({ items = [], columns = 3, palette = 'tone', hea
 | 何时不用 | 纯数字指标组 → MetricStrip（MetricStrip 无图标无底） |
 | 配套 | PillTitle, Lead |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R6 |
 
 **提示词**（直接复制）
@@ -1792,9 +1866,10 @@ export function ProductCardGrid({ items = [], columns = 3, palette = 'tone', hea
 何时不用：纯数字指标组 → MetricStrip（MetricStrip 无图标无底）
 配套：PillTitle, Lead
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1845,6 +1920,7 @@ export function StatCardRow({ items }) {
 | 何时不用 | 案例的完整叙述（难点/方案/结果）→ CaseBlock |
 | 配套 | CitationBlock |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -1857,9 +1933,10 @@ export function StatCardRow({ items }) {
 何时不用：案例的完整叙述（难点/方案/结果）→ CaseBlock
 配套：CitationBlock
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1920,6 +1997,7 @@ export function TestimonialCard({ quote, name, org, avatar }) {
 | 何时不用 | 特性 × 档位对照矩阵 → TierMatrixTable |
 | 配套 | SpecTable |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R6 |
 
 **提示词**（直接复制）
@@ -1932,9 +2010,10 @@ export function TestimonialCard({ quote, name, org, avatar }) {
 何时不用：特性 × 档位对照矩阵 → TierMatrixTable
 配套：SpecTable
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -1991,6 +2070,7 @@ export function TierCards({ tiers, footnote }) {
 | 何时不用 | 章节页导览（带分组标题的岛）→ IslandBulletGrid |
 | 配套 | NumberedTitle |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -2003,9 +2083,10 @@ export function TierCards({ tiers, footnote }) {
 何时不用：章节页导览（带分组标题的岛）→ IslandBulletGrid
 配套：NumberedTitle
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -2083,6 +2164,7 @@ export function TocList({ items = [], columns = 2, style }) {
 | 何时不用 | 多入口汇聚的网络 → ServiceNetworkMap；量化收敛漏斗 → FunnelStages |
 | 配套 | PhaseBand |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -2095,9 +2177,10 @@ export function TocList({ items = [], columns = 2, style }) {
 何时不用：多入口汇聚的网络 → ServiceNetworkMap；量化收敛漏斗 → FunnelStages
 配套：PhaseBand
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -2153,6 +2236,7 @@ export function ChevronFlow({ steps, variant = 'process' }) {
 | 何时不用 | 实验步骤（要更亲和）→ NumberedStepFlow；注意 R9：流程下必须跟 TimelineBar |
 | 配套 | TimelineBar（R9 必配）, TimelineBar 之后可接 StagePipelineChain |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R9 |
 
 **提示词**（直接复制）
@@ -2165,9 +2249,10 @@ export function ChevronFlow({ steps, variant = 'process' }) {
 何时不用：实验步骤（要更亲和）→ NumberedStepFlow；注意 R9：流程下必须跟 TimelineBar
 配套：TimelineBar（R9 必配）, TimelineBar 之后可接 StagePipelineChain
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -2239,6 +2324,7 @@ export function FlowChain({ steps, numbered = false }) {
 | 何时不用 | 并列相加（无方向）→ HexChain（HexChain 用 ⊕，本组件用 ›） |
 | 配套 | IconFeatureList |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -2251,9 +2337,10 @@ export function FlowChain({ steps, numbered = false }) {
 何时不用：并列相加（无方向）→ HexChain（HexChain 用 ⊕，本组件用 ›）
 配套：IconFeatureList
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -2308,6 +2395,7 @@ export function IconFlowBar({ steps }) {
 | 何时不用 | 纯顺序但无时长 → FlowChain；阶段归档（时间轴上的位置）→ PhaseBand |
 | 配套 | FlowChain |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R9 |
 
 **提示词**（直接复制）
@@ -2320,9 +2408,10 @@ export function IconFlowBar({ steps }) {
 何时不用：纯顺序但无时长 → FlowChain；阶段归档（时间轴上的位置）→ PhaseBand
 配套：FlowChain
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -2387,6 +2476,7 @@ export function TimelineBar({ segments, total }) {
 | 何时不用 | 客户评价背书 → TestimonialCard |
 | 配套 | EvidenceGrid, MetricStrip |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -2399,9 +2489,10 @@ export function TimelineBar({ segments, total }) {
 何时不用：客户评价背书 → TestimonialCard
 配套：EvidenceGrid, MetricStrip
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -2448,6 +2539,7 @@ export function CaseBlock({ title, facts }) {
 | 何时不用 | 单序列排行 → TargetBarChart；多面板小倍数 → PanelBarChart |
 | 配套 | FunnelStages |
 | **来源配色** | **GenScript · 双系列（浅档 capsuleLight + 深档 functional），对照橙 #E8963C** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -2460,9 +2552,10 @@ export function CaseBlock({ title, facts }) {
 何时不用：单序列排行 → TargetBarChart；多面板小倍数 → PanelBarChart
 配套：FunnelStages
 来源配色：GenScript · 双系列（浅档 capsuleLight + 深档 functional），对照橙 #E8963C
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -2535,6 +2628,7 @@ export function DataChart({ title, groups, max = 100, unit = '%', seriesNames = 
 | 何时不用 | 精修示意图 / 通路图 → FigurePanel / LegendFigure |
 | 配套 | CaseBlock, FigCaption |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -2547,9 +2641,10 @@ export function DataChart({ title, groups, max = 100, unit = '%', seriesNames = 
 何时不用：精修示意图 / 通路图 → FigurePanel / LegendFigure
 配套：CaseBlock, FigCaption
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -2613,6 +2708,7 @@ export function EvidenceGrid({ images, note, highlight, cols }) {
 | 何时不用 | 内页正文区当装饰（破坏 R2 内页不出深色块） |
 | 配套 | Cover, BackCover, SectionDivider |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -2625,9 +2721,10 @@ export function EvidenceGrid({ images, note, highlight, cols }) {
 何时不用：内页正文区当装饰（破坏 R2 内页不出深色块）
 配套：Cover, BackCover, SectionDivider
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -2701,6 +2798,7 @@ export function CapsuleDecor({ theme: t, preset = 'cover', style }) {
 | 何时不用 | 手写页码（会与 Page 内置的重复） |
 | 配套 | Page |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -2713,9 +2811,10 @@ export function CapsuleDecor({ theme: t, preset = 'cover', style }) {
 何时不用：手写页码（会与 Page 内置的重复）
 配套：Page
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -2760,6 +2859,7 @@ export function Folio({ num, side = 'right', color, style }) {
 | 何时不用 | 封面 / 封底（Cover / BackCover 自带页面，不要再套 Page） |
 | 配套 | BrandHeaderBar, ContactFooterBand, Folio（内置） |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -2772,9 +2872,10 @@ export function Folio({ num, side = 'right', color, style }) {
 何时不用：封面 / 封底（Cover / BackCover 自带页面，不要再套 Page）
 配套：BrandHeaderBar, ContactFooterBand, Folio（内置）
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -2823,6 +2924,7 @@ export function Page({ children, theme, number, folioSide = 'right', style }) {
 | 何时不用 | 并列条件（A 且 B 且 C，无产物）→ HexChain |
 | 配套 | CycleFlowDiagram |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.3 批 |
 
 **提示词**（直接复制）
@@ -2835,9 +2937,10 @@ export function Page({ children, theme, number, folioSide = 'right', style }) {
 何时不用：并列条件（A 且 B 且 C，无产物）→ HexChain
 配套：CycleFlowDiagram
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -2912,6 +3015,7 @@ export function ComboEquationDiagram({ left, right, result, caption, style }) {
 | 何时不用 | 3–8 节点的叙述式闭环 → AnnotatedCycle（本组件最多 4 个节点） |
 | 配套 | ComboEquationDiagram |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.3 批 |
 
 **提示词**（直接复制）
@@ -2924,9 +3028,10 @@ export function ComboEquationDiagram({ left, right, result, caption, style }) {
 何时不用：3–8 节点的叙述式闭环 → AnnotatedCycle（本组件最多 4 个节点）
 配套：ComboEquationDiagram
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3020,6 +3125,7 @@ export function CycleFlowDiagram({ nodes = [], center, caption, size = 52, strok
 | 何时不用 | 等量并列的多步 → NumberedStepFlow |
 | 配套 | DataChart, TargetBarChart |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.3 批 |
 
 **提示词**（直接复制）
@@ -3032,9 +3138,10 @@ export function CycleFlowDiagram({ nodes = [], center, caption, size = 52, strok
 何时不用：等量并列的多步 → NumberedStepFlow
 配套：DataChart, TargetBarChart
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3107,6 +3214,7 @@ export function FunnelStages({ stages = [], caption, minWidth = 42, style }) {
 | 何时不用 | 多入口汇聚的网络 → ServiceNetworkMap；实验动作 → BeadChain |
 | 配套 | PhaseBand, FlowChain |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.3 批 |
 
 **提示词**（直接复制）
@@ -3119,9 +3227,10 @@ export function FunnelStages({ stages = [], caption, minWidth = 42, style }) {
 何时不用：多入口汇聚的网络 → ServiceNetworkMap；实验动作 → BeadChain
 配套：PhaseBand, FlowChain
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3214,6 +3323,8 @@ export function StagePipelineChain({ stages = [], spectrum, caption, nodeSize = 
 | 何时不用 | 排序比较 → TargetBarChart；palette 默认 category 是 R22 的显式例外 |
 | 配套 | FigCaption, AnnotationPair |
 | **来源配色** | **MCE 化合物库手册 深蓝 #2C6BAA** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-library` · 化合物库深蓝（主色 `#2C6BAA`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE library p3「药物发现」 |
 
 **提示词**（直接复制）
@@ -3226,9 +3337,11 @@ export function StagePipelineChain({ stages = [], spectrum, caption, nodeSize = 
 何时不用：排序比较 → TargetBarChart；palette 默认 category 是 R22 的显式例外
 配套：FigCaption, AnnotationPair
 来源配色：MCE 化合物库手册 深蓝 #2C6BAA
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-library（化合物库深蓝 · 主色 #2C6BAA）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3265,6 +3378,8 @@ export function AnnotatedDonut({
 | 何时不用 | 客户评价 → TestimonialCard |
 | 配套 | TestimonialCard |
 | **来源配色** | **MCE 化合物库手册 橙 #F09B40（编号 / 文献专用）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-library` · 化合物库深蓝（主色 `#2C6BAA`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE 五册逆向 · R19 |
 
 **提示词**（直接复制）
@@ -3277,9 +3392,11 @@ export function AnnotatedDonut({
 何时不用：客户评价 → TestimonialCard
 配套：TestimonialCard
 来源配色：MCE 化合物库手册 橙 #F09B40（编号 / 文献专用）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-library（化合物库深蓝 · 主色 #2C6BAA）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3340,6 +3457,7 @@ export function CitationBlock({ title, items = [], columns = 2, icon = true, sty
 | 何时不用 | 营销参数表 → SpecTable（R16：两种语体按页型选用，不可混页） |
 | 配套 | MethodTable |
 | **来源配色** | **MCE 五册 · 技术语体（浅底细线，不做实底反白）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.3 批 |
 
 **提示词**（直接复制）
@@ -3352,9 +3470,10 @@ export function CitationBlock({ title, items = [], columns = 2, icon = true, sty
 何时不用：营销参数表 → SpecTable（R16：两种语体按页型选用，不可混页）
 配套：MethodTable
 来源配色：MCE 五册 · 技术语体（浅底细线，不做实底反白）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3410,6 +3529,8 @@ export function InstrumentReportPanel({ blocks = [], style }) {
 | 何时不用 | 单图排行 → TargetBarChart；注意多面板必须开 sharedScale |
 | 配套 | FigCaption, NoteBand |
 | **来源配色** | **MCE 化合物库手册 深蓝 #2C6BAA** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-library` · 化合物库深蓝（主色 `#2C6BAA`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE library p45「片段化合物库相关参数」 |
 
 **提示词**（直接复制）
@@ -3422,9 +3543,11 @@ export function InstrumentReportPanel({ blocks = [], style }) {
 何时不用：单图排行 → TargetBarChart；注意多面板必须开 sharedScale
 配套：FigCaption, NoteBand
 来源配色：MCE 化合物库手册 深蓝 #2C6BAA
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-library（化合物库深蓝 · 主色 #2C6BAA）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3462,6 +3585,8 @@ export function PanelBarChart({
 | 何时不用 | 精确数值比较 → TargetBarChart / DataChart；points 省略时按 seed 确定性生成 |
 | 配套 | SwatchLegend, FigCaption |
 | **来源配色** | **MCE 化合物库手册 深蓝 #2C6BAA** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-library` · 化合物库深蓝（主色 `#2C6BAA`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE library p44 上带 |
 
 **提示词**（直接复制）
@@ -3474,9 +3599,11 @@ export function PanelBarChart({
 何时不用：精确数值比较 → TargetBarChart / DataChart；points 省略时按 seed 确定性生成
 配套：SwatchLegend, FigCaption
 来源配色：MCE 化合物库手册 深蓝 #2C6BAA
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-library（化合物库深蓝 · 主色 #2C6BAA）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3514,6 +3641,7 @@ export function ScatterClusterPanel({
 | 何时不用 | 多面板小倍数 → PanelBarChart；构成占比 → AnnotatedDonut |
 | 配套 | FigCaption |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.3 批 |
 
 **提示词**（直接复制）
@@ -3526,9 +3654,10 @@ export function ScatterClusterPanel({
 何时不用：多面板小倍数 → PanelBarChart；构成占比 → AnnotatedDonut
 配套：FigCaption
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3609,6 +3738,8 @@ export function TargetBarChart({ items = [], ticks = 5, caption, barColor, label
 | 何时不用 | 子能力的长清单 → ChipPillGrid；图例色标 → SwatchLegend |
 | 配套 | ProductCardGrid, ServiceNetworkMap |
 | **来源配色** | **MCE 质量管理体系 青 tint #C1E7ED（源色 青 #41B3B9）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-qms` · QMS 珊瑚红（主色 `#F16366`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE 五册逆向 · R21 |
 
 **提示词**（直接复制）
@@ -3621,9 +3752,11 @@ export function TargetBarChart({ items = [], ticks = 5, caption, barColor, label
 何时不用：子能力的长清单 → ChipPillGrid；图例色标 → SwatchLegend
 配套：ProductCardGrid, ServiceNetworkMap
 来源配色：MCE 质量管理体系 青 tint #C1E7ED（源色 青 #41B3B9）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-qms（QMS 珊瑚红 · 主色 #F16366）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3680,6 +3813,7 @@ export function CategoryTagRow({ items = [], size = 'md', style }) {
 | 何时不用 | 需要图标 + 详细说明的特性 → IconFeatureList |
 | 配套 | IconFeatureList |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.3 批 |
 
 **提示词**（直接复制）
@@ -3692,9 +3826,10 @@ export function CategoryTagRow({ items = [], size = 'md', style }) {
 何时不用：需要图标 + 详细说明的特性 → IconFeatureList
 配套：IconFeatureList
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3752,6 +3887,7 @@ export function ChipPillGrid({ items = [], columns = 3, style }) {
 | 何时不用 | 短标签 → ChipPillGrid；卖点卡 → StatCardRow |
 | 配套 | ChipPillGrid |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · R17 |
 
 **提示词**（直接复制）
@@ -3764,9 +3900,10 @@ export function ChipPillGrid({ items = [], columns = 3, style }) {
 何时不用：短标签 → ChipPillGrid；卖点卡 → StatCardRow
 配套：ChipPillGrid
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3843,6 +3980,7 @@ export function IconFeatureList({ items = [], columns = 3, style }) {
 | 何时不用 | 通栏连续段落 → BodyText；需要左右分栏对照 → 用两列网格包 BodyText |
 | 配套 | ServiceNetworkMap, LegendFigure |
 | **来源配色** | **中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）** |
+| 来源脉 `src` | `neutral` · 中性文本层 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -3855,9 +3993,10 @@ export function IconFeatureList({ items = [], columns = 3, style }) {
 何时不用：通栏连续段落 → BodyText；需要左右分栏对照 → 用两列网格包 BodyText
 配套：ServiceNetworkMap, LegendFigure
 来源配色：中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+来源脉：中性文本层 —— 配色必须从该脉的主题取：（无专属色相，随调用页主题）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3911,6 +4050,7 @@ export function AnnotationPair({ cn, en, divider = true, size = 'md', align = 'l
 | 何时不用 | 分点罗列 → BulletList / NumberedList；多栏仅用于无小标题的连续论述 |
 | 配套 | FigCaption, BarTitle |
 | **来源配色** | **中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）** |
+| 来源脉 `src` | `neutral` · 中性文本层 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -3923,9 +4063,10 @@ export function AnnotationPair({ cn, en, divider = true, size = 'md', align = 'l
 何时不用：分点罗列 → BulletList / NumberedList；多栏仅用于无小标题的连续论述
 配套：FigCaption, BarTitle
 来源配色：中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+来源脉：中性文本层 —— 配色必须从该脉的主题取：（无专属色相，随调用页主题）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -3974,6 +4115,7 @@ export function BodyText({ text, children, columns = 1, size = 'lg', justify = t
 | 何时不用 | 有先后顺序 → NumberedList；实验动作序列 → BeadChain |
 | 配套 | BarTitle, DefinitionList |
 | **来源配色** | **中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）** |
+| 来源脉 `src` | `neutral` · 中性文本层 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -3986,9 +4128,10 @@ export function BodyText({ text, children, columns = 1, size = 'lg', justify = t
 何时不用：有先后顺序 → NumberedList；实验动作序列 → BeadChain
 配套：BarTitle, DefinitionList
 来源配色：中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+来源脉：中性文本层 —— 配色必须从该脉的主题取：（无专属色相，随调用页主题）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -4041,6 +4184,7 @@ export function BulletList({ items = [], columns = 1, size = 'md', marker = '•
 | 何时不用 | 属性→取值清单（要底色与可读性优先）→ KeyValueTable；不需要表格语义时用本组件 |
 | 配套 | BarTitle |
 | **来源配色** | **中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）** |
+| 来源脉 `src` | `neutral` · 中性文本层 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -4053,9 +4197,10 @@ export function BulletList({ items = [], columns = 1, size = 'md', marker = '•
 何时不用：属性→取值清单（要底色与可读性优先）→ KeyValueTable；不需要表格语义时用本组件
 配套：BarTitle
 来源配色：中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+来源脉：中性文本层 —— 配色必须从该脉的主题取：（无专属色相，随调用页主题）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -4110,6 +4255,7 @@ export function DefinitionList({ items = [], termWidth = '30mm', size = 'md', ru
 | 何时不用 | 图上方的标题 → FigurePanel 的 title；正文段落 → BodyText |
 | 配套 | FigurePanel, FigurePanel 内容 |
 | **来源配色** | **中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）** |
+| 来源脉 `src` | `neutral` · 中性文本层 |
 | 来源证据 | MCE 五册逆向（原页图注在右下角加粗深灰） |
 
 **提示词**（直接复制）
@@ -4122,9 +4268,10 @@ export function DefinitionList({ items = [], termWidth = '30mm', size = 'md', ru
 何时不用：图上方的标题 → FigurePanel 的 title；正文段落 → BodyText
 配套：FigurePanel, FigurePanel 内容
 来源配色：中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+来源脉：中性文本层 —— 配色必须从该脉的主题取：（无专属色相，随调用页主题）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -4170,6 +4317,7 @@ export function FigCaption({ children, tone = 'strong', align, style }) {
 | 何时不用 | 页脚最末的 * 小字 → Footnotes（NoteBand 在版心内，Footnotes 在页脚） |
 | 配套 | Footnotes, ConclusionBanner |
 | **来源配色** | **中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）** |
+| 来源脉 `src` | `neutral` · 中性文本层 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -4182,9 +4330,10 @@ export function FigCaption({ children, tone = 'strong', align, style }) {
 何时不用：页脚最末的 * 小字 → Footnotes（NoteBand 在版心内，Footnotes 在页脚）
 配套：Footnotes, ConclusionBanner
 来源配色：中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+来源脉：中性文本层 —— 配色必须从该脉的主题取：（无专属色相，随调用页主题）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -4241,6 +4390,7 @@ export function NoteBand({ children, text, label, icon, tone = 'tint', style }) 
 | 何时不用 | 纯并列 → BulletList；需要图形化的步骤流 → NumberedStepFlow |
 | 配套 | BarTitle |
 | **来源配色** | **中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）** |
+| 来源脉 `src` | `neutral` · 中性文本层 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -4253,9 +4403,10 @@ export function NoteBand({ children, text, label, icon, tone = 'tint', style }) 
 何时不用：纯并列 → BulletList；需要图形化的步骤流 → NumberedStepFlow
 配套：BarTitle
 来源配色：中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+来源脉：中性文本层 —— 配色必须从该脉的主题取：（无专属色相，随调用页主题）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -4315,6 +4466,7 @@ export function NumberedList({ items = [], columns = 1, start = 1, size = 'md', 
 | 何时不用 | ≤4 节点的仪表盘式渐变环 → CycleFlowDiagram |
 | 配套 | FigCaption, AnnotationPair |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -4327,9 +4479,10 @@ export function NumberedList({ items = [], columns = 1, start = 1, size = 'md', 
 何时不用：≤4 节点的仪表盘式渐变环 → CycleFlowDiagram
 配套：FigCaption, AnnotationPair
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -4430,6 +4583,7 @@ export function AnnotatedCycle({ nodes = [], center, radius = 36, nodeWidth = 32
 | 何时不用 | 交付阶段 → StagePipelineChain；分几步 → NumberedStepFlow |
 | 配套 | FigCaption |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 筛选流程页（实验动作形态）· v0.4 批 |
 
 **提示词**（直接复制）
@@ -4442,9 +4596,10 @@ export function AnnotatedCycle({ nodes = [], center, radius = 36, nodeWidth = 32
 何时不用：交付阶段 → StagePipelineChain；分几步 → NumberedStepFlow
 配套：FigCaption
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -4508,6 +4663,8 @@ export function BeadChain({ steps = [], size = 15, palette = 'tone', caption, st
 | 何时不用 | 有先后 → NumberedStepFlow；线性单一流程 → IconFlowBar（用 ›） |
 | 配套 | FigCaption |
 | **来源配色** | **MCE 化合物库手册 深蓝 #2C6BAA** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-library` · 化合物库深蓝（主色 `#2C6BAA`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE library p06 / p40 / p43「产品组成 / 订购须知」 |
 
 **提示词**（直接复制）
@@ -4520,9 +4677,11 @@ export function BeadChain({ steps = [], size = 15, palette = 'tone', caption, st
 何时不用：有先后 → NumberedStepFlow；线性单一流程 → IconFlowBar（用 ›）
 配套：FigCaption
 来源配色：MCE 化合物库手册 深蓝 #2C6BAA
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-library（化合物库深蓝 · 主色 #2C6BAA）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -4599,6 +4758,8 @@ export function HexChain({ items = [], connector = '+', palette = 'tone', size =
 | 何时不用 | 无先后的并列 → HexChain；顶部实色条的正统框链 → FlowChain |
 | 配套 | FigCaption, NoteBand |
 | **来源配色** | **MCE 化合物库手册 深蓝 #2C6BAA（编号圆用橙 #F09B40）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-library` · 化合物库深蓝（主色 `#2C6BAA`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE library p89「DEL 建库和筛选的流程」 |
 
 **提示词**（直接复制）
@@ -4611,9 +4772,11 @@ export function HexChain({ items = [], connector = '+', palette = 'tone', size =
 何时不用：无先后的并列 → HexChain；顶部实色条的正统框链 → FlowChain
 配套：FigCaption, NoteBand
 来源配色：MCE 化合物库手册 深蓝 #2C6BAA（编号圆用橙 #F09B40）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-library（化合物库深蓝 · 主色 #2C6BAA）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -4694,6 +4857,8 @@ export function NumberedStepFlow({ steps = [], palette = 'tone', size = 'md', ca
 | 何时不用 | 流程步骤 → NumberedStepFlow / FlowChain（本组件表达「位置」，不是「步骤」） |
 | 配套 | StagePipelineChain |
 | **来源配色** | **MCE 化合物库手册 p44 七色相带（青绿→橙 递进）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-library` · 化合物库深蓝（主色 `#2C6BAA`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE library p44 中带 |
 
 **提示词**（直接复制）
@@ -4706,9 +4871,11 @@ export function NumberedStepFlow({ steps = [], palette = 'tone', size = 'md', ca
 何时不用：流程步骤 → NumberedStepFlow / FlowChain（本组件表达「位置」，不是「步骤」）
 配套：StagePipelineChain
 来源配色：MCE 化合物库手册 p44 七色相带（青绿→橙 递进）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-library（化合物库深蓝 · 主色 #2C6BAA）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -4784,6 +4951,8 @@ export function PhaseBand({ stages = [], phases = [], active, axis = true, capti
 | 何时不用 | 一条线的流程 → StagePipelineChain；链与环都表达不了时才用它 |
 | 配套 | AnnotationPair, CategoryTagRow |
 | **来源配色** | **MCE PROTAC 手册 深紫 #5A3A7D（类目条玫红 #DC5973）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-protac` · PROTAC 深紫（主色 `#5A3A7D`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE PROTAC p11 / 药物发现服务册「Building Blocks of Conjugates」 |
 
 **提示词**（直接复制）
@@ -4796,9 +4965,11 @@ export function PhaseBand({ stages = [], phases = [], active, axis = true, capti
 何时不用：一条线的流程 → StagePipelineChain；链与环都表达不了时才用它
 配套：AnnotationPair, CategoryTagRow
 来源配色：MCE PROTAC 手册 深紫 #5A3A7D（类目条玫红 #DC5973）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-protac（PROTAC 深紫 · 主色 #5A3A7D）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -4893,6 +5064,7 @@ export function ServiceNetworkMap({ columns = 3, nodes = [], captions = [], capt
 | 何时不用 | 原始数据图 → EvidenceGrid（EvidenceGrid 是直角平铺无框） |
 | 配套 | FigCaption |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 各册插图区处理方式 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -4905,9 +5077,10 @@ export function ServiceNetworkMap({ columns = 3, nodes = [], captions = [], capt
 何时不用：原始数据图 → EvidenceGrid（EvidenceGrid 是直角平铺无框）
 配套：FigCaption
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -4957,6 +5130,8 @@ export function FigurePanel({ title, caption, children, tone = 'tint', pad = '4m
 | 何时不用 | 无图例的纯插图 → FigurePanel；缺图时渲染「待补插图」占位而非伪科学图 |
 | 配套 | FigCaption, AnnotationPair |
 | **来源配色** | **MCE 化合物库手册 深蓝 #2C6BAA** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
+| **锁定册** `manual` | `mce-library` · 化合物库深蓝（主色 `#2C6BAA`）—— 来源册里它就是这个色，**不要换册** |
 | 来源证据 | MCE library p20 / p57「肿瘤免疫化合物库靶点举例」 |
 
 **提示词**（直接复制）
@@ -4969,9 +5144,11 @@ export function FigurePanel({ title, caption, children, tone = 'tint', pad = '4m
 何时不用：无图例的纯插图 → FigurePanel；缺图时渲染「待补插图」占位而非伪科学图
 配套：FigCaption, AnnotationPair
 来源配色：MCE 化合物库手册 深蓝 #2C6BAA
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
+锁定册：mce-library（化合物库深蓝 · 主色 #2C6BAA）—— 该组件在来源册里就是这个色，不要换册
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -5009,6 +5186,7 @@ export function LegendFigure({
 | 何时不用 | 类目胶囊标签 → CategoryTagRow |
 | 配套 | ScatterClusterPanel |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -5021,9 +5199,10 @@ export function LegendFigure({
 何时不用：类目胶囊标签 → CategoryTagRow
 配套：ScatterClusterPanel
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -5080,6 +5259,7 @@ export function SwatchLegend({ items = [], direction = 'row', align = 'flex-end'
 | 何时不用 | 封面（Cover 自带品牌位）；注意 @page 无 margin box，页眉必须画在 .page 内部 |
 | 配套 | Page, ContactFooterBand |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -5092,9 +5272,10 @@ export function SwatchLegend({ items = [], direction = 'row', align = 'flex-end'
 何时不用：封面（Cover 自带品牌位）；注意 @page 无 margin box，页眉必须画在 .page 内部
 配套：Page, ContactFooterBand
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -5159,6 +5340,7 @@ export function BrandHeaderBar({ brand, tagline, meta, right, rule = true, style
 | 何时不用 | 封底的整页联系页 → BackCover；tone=solid 慎用（内页实底深色破坏 R2） |
 | 配套 | BrandHeaderBar, Page |
 | **来源配色** | **MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）** |
+| 来源脉 `src` | `mce` · MCE 皓元 |
 | 来源证据 | MCE 五册逆向 · v0.4 批 |
 
 **提示词**（直接复制）
@@ -5171,9 +5353,10 @@ export function BrandHeaderBar({ brand, tagline, meta, right, rule = true, style
 何时不用：封底的整页联系页 → BackCover；tone=solid 慎用（内页实底深色破坏 R2）
 配套：BrandHeaderBar, Page
 来源配色：MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+来源脉：MCE 皓元 —— 配色必须从该脉的主题取：mce-library（化合物库手册） / mce-discovery（药物发现服务） / mce-protac（PROTAC 手册） / mce-qms（质量管理体系） / mce-biochem（生化试剂）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；
@@ -5240,6 +5423,7 @@ export function ContactFooterBand({ heading, items = [], tone = 'tint', columns,
 | 何时不用 | 裸放作装饰（R17 图标必入容器）；大幅装饰插画 → FigurePanel |
 | 配套 | StatCardRow, IconFlowBar, IconFeatureList, ChipPillGrid |
 | **来源配色** | **GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）** |
+| 来源脉 `src` | `genscript` · GenScript 金斯瑞 |
 | 来源证据 | GenScript 三册逆向 · R1–R13 期 |
 
 **提示词**（直接复制）
@@ -5252,9 +5436,10 @@ export function ContactFooterBand({ heading, items = [], tone = 'tint', columns,
 何时不用：裸放作装饰（R17 图标必入容器）；大幅装饰插画 → FigurePanel
 配套：StatCardRow, IconFlowBar, IconFeatureList, ChipPillGrid
 来源配色：GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+来源脉：GenScript 金斯瑞 —— 配色必须从该脉的主题取：blue（核酸服务手册） / red（细胞工程服务手册） / purple（蛋白&抗体服务手册） / wine（蛋白手册 · 抗体章）
 
 硬约束：
-· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；
+· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；
 · 不得在页面里写死 hex，一律从主题令牌派生（R4）；
 · 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；
 · 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；

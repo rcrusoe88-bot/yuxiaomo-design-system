@@ -18,6 +18,9 @@
 import { readFileSync, writeFileSync, readdirSync } from 'node:fs'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, join, basename } from 'node:path'
+// 直接读主题注册表 —— 来源脉 / 手册 / 主题 key 的定义只有 themes.js 一份，
+// 在脚本里另抄一遍就是等着漂移。
+import { CORPORA, ORIGIN_KEYS, THEMES } from '../src/lib/themes.js'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const read = (p) => readFileSync(join(ROOT, p), 'utf8').replace(/\r\n/g, '\n')
@@ -25,13 +28,14 @@ const read = (p) => readFileSync(join(ROOT, p), 'utf8').replace(/\r\n/g, '\n')
 /* 非组件导出：与 audit.mjs 的 NON_COMPONENT 保持同一口径 */
 const NON_COMPONENT = new Set([
   'THEMES', 'NEUTRAL', 'getTheme', 'ThemeProvider', 'useTheme', 'useNeutral', 'ICON_NAMES',
+  'CORPORA', 'ORIGIN_KEYS', 'BRAND_THEME_KEYS', 'manualLabel', 'defaultManualOf',
   'pastelRamp', 'toneRamp', 'categoryRamp', 'mixWhite', 'mixBlack', 'shiftHue',
   'hexToRgb', 'rgbToHex', 'rgbToHsl', 'hslToRgb', 'renderRich',
 ])
 
 /* 必需的契约字段（audit 也查这 4 个） */
 export const REQUIRED = ['intent', 'use', 'notfor', 'usage']
-export const OPTIONAL = ['pairs', 'hue', 'evidence', 'since']
+export const OPTIONAL = ['pairs', 'hue', 'src', 'manual', 'evidence', 'since']
 
 /* 族归属：index.js 里每个 `// —— 族 X 名称` 注释统领其后的 export 行。
    少数组件不在任何"族"注释下（Icon），用回退表补。 */
@@ -140,6 +144,21 @@ export function build() {
       const fam = famOf[name]
       if (!fam) issues.push(`${name}：解析不到所属族（index.js 缺"族 X"注释 或 需补 FAMILY_FALLBACK）`)
       for (const k of REQUIRED) if (!c[k]) issues.push(`${name}：契约缺必需字段 ${k}`)
+      // src（来源脉）是 R23 的机器可读依据：缺了它，下游只能按默认色渲染 = 全变蓝
+      if (!c.src) issues.push(`${name}：契约缺 src（来源脉，取值 ${ORIGIN_KEYS.join(' / ')}）`)
+      else if (!ORIGIN_KEYS.includes(c.src)) issues.push(`${name}：src="${c.src}" 不是合法来源脉（应为 ${ORIGIN_KEYS.join(' / ')}）`)
+      // manual（锁定册）是可选的细粒度补充；写了就必须与 src 同脉，否则等于把 A 脉的色安到 B 脉的组件上
+      if (c.manual) {
+        if (!THEMES[c.manual]) issues.push(`${name}：manual="${c.manual}" 不是 themes.js 里的主题 key`)
+        else if (THEMES[c.manual].corpus !== c.src) {
+          issues.push(`${name}：manual="${c.manual}" 属 ${THEMES[c.manual].corpus} 脉，与 src="${c.src}" 不符`)
+        }
+      }
+
+      const corpus = CORPORA[c.src] || null
+      const manualList = corpus && corpus.manuals.length
+        ? corpus.manuals.map((m) => `${m.key}（${m.label}）`).join(' / ')
+        : '（无专属色相，随调用页主题）'
 
       const usage = c.usage || `<${name} />`
       const prompt = [
@@ -149,9 +168,13 @@ export function build() {
         `何时用：${c.use || '（未标注）'}`,
         `何时不用：${c.notfor || '（未标注）'}${c.pairs ? `\n配套：${c.pairs}` : ''}`,
         `来源配色：${c.hue || '随主题'}`,
+        `来源脉：${corpus ? corpus.label : '无'} —— 配色必须从该脉的主题取：${manualList}`,
+        ...(c.manual
+          ? [`锁定册：${c.manual}（${THEMES[c.manual].name} · 主色 ${THEMES[c.manual].functional}）—— 该组件在来源册里就是这个色，不要换册`]
+          : []),
         ``,
         `硬约束：`,
-        `· 配色取自**来源手册色相或调用页主题**，不得把配色统一成蓝色（R23）；`,
+        `· 配色取自**该组件的来源脉主题**，不得换成别的脉、也不得统一成蓝色（R23）；`,
         `· 不得在页面里写死 hex，一律从主题令牌派生（R4）；`,
         `· 一站一拓扑：同一语义全册只用这一种拓扑，不同语义不得共用（R14）；`,
         `· 唯一允许的文本高亮是行内加粗 **x**，不加色、不加底、不加下划线；`,
@@ -167,6 +190,7 @@ export function build() {
         familyName: FAMILY_META[fam] || '',
         file: `src/lib/${f}`,
         since: c.since || '—',
+        origin: corpus ? corpus.label : '',
         import: `import { ${name} } from './src/lib'`,
         signature: params,
         props,
@@ -176,6 +200,8 @@ export function build() {
           notfor: c.notfor || '',
           pairs: c.pairs || '',
           hue: c.hue || '',
+          src: c.src || '',
+          manual: c.manual || '',
           evidence: c.evidence || '',
         },
         usage,
@@ -209,6 +235,12 @@ export function build() {
     generatedBy: 'scripts/registry.mjs',
     note: '契约唯一真相源是 src/lib/*.jsx 里的 /* @ds-contract */；本文件是它的投影，请勿手改。',
     counts: { components: components.length, families: families.length, rules },
+    // 来源脉 —— 组件契约里的 src 指向这里；「脉 → 册」由调用方决定（同脉内换册不换结构）
+    corpora: CORPORA,
+    originKeys: ORIGIN_KEYS,
+    themes: Object.fromEntries(
+      Object.entries(THEMES).map(([k, t]) => [k, { name: t.name, corpus: t.corpus, manual: t.manual, functional: t.functional }])
+    ),
     families,
     components,
   }
@@ -230,7 +262,20 @@ export function build() {
   L.push('| R14 | 一站一拓扑 | 同一语义全册只用一种拓扑；不同语义绝不共用 |')
   L.push('| R16 | 两种表格语体不混 | 营销参数表 `SpecTable` ↔ 技术数据表 `InstrumentReportPanel` |')
   L.push('| R22 | 类目色纪律 | 多档配色默认同色相（`tone`）；跨色相须显式且全册锁定 |')
-  L.push('| **R23** | **配色随来源，不随默认** | **组件保持其来源手册的色相（见每节「来源配色」）；不得把所有组件统一成蓝色** |')
+  L.push('| **R23** | **配色随来源，不随默认** | **组件的配色由它的来源脉（`src`）决定；不得把所有组件统一成蓝色。每条组件的来源脉见下表** |')
+  L.push('')
+  L.push('### 组件来源脉（`src`）—— R23 的机器可读依据')
+  L.push('')
+  L.push('| `src` | 来源 | 该脉可选主题（「脉内换册」只换主色、不换结构） |')
+  L.push('|---|---|---|')
+  for (const k of ORIGIN_KEYS) {
+    const c = CORPORA[k]
+    const ms = c.manuals.length ? c.manuals.map((m) => `\`${m.key}\` ${m.label}`).join(' · ') : `—（${c.note}）`
+    L.push(`| \`${k}\` | ${c.label} | ${ms} |`)
+  }
+  L.push('')
+  L.push('> 用法：先读组件的 `src`，再从该脉选一册主题，**整份文档只用所选那一册**（R1 一册一色相）。')
+  L.push('> 不要用 A 脉的册去渲染 B 脉的组件 —— 那正是「全部变蓝」的成因。')
   L.push('')
   L.push('---')
   L.push('')
@@ -249,6 +294,11 @@ export function build() {
       L.push(`| 何时不用 | ${c.contract.notfor} |`)
       if (c.contract.pairs) L.push(`| 配套 | ${c.contract.pairs} |`)
       L.push(`| **来源配色** | **${c.contract.hue || '随主题'}** |`)
+      if (c.contract.src) L.push(`| 来源脉 \`src\` | \`${c.contract.src}\`${c.origin ? ' · ' + c.origin : ''} |`)
+      if (c.contract.manual) {
+        const t = THEMES[c.contract.manual]
+        L.push(`| **锁定册** \`manual\` | \`${c.contract.manual}\` · ${t.name}（主色 \`${t.functional}\`）—— 来源册里它就是这个色，**不要换册** |`)
+      }
       if (c.contract.evidence) L.push(`| 来源证据 | ${c.contract.evidence} |`)
       L.push('')
       L.push('**提示词**（直接复制）')

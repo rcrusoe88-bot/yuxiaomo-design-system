@@ -40,6 +40,7 @@ export function renderRich(text) {
  * notfor:   图上方的标题 → FigurePanel 的 title；正文段落 → BodyText
  * pairs:    FigurePanel, FigurePanel 内容
  * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * src:       neutral
  * evidence: MCE 五册逆向（原页图注在右下角加粗深灰）
  * since:    v0.4
  * usage:    <FigCaption tone="strong">图 1  LNP 粒径与 PDI 分布</FigCaption>
@@ -68,6 +69,7 @@ export function FigCaption({ children, tone = 'strong', align, style }) {
  * notfor:   分点罗列 → BulletList / NumberedList；多栏仅用于无小标题的连续论述
  * pairs:    FigCaption, BarTitle
  * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * src:       neutral
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <BodyText text="LNP 由四种脂质组分自组装而成，**可电离脂质**决定内体逃逸效率。" columns={2} />
@@ -98,6 +100,7 @@ export function BodyText({ text, children, columns = 1, size = 'lg', justify = t
  * notfor:   有先后顺序 → NumberedList；实验动作序列 → BeadChain
  * pairs:    BarTitle, DefinitionList
  * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * src:       neutral
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <BulletList items={['**粒径** 80–120 nm', 'PDI ≤ 0.2']} columns={2} />
@@ -133,6 +136,7 @@ export function BulletList({ items = [], columns = 1, size = 'md', marker = '•
  * notfor:   纯并列 → BulletList；需要图形化的步骤流 → NumberedStepFlow
  * pairs:    BarTitle
  * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * src:       neutral
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <NumberedList items={['质粒构建', '体外转录', 'LNP 包封']} />
@@ -172,6 +176,7 @@ export function NumberedList({ items = [], columns = 1, start = 1, size = 'md', 
  * notfor:   属性→取值清单（要底色与可读性优先）→ KeyValueTable；不需要表格语义时用本组件
  * pairs:    BarTitle
  * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * src:       neutral
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <DefinitionList items={[{ term: 'LNP', en: 'Lipid nanoparticle', desc: '脂质纳米颗粒' }]} />
@@ -210,6 +215,7 @@ export function DefinitionList({ items = [], termWidth = '30mm', size = 'md', ru
  * notfor:   页脚最末的 * 小字 → Footnotes（NoteBand 在版心内，Footnotes 在页脚）
  * pairs:    Footnotes, ConclusionBanner
  * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * src:       neutral
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <NoteBand icon="gear" label="为什么" text="**PEG-脂质**过量会降低细胞摄取。" />
@@ -249,6 +255,7 @@ export function NoteBand({ children, text, label, icon, tone = 'tint', style }) 
  * notfor:   通栏连续段落 → BodyText；需要左右分栏对照 → 用两列网格包 BodyText
  * pairs:    ServiceNetworkMap, LegendFigure
  * hue:      中性文本层 · 不引入色相（正文 #414042 / 次级 #808080）
+ * src:       neutral
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <AnnotationPair cn="现象：粒径随 N/P 比下降" en="Particle size decreases with N/P ratio" />

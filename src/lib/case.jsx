@@ -9,6 +9,7 @@ import { useTheme, useNeutral } from './theme'
  * notfor:   客户评价背书 → TestimonialCard
  * pairs:    EvidenceGrid, MetricStrip
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <CaseBlock title="难表达蛋白的 mRNA 优化" facts={[{ k: '技术难点', v: 'GC 含量过高' }]} />
@@ -35,6 +36,7 @@ export function CaseBlock({ title, facts }) {
  * notfor:   精修示意图 / 通路图 → FigurePanel / LegendFigure
  * pairs:    CaseBlock, FigCaption
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <EvidenceGrid images={[{ src: '/assets/if_1.png', caption: '图 1  免疫荧光' }]} cols={3} />
@@ -74,6 +76,7 @@ export function EvidenceGrid({ images, note, highlight, cols }) {
  * notfor:   单序列排行 → TargetBarChart；多面板小倍数 → PanelBarChart
  * pairs:    FunnelStages
  * hue:      GenScript · 双系列（浅档 capsuleLight + 深档 functional），对照橙 #E8963C
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <DataChart groups={[{ label: 'L1', a: 62, b: 88 }]} seriesNames={['未优化', '优化后']} unit="%" />

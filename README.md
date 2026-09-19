@@ -36,7 +36,7 @@ yuxiaomo-design-system/
 │   └── styles.css              # 基础样式 + A4 打印规则
 ├── registry.json               # ⭐ 机器可读契约（由源码生成）：Agent 精确选型入口
 ├── examples/                   # 出品样例（PDF）
-├── scripts/                    # 校验 / 生成 / 运维脚本（audit, verify, density, registry, shot-page, fix-tracking-ref, api-push）
+├── scripts/                    # 校验 / 生成 / 运维脚本（audit, verify, density, registry, contract-src, demo-wrap-src, shot-page, fix-tracking-ref, api-push）
 ├── shot.cjs / export-pdf.cjs   # 截图 / A4 PDF 导出脚本
 └── package.json
 ```
@@ -64,17 +64,33 @@ npm run audit                                                              # 文
 
 **要"复制提示词"**：`node node_modules/vite/bin/vite.js --port 5175` 后打开 **`/?app=registry`**（组件提示词实验室）。
 
-## 主题一览（`src/lib/themes.js`）
+## 主题一览（`src/lib/themes.js`，10 套 / 3 条脉）
 
-| key | 名称 | 主色 | 深底 | 来源 |
-|---|---|---|---|---|
-| `blue` | 深海蓝 | `#019EDB` | `#006CB1` | 参考手册逆向 |
-| `red` | 信号红 | `#EE3451` | `#701E20` | 参考手册逆向 |
-| `purple` | 学术紫 | `#682E79` | `#2C1736` | 参考手册逆向 |
-| `wine` | 酒红 | `#EE3250` | `#6F1D1F` | 参考手册逆向 |
-| `yuantai` | 远泰红 | `#D80000` | `#606060` | 现实项目（红 + 深灰） |
+主题按**来源脉**组织。组件不绑定主题，只声明自己属于哪条脉（契约 `src`），由调用方选册 —— 「一套语言 × 多套主题」。
 
-每套主题含 7 个角色：`functional` / `header` / `dark` / `tint` / `zebra` / `capsuleLight` / `capsuleDeep`，外加 `ramp`（时间轴递变色带）。**加一家新公司 = 往 `themes.js` 加 8 行。**
+| key | 名称 | 主色 | 深底 | 来源脉 | 对应手册 |
+|---|---|---|---|---|---|
+| `blue` | 深海蓝 | `#019EDB` | `#006CB1` | GenScript | 核酸服务手册 |
+| `red` | 信号红 | `#EE3451` | `#701E20` | GenScript | 细胞工程服务手册 |
+| `purple` | 学术紫 | `#682E79` | `#2C1736` | GenScript | 蛋白&抗体服务手册 |
+| `wine` | 酒红 | `#EE3250` | `#6F1D1F` | GenScript | 蛋白手册 · 抗体章 |
+| `mce-library` | 化合物库深蓝 | `#2C6BAA` | `#2670B8` | MCE | 化合物库手册 |
+| `mce-discovery` | 药物发现紫 | `#574DA0` | `#030017` | MCE | 药物发现服务 |
+| `mce-protac` | PROTAC 深紫 | `#5A3A7D` | 派生 | MCE | PROTAC 手册 |
+| `mce-qms` | QMS 珊瑚红 | `#F16366` | `#120E0F` | MCE | 质量管理体系 |
+| `mce-biochem` | 生化试剂青 | `#2995B3` | 派生 | MCE | 生化试剂 |
+| `yuantai` | 远泰红 | `#D80000` | `#606060` | 品牌 | 远泰品牌手册（成稿换肤用） |
+
+每套主题含 7 个角色：`functional` / `header` / `dark` / `tint` / `zebra` / `capsuleLight` / `capsuleDeep`，外加 `ramp`（时间轴递变色带）。
+**加一家新公司 = 往 `themes.js` 加 8 行。** 加一条**新来源脉**则需要同时登记 `CORPORA` —— 少做这一步，该脉的组件就会静默落到默认蓝（v0.4 的真实事故，见 `references/rules.md` R23）。
+
+**陈列页两种配色视角**（状态存在 URL 里，可分享）：
+
+```
+/                                    来源模式（默认）— 每个演示块按自己的来源脉取色
+/?mce=mce-qms&gs=red                 把 MCE 侧换成质量管理体系、GenScript 侧换成细胞工程
+/?mode=brand&brand=yuantai           品牌模式 — 全册统一换肤，看成稿效果
+```
 
 ## 组件总览（71 个，14 族）
 
@@ -101,13 +117,21 @@ npm run audit                                                              # 文
 另有色彩工具 `toneRamp` / `categoryRamp` / `pastelRamp` / `mixWhite` / `mixBlack` / `shiftHue`
 与文本工具 `renderRich`（行内加粗 = 唯一允许的文本高亮）：让组件从主题令牌**派生**浅色系，而非写死 hex。
 
-## 精确复用：契约 → registry → 提示词包（v0.4.1）
+## 精确复用：契约 → registry → 提示词包（v0.4.1 / v0.5）
 
 **问题**：Agent 复现一页时读的是**文档**，不是源码。文档一旦与代码脱钩，Agent 就会"照抄一个不存在的属性"。
 v0.4.0 交付复核时实测：`references/components.md` 有 **18 个组件**的签名写了源码里根本没有的属性
 （`BlockTitle` 的 `text`、`ContactFooterBand` 的 `contacts`、`BrandHeaderBar` 的 `logo`/`pageNo`、
 `MethodTable` 的 `columns`、`TocList` 的 `leaders`、`MetricStrip` 的 `highlight` …）。
 `npm run build` 完全查不出来 —— 因为**没人拿文档去跑**。这就是"输出质量漂移"的根因。
+
+v0.5 补上第二类漂移：**配色漂移**。属性写错会报错，配色写错**不会** —— 组件照样渲染，只是颜色不对。
+所以契约里多了两个字段，专门描述"这个组件本来长什么颜色"：
+
+| 字段 | 取值 | 含义 | 缺了会怎样 |
+|---|---|---|---|
+| `src` | `genscript` / `mce` / `neutral` | 来源脉（必填） | 下游只能按默认色渲染 → **全部变蓝** |
+| `manual` | 主题 key，如 `mce-protac`（可选） | 锁定到具体某一册 | 该组件会被画成"脉里第一册"的色，而非它真实的来源册 |
 
 **解法：把契约放进源码，其余产物全部生成。**
 
@@ -170,6 +194,8 @@ src/lib/*.jsx
 
 | `scripts/registry.mjs` | `npm run registry` | **从源码生成两份可复用产物**：`registry.json`（机器可读契约：语义/禁用/来源配色/真实 props/用法/源码）+ `references/prompt-pack.md`（人的复制粘贴包）。**不要手改这两份产物** —— 它们是 `src/lib/*.jsx` 里 `@ds-contract` 的投影，改源码后重新生成即可。 |
 | `scripts/shot-page.cjs` | `node scripts/shot-page.cjs <port> <path> <outPrefix>` | **整页截图（非 A4 页）**：抓工具页 / 提示词实验室（`/?app=registry`）的首屏与整页两张图。`shot.cjs` 只遍历 `.bds-page`，对工具页输出 "A4 pages found: 0"，所以需要这个。 |
+| `scripts/contract-src.py` | `python scripts/contract-src.py [--apply]` | **契约 `src` / `manual` 字段的推导与写入**（幂等，可对新增组件重跑）。从 `hue` 文本派生来源脉与锁定册 —— 规则里有一条例外条款很关键：hue 写了「随册/多册/五册/各册」的组件是**跨册复用**，**不许**锁定到某一册（否则把它的通用性丢了）。写完自带字段位置自检。 |
+| `scripts/demo-wrap-src.py` | `python scripts/demo-wrap-src.py [--apply]` | **给陈列页的演示单元套 `<SrcBlock>`**（幂等）。演示单元的结构规整（`<RuleTitle>` 引领、到下一个 `<RuleTitle>` 或 `</Page>` 结束），所以可以自动配对；手改 32 处 = 32 次可能打错，而且以后新增演示单元必漏。 |
 
 > `npm run build` 只保证代码能编译，**不保证文档没写错数**——改完文档或加了组件后跑一次 `npm run audit`。
 
@@ -209,6 +235,16 @@ src/lib/*.jsx
 不得把不同来源的组件统一成蓝色 —— 五册实测色相本就各不相同：library 深蓝 `#2C6BAA` / PROTAC 深紫 `#5A3A7D` /
 qms 珊瑚红 `#F16366` / 生化试剂 青 `#2995B3` / 药物发现 紫 `#574DA0`）。
 这一批修掉了 18 个组件的文档签名漂移，并新增 4 条机械校验把漂移变成退出码。
+
+**第五批 · 让组件回到它本来的颜色（v0.5）** —— 把 R23 从一条"愿望"变成可校验的结构。
+起因：陈列页 13 页**全部渲染成 `#019EDB`**。但根因不是"忘了换主题"，而是 **`themes.js` 当时只实现了 GenScript 一条来源脉**，
+而 36 个组件在契约里声明自己源自 MCE 五册 —— 它们的来源色在系统里**根本不存在**，只能落到默认蓝。
+`npm run build` 通过、`audit` 通过，全都查不出来，因为没有任何检查会去对撞"声明的脉"与"存在的主题"。
+
+这一批做了三件事：① 补齐 **5 套 MCE 来源主题**（实测值取样，缺失角色由 `derived()` 派生）；
+② 契约新增 `src`（来源脉）与 `manual`（锁定册）两个机器可读字段，`npm run registry` 会拒收缺 `src` 或脉册不符的组件；
+③ `audit` 新增「来源脉闭环」检查，陈列页改成**来源模式**（每个演示块按自己的脉取色，标「锁定」的由契约钉死）
++ **品牌模式**（全册统一换肤）。
 
 完整逆向报告：`行业参考手册库/GenScript_金斯瑞/设计元素完整清单_GenScript.md`、`行业参考手册库/MCE_皓元/设计元素完整清单_MCE.md`。
 方法可复用：《手册设计元素提炼提示词.md》。

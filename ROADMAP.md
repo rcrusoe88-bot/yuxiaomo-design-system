@@ -55,7 +55,31 @@
 - [x] 文档全量同步（components / README / SKILL / rules / checklist），`npm run audit` 全绿
 - [ ] **仍未做**：`examples/components-v0.4.pdf` 之外的样例更新；族 K/M/N/O 的真实项目验证（下一个真实手册项目里跑）
 
-## v0.5 — 按真实项目补齐
+## v0.5 — 来源脉补全（已完成，2026-09-19）
+
+> 触发原因：你看到 v0.4 的「组件模板」13 页**全是同一种蓝**，要求"组件保留原有的风格及配色"。
+> 排查结论：不是忘了换主题，而是 `themes.js` 只实现了 GenScript 一条脉，
+> MCE 五册的 36 个组件**在系统里根本没有色可取** —— 只能落到默认 blue。
+
+- [x] **补齐第二条来源脉**：`themes.js` 新增 5 套 MCE 主题（`mce-library` `#2C6BAA` /
+      `mce-discovery` `#574DA0` / `mce-protac` `#5A3A7D` / `mce-qms` `#F16366` / `mce-biochem` `#2995B3`），
+      实测值取自 MCE 逆向清单第〇节，未覆盖的角色走 `derived(f)` 统一派生（不手工编 hex）
+- [x] **`CORPORA` 来源脉索引**：脉 → 册 → 主题 key 的单一真相源，`registry` / `audit` 直接 import
+- [x] **契约新增 `src`（来源脉，必填）+ `manual`（锁定册，可选）**：71 个组件全补齐
+      （genscript 28 / mce 35 / neutral 8；16 个锁定到具体册）
+- [x] **`audit` 新增「来源脉闭环」**：每条脉的每一册必须有主题、`theme.corpus` 必须回指、
+      `manual` 必须与 `src` 同脉 —— **这条检查在 v0.4 会当场报错**
+- [x] **陈列页拆两种配色视角**：来源模式（每块按自己脉取色 + 徽标显示「脉·册·hex」，锁定的标「锁定」）
+      与品牌模式（全册统一换肤）；状态写入 URL 可分享复现
+- [x] `src` / `manual` 进入 `prompt-pack.md` 与 `registry.json`，并新增「组件来源脉」总表
+- [x] 文档同步（tokens / rules / checklist / README / SKILL）+ `npm run audit` 全绿
+- [x] `shot.cjs` / `export-pdf.cjs` 支持指定配色状态路径（原来写死 `/`，无法导出换色版本）
+
+- [x] 重出样例 PDF：`examples/components-v0.5-source.pdf`（来源模式，每块各自取色）
+      与 `examples/components-v0.5-brand-yuantai.pdf`（品牌模式，全册远泰红）—— 13 页无尾页
+- [ ] **仍未做**：`accent`（MCE 第二色）仍未接进组件 —— 受 R1（一册一色相）压制，这是**有意的**，不是漏做
+
+## v0.6 — 按真实项目补齐
 
 - [ ] 用本系统完整做一版公司手册，记录"哪一页找不到对应原型 / 组件"
 - [ ] 按缺口补 T01–T07 模板与 E04+ 元素
@@ -63,7 +87,7 @@
 - [ ] `checklist.md` 的半自动校验脚本（色相越界检测 / 组件白名单扫描 / 一页多胶囊检测）
   - 注：v0.4 已解决其中最要命的一项（**溢出**，见 `verify.cjs`），剩下的色彩/白名单扫描可在此基础上扩展
 
-## v0.6 — 载体与形态
+## v0.7 — 载体与形态
 
 - [ ] **本地 skill 化**：把 `SKILL.md` 装到 `~/.workbuddy/skills/`，让 Agent 自动触发（当前需手动指路）
 - [ ] 载体 B：Web 产品落地页（同令牌、px 栅格）

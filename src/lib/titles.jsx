@@ -40,6 +40,8 @@ const SUB_SIZE = { 1: '13pt', 2: '11pt', 3: '9.5pt' }
  * notfor:   当页题使用（它是眉，不是题）→ PairTitle / BlockTitle
  * pairs:    PairTitle
  * hue:      MCE 化合物库手册 橙 #F09B40（编号 / 文献专用）
+ * src:       mce
+ * manual:    mce-library
  * evidence: MCE 五册逆向（原页橙色 10pt，本系统改主色以守 R1）
  * since:    v0.4
  * usage:    <EyebrowTitle items={['第 3 章', '检测服务']} />
@@ -76,6 +78,7 @@ export function EyebrowTitle({ items = [], align = 'left', divider = '·', tone 
  * notfor:   一页出现两个 H1；硬朗技术感页题 → BlockTitle
  * pairs:    EyebrowTitle, BarTitle
  * hue:      MCE 多册 · 色相随册（library #2C6BAA / qms #F16366），形态不变
+ * src:       mce
  * evidence: MCE library p3/p6/p7/p45/p89 与 qms 全线
  * since:    v0.4
  * usage:    <PairTitle cn="质粒与病毒载体质控" en="Plasmid & vector QC" />
@@ -113,6 +116,7 @@ export function PairTitle({ cn, en, eyebrow, align = 'left', size = 'md', style 
  * notfor:   收口式单点承诺 → PillTitle（胶囊只允许一页 1 个，方块允许 2 个）
  * pairs:    OutlineTitle（并置形成主次对照）
  * hue:      GenScript 胶囊型 → 直角变体 · 随主题
+ * src:       genscript
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <BlockTitle en="Analytical development">分析方法开发</BlockTitle>
@@ -154,6 +158,7 @@ export function BlockTitle({ children, en, tone = 'solid', size = 'md', width, i
  * notfor:   需要强调的页题 → BlockTitle
  * pairs:    BlockTitle
  * hue:      BlockTitle 轻量变体 · 随主题（描边+主色字，不加新色）
+ * src:       genscript
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <OutlineTitle en="Add-on services">配套服务</OutlineTitle>
@@ -188,6 +193,8 @@ export function OutlineTitle({ children, en, size = 'md', align = 'left', width,
  * notfor:   与 RuleTitle 混用（全册 H2 只用一种）；页题 → H1 系列
  * pairs:    RuleTitle（二选一，不可并用）
  * hue:      MCE library p8 青色 #58C6CE（本系统改用主题主色以守 R1）
+ * src:       mce
+ * manual:    mce-library
  * evidence: MCE library p8（原页 12pt 青色小标题，改主色守 R1）
  * since:    v0.4
  * usage:    <BarTitle en="Workflow" level={2}>服务流程</BarTitle>
@@ -223,6 +230,7 @@ export function BarTitle({ children, sub, en, level = 2, style }) {
  * notfor:   与 BarTitle 混用；页题 → H1 系列
  * pairs:    BarTitle（二选一，不可并用）
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <RuleTitle en="Process parameters">工艺参数</RuleTitle>
@@ -258,6 +266,8 @@ export function RuleTitle({ children, en, note, align = 'left', ruleWidth = '14m
  * notfor:   无序内容 → BarTitle；纯粹的小节划分 → RuleTitle
  * pairs:    TocList
  * hue:      MCE 化合物库手册（编号色 = 分区主题色 #2C6BAA 的 tint）
+ * src:       mce
+ * manual:    mce-library
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <NumberedTitle index={1} total={6} en="Analytical development">分析开发</NumberedTitle>

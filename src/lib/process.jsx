@@ -21,6 +21,7 @@ function FigCaption({ children, align = 'center' }) {
  * notfor:   多入口汇聚的网络 → ServiceNetworkMap；实验动作 → BeadChain
  * pairs:    PhaseBand, FlowChain
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.3 批
  * since:    v0.3
  * usage:    <StagePipelineChain stages={['设计', '合成', '包封', '放行']} spectrum={['CRO', 'CDMO']} />
@@ -89,6 +90,7 @@ export function StagePipelineChain({ stages = [], spectrum, caption, nodeSize = 
  * notfor:   等量并列的多步 → NumberedStepFlow
  * pairs:    DataChart, TargetBarChart
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.3 批
  * since:    v0.3
  * usage:    <FunnelStages stages={[{ method: 'DEL', label: '初筛', value: '10⁹' }]} />
@@ -141,6 +143,7 @@ export function FunnelStages({ stages = [], caption, minWidth = 42, style }) {
  * notfor:   3–8 节点的叙述式闭环 → AnnotatedCycle（本组件最多 4 个节点）
  * pairs:    ComboEquationDiagram
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.3 批
  * since:    v0.3
  * usage:    <CycleFlowDiagram nodes={[{ label: '设计', icon: 'gear' }]} center={{ label: '迭代优化' }} />
@@ -214,6 +217,7 @@ export function CycleFlowDiagram({ nodes = [], center, caption, size = 52, strok
  * notfor:   并列条件（A 且 B 且 C，无产物）→ HexChain
  * pairs:    CycleFlowDiagram
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.3 批
  * since:    v0.3
  * usage:    <ComboEquationDiagram left={{ title: '脂质组分', items: ['可电离脂质'] }} right={{ title: 'mRNA', items: ['IVT 产物'] }} result={{ title: 'mRNA-LNP', items: ['成品'] }} />

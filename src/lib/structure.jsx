@@ -10,6 +10,7 @@ import { Icon } from './icons'
  * notfor:   内页（内页禁止满版深底 R2）→ Page；章节开篇 → SectionDivider；封底 → BackCover
  * pairs:    CapsuleDecor（内置，preset=cover）
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <Cover title="mRNA-LNP 一站式 CDMO 服务" enTitle="mRNA-LNP CDMO Services" tagline="从序列设计到制剂灌装" logo={logoImg} />
@@ -48,6 +49,7 @@ export function Cover({ title, enTitle, logo, tagline, children, style }) {
  * notfor:   内容页 → Page；封面/封底 → Cover / BackCover
  * pairs:    IslandBulletGrid（岛内容）
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <SectionDivider chapterNo="02" title="检测服务" lead="覆盖质粒、病毒载体与 LNP 的全流程质控">{岛内容}</SectionDivider>
@@ -83,6 +85,7 @@ export function SectionDivider({ chapterNo, title, lead, children, style }) {
  * notfor:   内页正文列举 → BulletList；多产品参数对照 → SpecTable
  * pairs:    SectionDivider
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <IslandBulletGrid groups={[{ title: '质粒质控', bullets: ['酶切图谱', '全长测序'] }]} />
@@ -112,6 +115,7 @@ export function IslandBulletGrid({ groups }) {
  * notfor:   内页底部联系带 → ContactFooterBand
  * pairs:    CapsuleDecor（内置，preset=backcover）
  * hue:      GenScript 三册 · 随主题（蓝 #019EDB / 红 #EE3451 / 紫 #682E79）
+ * src:       genscript
  * evidence: GenScript 三册逆向 · R1–R13 期
  * since:    v0.1
  * usage:    <BackCover contacts={[{ type: 'mail', text: 'service@yuantai.com' }]} version="v2.0 · 2026.09" />

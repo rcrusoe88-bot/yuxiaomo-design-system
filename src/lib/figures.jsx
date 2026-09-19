@@ -26,6 +26,7 @@ import { mixWhite } from './color'
  * notfor:   原始数据图 → EvidenceGrid（EvidenceGrid 是直角平铺无框）
  * pairs:    FigCaption
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 各册插图区处理方式 · v0.4 批
  * since:    v0.4
  * usage:    <FigurePanel title="LNP 结构" caption="图 3  四组分自组装">{插图}</FigurePanel>
@@ -62,6 +63,8 @@ export function FigurePanel({ title, caption, children, tone = 'tint', pad = '4m
  * notfor:   无图例的纯插图 → FigurePanel；缺图时渲染「待补插图」占位而非伪科学图
  * pairs:    FigCaption, AnnotationPair
  * hue:      MCE 化合物库手册 深蓝 #2C6BAA
+ * src:       mce
+ * manual:    mce-library
  * evidence: MCE library p20 / p57「肿瘤免疫化合物库靶点举例」
  * since:    v0.4
  * usage:    <LegendFigure title="肿瘤免疫靶点" items={[{ label: 'PD-L1', side: 'left' }]} />
@@ -141,6 +144,7 @@ function LegendStack({ items, fallback, align, colorOf }) {
  * notfor:   类目胶囊标签 → CategoryTagRow
  * pairs:    ScatterClusterPanel
  * hue:      MCE 五册 · 随册主题（library #2C6BAA / PROTAC #5A3A7D / qms #F16366 …）
+ * src:       mce
  * evidence: MCE 五册逆向 · v0.4 批
  * since:    v0.4
  * usage:    <SwatchLegend items={[{ color: '#7EC0EE', label: '质粒服务' }]} />
