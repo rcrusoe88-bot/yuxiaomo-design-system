@@ -36,7 +36,7 @@ yuxiaomo-design-system/
 │   └── styles.css              # 基础样式 + A4 打印规则
 ├── registry.json               # ⭐ 机器可读契约（由源码生成）：Agent 精确选型入口
 ├── examples/                   # 出品样例（PDF）
-├── scripts/                    # 校验脚本（audit / verify / density / api-push）
+├── scripts/                    # 校验 / 生成 / 运维脚本（audit, verify, density, registry, shot-page, fix-tracking-ref, api-push）
 ├── shot.cjs / export-pdf.cjs   # 截图 / A4 PDF 导出脚本
 └── package.json
 ```
@@ -164,6 +164,7 @@ src/lib/*.jsx
 |---|---|---|
 | `scripts/audit.mjs` | `npm run audit` | **一致性校验**：核对文档声明的组件/规则/原型/模板数量与代码实际是否一致；检查组件文档双向覆盖、编号无缺号、命名空间无越界、被引用的文件都存在。不一致退出码 1。 |
 | `scripts/api-push.py` | `python scripts/api-push.py <sha>` | **应急推送**：当本机代理把 `github.com` 隧道拦掉（502）、`git push` 不可用时，改用 GitHub Git Data API 原样推送已有提交（完整复刻 author/committer，**生成相同 sha**，不留分叉）。 |
+| `scripts/fix-tracking-ref.py` | `python scripts/fix-tracking-ref.py --verify` | **重建 `origin/main` 跟踪引用**。本机 git 写不进这个引用：`git push`/`fetch` 都**报成功**却不落盘，还会把手建的引用**删掉**，于是 `git status` 永远显示 `## main...origin/main [gone]`。→ **每次 push/fetch 之后跑一次**。`--verify` 会先用 `gh api` 核对远端真实 sha 再落盘。 |
 | `scripts/verify.cjs` | `npm run verify` | **A4 溢出与运行时校验**：逐页比对 `scrollHeight` vs `clientHeight`。**为什么必须有它**——分页骨架里每页是 `height:297mm; overflow:hidden`，内容超高**不会报错、只会被静默裁掉**，构建通过 ≠ 页面没被裁。同时收集 console 报错与 React 警告。须带 `NODE_PATH` 运行（见文件头注释）。 |
 | `scripts/density.cjs` | `npm run density` | **逐页密度校验**：量每页正常流内容占高（**排除 absolute 的页码**，否则每页都量成 96.6%）。`verify` 查"超出"（是错误），`density` 查"没填满"（是质量问题）——一个 A4 页只占 52% 高度时构建通过、无报错、截图也不崩，但印出来就是半页空白。不在 70–93% 区间即提示；**永远退出 0**，不挡构建。 |
 
