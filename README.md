@@ -1,15 +1,18 @@
-# Yuxiaomo Design System · 个人产品页设计系统
+# Yuxiaomo Design System · 公司产品服务手册设计系统
 
-> **一套设计语言 × 无限品牌主题。** 为任意公司设计产品页/产品手册时，Agent 参照本系统即可稳定输出——不发散、不产生 AI slop。
+> **一套设计语言 × 无限品牌主题。** 为公司产品与服务设计手册时，Agent 参照本系统即可稳定输出——不发散、不产生 AI slop。
 
-本系统由三部分构成：**可命名的审美规则**（rules）、**可复用的 React 组件**（components）、**可套用的版式原型**（layouts）。三者与品牌主题令牌解耦，换公司只换主题。
+**定位**：公司产品手册 / 服务手册 / 产品宣传册，主载体 **A4 印刷页（210×297mm）→ PDF 交付**。Web 落地页为规划中的第二载体。
+
+本系统由三部分构成：**可命名的审美规则**（rules）、**可复用的 React 组件**（components）、**可套用的版式原型**（layouts）。三者与品牌主题令牌解耦，换公司只换主题。系统会持续生长——新增能力的规范见 `references/extending.md`。
 
 ## 目录结构
 
 ```
 yuxiaomo-design-system/
-├── SKILL.md                    # ⭐ AI 入口：工作流 + 硬约束 + 反模式
+├── SKILL.md                    # ⭐ AI 入口：工作流 + 硬约束 + 反模式 + 扩展速查
 ├── README.md                   # 本文件：人的入口
+├── ROADMAP.md                  # 路线图：已完成 / 待补 / backlog
 ├── design-language.md          # 设计基因：为什么这样设计
 ├── references/                 # 被参照的规范（Agent 按需读）
 │   ├── rules.md                # 13 条可命名审美规则
@@ -17,16 +20,24 @@ yuxiaomo-design-system/
 │   ├── components.md           # 24 个组件的 API 与用法
 │   ├── layouts.md              # 7 个版式原型 + 叙事铁律
 │   ├── anti-patterns.md        # AI slop 反模式黑名单
-│   └── checklist.md            # 交付前自检清单
+│   ├── checklist.md            # 交付前自检清单
+│   └── extending.md            # ⭐ 扩展指南：五类扩展 SOP + 完成定义 + 公开红线
+├── templates/                  # 整页参考模板（组件是零件，模板是装好的整页）
+│   └── README.md               # 模板索引 T01–T07 + 模板规范
+├── elements/                   # 设计元素库（可跨主题复用的装饰母题）
+│   └── README.md               # 母题登记表 E01–E03 + 元素规范
+├── assets/<brand-key>/         # 品牌素材包（logo / photo / chart / brand.md）
+│   └── README.md               # 素材规范 + 公开性红线
 ├── src/
 │   ├── lib/                    # 组件库（themes/theme/primitives/structure/cards/tables/flow/case/icons）
 │   ├── demo/                   # 演示页：多主题巡展 + 真实文案手册
 │   └── styles.css              # 基础样式 + A4 打印规则
 ├── examples/                   # 出品样例（PDF）
-├── assets/                     # 模板/素材（规划中）
 ├── shot.cjs / export-pdf.cjs   # 截图 / A4 PDF 导出脚本
 └── package.json
 ```
+
+**两层复用关系**：`src/lib` 是**零件**（组件），`templates/` 是**装好的整页**（先挑模板拼骨架，再换真实文案与品牌素材）。`elements/` 放比组件更小的、与品牌无关的装饰母题。
 
 ## 快速开始
 
@@ -58,6 +69,28 @@ node shot.cjs                                     # 逐页截图（visual check�
 - **E 流程**：`FlowChain` / `IconFlowBar` / `TimelineBar` / `ChevronFlow`
 - **F 案例证据**：`CaseBlock` / `EvidenceGrid` / `DataChart`
 - **G 家具**：`Page` / `Folio` / `Footnotes` / `Icon`（16 个面性双色图标）
+
+## 如何往里加东西（扩展系统）
+
+系统会持续生长：新主题、新组件、新版式、新模板、新设计元素。完整规范见 **`references/extending.md`**，速查如下。
+
+| 我要加 | 放哪 | 命名 | 完成后必须 |
+|---|---|---|---|
+| **品牌主题** | `src/lib/themes.js` | key 用品牌小写（`yuantai`） | 补 `references/tokens.md` + 本文件主题表；跑一遍 examples 确认对比度 |
+| **React 组件** | `src/lib/<族>.jsx` | PascalCase 语义化 | 导出到 `lib/index.js` + 补 `references/components.md` + demo 里真用一次 |
+| **版式原型** | `references/layouts.md` | 顺延 `L9 / L10…` | 写清"何时用 / 由哪些组件构成 / 密度等级"，补进叙事铁律 |
+| **整页模板** | `templates/` | `tpl-<场景>-<版式>.html` | 补 `templates/README.md` 索引 + 预览图 |
+| **设计元素** | `elements/` | `el-<族>-<名称>.svg` | 补 `elements/README.md` 母题登记表 |
+| **参考手册语料** | 本地参考库（仓库外） | — | 逆向出结论后，只把**被验证的规则/组件/令牌**并入系统，原图与原文件不入库 |
+
+四条铁律：
+
+1. **只加不改语义** —— 改动既有组件/令牌的语义属破坏性变更，要记变更说明并检查所有样例。
+2. **可见性 = 登记** —— 没进索引的产出，对 Agent 等于不存在。
+3. **可复用优先于能用** —— 只服务一页的东西叫页面内容，不叫组件。
+4. **有证据** —— 新规则必须写清来源（页码 / 项目名），不接受"我觉得好看"。
+
+> **公开仓库红线**：本仓库是 public。保密素材（未公开产品数据、内部实验图、第三方手册原图）不入库，放本地 `assets-local/`（已 gitignore）。详见 `references/extending.md` 第三节。
 
 ## 设计来源
 

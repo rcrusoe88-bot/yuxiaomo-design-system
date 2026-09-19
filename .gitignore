@@ -2,6 +2,7 @@ node_modules/
 dist/
 preview/
 .vite/
+assets-local/
 *.log
 *.local
 .DS_Store
