@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/yuxiaomo/chapter.schema.json",
+  "title": "Brochure Chapter Schema",
+  "type": "object",
+  "required": ["id", "no", "title", "purpose", "pages"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string" },
+    "no": { "type": "string" },
+    "title": { "type": "string" },
+    "purpose": { "type": "string", "minLength": 10 },
+    "pages": { "type": "array", "items": { "$ref": "page.schema.json" } }
+  }
+}
