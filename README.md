@@ -90,13 +90,14 @@ node shot.cjs                                     # 逐页截图（visual check�
 
 > 原型与模板是**多对多**：一个原型可派生多个模板，一个模板必挂一个原型（见 `templates/README.md` 的"对应原型"列）。
 
-## 一致性校验
+## 工具脚本
 
-```bash
-npm run audit     # 核对文档声明的组件/规则/原型/模板数量与代码实际是否一致
-```
+| 脚本 | 命令 | 作用 |
+|---|---|---|
+| `scripts/audit.mjs` | `npm run audit` | **一致性校验**：核对文档声明的组件/规则/原型/模板数量与代码实际是否一致；检查组件文档双向覆盖、编号无缺号、命名空间无越界、被引用的文件都存在。不一致退出码 1。 |
+| `scripts/api-push.py` | `python scripts/api-push.py <sha>` | **应急推送**：当本机代理把 `github.com` 隧道拦掉（502）、`git push` 不可用时，改用 GitHub Git Data API 原样推送已有提交（完整复刻 author/committer，**生成相同 sha**，不留分叉）。 |
 
-改完文档或加了组件后跑一次。`npm run build` 只保证代码能编译，**不保证文档没写错数**。
+> `npm run build` 只保证代码能编译，**不保证文档没写错数**——改完文档或加了组件后跑一次 `npm run audit`。
 
 ## 如何往里加东西（扩展系统）
 
