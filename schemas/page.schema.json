@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/yuxiaomo/page.schema.json",
+  "title": "Brochure Page Schema",
+  "type": "object",
+  "required": ["id", "type", "job", "density", "blocks"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "type": { "type": "string", "enum": ["company-overview", "product-catalog", "product-detail", "service-overview", "service-process", "solution-overview", "technical-method", "case-evidence"] },
+    "job": { "type": "string", "minLength": 10 },
+    "density": { "type": "string", "enum": ["sparse", "medium", "dense"] },
+    "layout": { "type": "string", "pattern": "^L[0-9]+$" },
+    "evidenceRequired": { "type": "boolean" },
+    "blocks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "block.schema.json" }
+    }
+  }
+}

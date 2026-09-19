@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/yuxiaomo/document.schema.json",
+  "title": "Brochure Document Schema",
+  "type": "object",
+  "required": ["id", "title", "audience", "goal", "theme", "styleProfile", "pageSize", "chapters"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "audience": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "goal": { "type": "string", "minLength": 10 },
+    "theme": { "type": "string", "minLength": 1 },
+    "styleProfile": { "type": "string", "enum": ["neutral-editorial", "technical-structured", "warm-professional"] },
+    "pageSize": { "const": "A4" },
+    "language": { "type": "string", "default": "zh-CN" },
+    "chapters": { "type": "array", "items": { "$ref": "chapter.schema.json" } }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/yuxiaomo/block.schema.json",
+  "title": "Brochure Block Schema",
+  "type": "object",
+  "required": ["type", "component", "data"],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "type": "string", "minLength": 1 },
+    "semanticRole": { "type": "string" },
+    "component": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]+$" },
+    "data": { "type": "object" },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "minItems": { "type": "integer", "minimum": 0 },
+        "maxItems": { "type": "integer", "minimum": 1 },
+        "allowedDensity": { "type": "array", "items": { "enum": ["sparse", "medium", "dense"] } }
+      }
+    }
+  }
+}
