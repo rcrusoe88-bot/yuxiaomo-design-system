@@ -2,6 +2,35 @@
 
 遵循「只加不改语义」（additive-first）：新增能力升**次版本**；修改既有组件 / 令牌的语义或默认值属破坏性变更，必须在此记明并检查 `examples/` 全部样例是否仍成立。
 
+## v0.3.0 — 2026-09-19
+
+**第二批参考语料：MCE（MedChemExpress 皓元）五册 145 页逆向**
+
+- 逆向对象：化合物库手册 92p / 药物发现服务 8p / PROTAC 19p / 质量管理体系 24p / 生化试剂 2p。
+- 方法：文字层字号普查 + 表格结构检出 + 矢量/位图密度扫描 + 46 页逐页视觉读取 + 7 页矢量层导出 SVG 校验。
+- 逆向报告：`行业参考手册库/MCE_皓元/设计元素完整清单_MCE.md`（含 5 处与现有系统的冲突判定）。
+
+**新增 3 个组件族 / 10 个组件（纯新增，未改动任何既有组件语义）**
+
+- 族 H 流程图解：`StagePipelineChain` / `FunnelStages` / `CycleFlowDiagram` / `ComboEquationDiagram`
+- 族 I 数据证据：`TargetBarChart` / `InstrumentReportPanel` / `CitationBlock`
+- 族 J 标签：`CategoryTagRow` / `ChipPillGrid` / `IconFeatureList`
+- 新增 `src/lib/color.js`：`pastelRamp` / `mixWhite` / `mixBlack` / `shiftHue` / 色彩转换工具，使组件从主题令牌**派生**浅色系而非写死 hex。
+
+**新增 8 条可命名规则（R14–R21）**
+
+一站一拓扑 / 深浅=顺序色相=并列 / 两种表格语体按页型选用 / 图标必入容器 / 量化承诺内联加粗 / 信任靠同行评议 / 深色收尾转化 / 类目色恒定。
+
+**修复**
+
+- `styles.css`：末页 `break-after: page` 导致导出 PDF 多出一张空白页 → 加 `.bds-page:last-of-type { break-after: auto }`；并新增 `.bds-demo-wrap` 打印归零规则。
+- `shot.cjs` / `export-pdf.cjs`：端口写死 5173 导致换端口即失败 → 改为可传入端口参数（`node shot.cjs 5175`）。
+- 族编号冲突：新族曾用 P/D/T，与既有「族 D 卡片」撞名 → 改为 H/I/J。
+
+**新增示例**
+
+- `src/demo/AppComponents.jsx`：6 页 A4 组件陈列（远泰 mRNA-LNP 场景），产出 `examples/components-v0.3.pdf`（6 页 595×842 pt，零运行时错误）。
+
 ## v0.2.0 — 2026-09-19
 
 **定位收紧**

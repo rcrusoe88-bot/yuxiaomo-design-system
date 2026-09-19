@@ -7,4 +7,9 @@ export { StatCardRow, TierCards, ConclusionBanner, TestimonialCard } from './car
 export { SpecTable, TierMatrixTable, ProductHeaderRow } from './tables'
 export { FlowChain, IconFlowBar, TimelineBar, ChevronFlow } from './flow'
 export { CaseBlock, EvidenceGrid, DataChart } from './case'
+// —— v0.3 新增：源自 MCE 五册逆向（process 流程族 / data 数据族 / tags 标签族）
+export { StagePipelineChain, FunnelStages, CycleFlowDiagram, ComboEquationDiagram } from './process'
+export { TargetBarChart, InstrumentReportPanel, CitationBlock } from './data'
+export { CategoryTagRow, ChipPillGrid, IconFeatureList } from './tags'
+export { pastelRamp, mixWhite, mixBlack, shiftHue, hexToRgb, rgbToHex, rgbToHsl, hslToRgb } from './color'
 export { Icon, ICON_NAMES } from './icons'

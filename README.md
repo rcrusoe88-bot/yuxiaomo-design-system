@@ -29,7 +29,7 @@ yuxiaomo-design-system/
 ├── assets/<brand-key>/         # 品牌素材包（logo / photo / chart / brand.md）
 │   └── README.md               # 素材规范 + 公开性红线
 ├── src/
-│   ├── lib/                    # 组件库（themes/theme/primitives/structure/cards/tables/flow/case/icons）
+│   ├── lib/                    # 组件库（themes/theme/primitives/structure/cards/tables/flow/case/process/data/tags/icons/color）
 │   ├── demo/                   # 演示页：多主题巡展 + 真实文案手册
 │   └── styles.css              # 基础样式 + A4 打印规则
 ├── examples/                   # 出品样例（PDF）
@@ -60,7 +60,7 @@ node shot.cjs                                     # 逐页截图（visual check�
 
 每套主题含 7 个角色：`functional` / `header` / `dark` / `tint` / `zebra` / `capsuleLight` / `capsuleDeep`，外加 `ramp`（时间轴递变色带）。**加一家新公司 = 往 `themes.js` 加 8 行。**
 
-## 组件总览（24 个，7 族）
+## 组件总览（34 个，10 族）
 
 - **A 结构页**：`Cover` / `SectionDivider` / `IslandBulletGrid` / `BackCover`
 - **B 标题**：`PillTitle` / `H2` / `Sub` / `Lead`
@@ -69,6 +69,11 @@ node shot.cjs                                     # 逐页截图（visual check�
 - **E 流程**：`FlowChain` / `IconFlowBar` / `TimelineBar` / `ChevronFlow`
 - **F 案例证据**：`CaseBlock` / `EvidenceGrid` / `DataChart`
 - **G 家具**：`Page` / `Folio` / `Footnotes` / `Icon`（16 个面性双色图标）
+- **H 流程图解**（v0.3）：`StagePipelineChain` / `FunnelStages` / `CycleFlowDiagram` / `ComboEquationDiagram`
+- **I 数据证据**（v0.3）：`TargetBarChart` / `InstrumentReportPanel` / `CitationBlock`
+- **J 标签**（v0.3）：`CategoryTagRow` / `ChipPillGrid` / `IconFeatureList`
+
+另有色彩工具 `pastelRamp` / `mixWhite` / `mixBlack` / `shiftHue`：让组件从主题令牌**派生**浅色系，而非写死 hex。
 
 ## 如何往里加东西（扩展系统）
 
@@ -94,7 +99,12 @@ node shot.cjs                                     # 逐页截图（visual check�
 
 ## 设计来源
 
-规则与令牌源自对 GenScript（金斯瑞）三份产品手册（44 页）的逐页视觉逆向 + 像素级色值实测，并经真实项目（远泰生物 mRNA-LNP 手册）迭代校准。详见 `references/rules.md` 各条规则的页码证据。
+**第一批 · GenScript（金斯瑞）**三份产品手册共 44 页 —— 逐页视觉逆向 + 像素级色值实测，产出 R1–R13、族 A–G。经真实项目（远泰生物 mRNA-LNP 手册）迭代校准。
+
+**第二批 · MCE（MedChemExpress 皓元）**五份手册共 145 页 —— 文字层字号普查 + 表格结构检出 + 矢量/位图密度扫描 + 46 页逐页视觉读取，产出 R14–R21、族 H–J（10 个新组件）。这一批补上了本系统原本的短板：**流程拓扑的语义分工、技术数据的呈现语体、服务型手册的信任与转化结构**。
+
+完整逆向报告：`行业参考手册库/GenScript_金斯瑞/设计元素完整清单_GenScript.md`、`行业参考手册库/MCE_皓元/设计元素完整清单_MCE.md`。
+方法可复用：《手册设计元素提炼提示词.md》。
 
 ## 许可
 

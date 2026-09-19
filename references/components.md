@@ -1,6 +1,7 @@
-# 组件 API · Components（24 个 / 7 族）
+# 组件 API · Components（34 个 / 10 族）
 
 > 全部组件从 `src/lib` 导入，自动消费 `ThemeProvider` 注入的主题，**不接收硬编码色值**。
+> 族 H / I / J 为 v0.3 新增，源自 MCE（皓元）五册逆向 —— 见 `行业参考手册库/MCE_皓元/设计元素完整清单_MCE.md`。
 
 ```jsx
 import { ThemeProvider, Cover, Page, PillTitle, SpecTable /* … */ } from './src/lib'
@@ -98,6 +99,92 @@ import { ThemeProvider, Cover, Page, PillTitle, SpecTable /* … */ } from './sr
 | `Folio` | `num side color` | `– 0X –` 页码，奇偶左右交替 |
 | `Icon` | `name size primary secondary` | 面性双色 SVG 图标 |
 | `ICON_NAMES` | — | 16 个图标名：`flask timer truck shield award chart dna gear box cell link globe phone mail pin check` |
+
+---
+
+## 族 H · 流程与图解族（v0.3，规则 R14「一站一拓扑」）
+
+> 核心纪律：**不同语义配不同拓扑**，绝不把同一种流程图复用在不同语义的页面上。
+> 流程用链 → 收敛用漏斗 → 迭代用环 → 组合用公式。
+
+### `StagePipelineChain` 阶段管线链 ★总图首选
+`<StagePipelineChain stages={[]} spectrum={[]} caption nodeSize={18} />`
+- 横向圆形节点 + `›` 箭头；节点可为字符串或 `{ label, active }`（`active` = 实底高亮当前阶段）
+- `spectrum` → 底部斜纹长条上骑缝放胶囊标签，用于表达"服务边界"（如 `['CRO','CDMO','CMO']`，最后一个自动用浅档色）
+- **用法铁律**：节点名必须与后续每页的 L2 标题一一对应，形成**总-分锚定**——读者永远知道讲到流程哪一站。
+
+### `FunnelStages` 量化收敛漏斗
+`<FunnelStages stages={[{ method, label, value, highlight }]} caption minWidth={42} />`
+逐层收窄横条 + 左侧虚线引线方法名 + 右侧量化数字；`highlight` 标记关键层（浅档色）。
+⚠️ `value` 里的数字是**对外承诺**，必须来自真实数据，禁止编造。
+
+### `CycleFlowDiagram` 环形迭代图
+`<CycleFlowDiagram nodes={[{ label, icon }]} center caption size={54} />`
+渐变环（吃 `ramp` 四档）+ 四角图标节点 + 中心标签圆。最多 4 个节点（按 tl→tr→br→bl 顺序）。
+**与 `StagePipelineChain` 形成语义对照**：流程用链，优化用环。
+
+### `ComboEquationDiagram` 组合公式图
+`<ComboEquationDiagram left={{title,items}} right={{title,items}} result={{title,items}} caption />`
+「A ＋ B » 产物」三栏公式式布局，每栏 = 胶囊标题 + 药丸堆叠清单。
+
+---
+
+## 族 I · 数据与证据族（v0.3）
+
+> 核心纪律：**图表默认单色**，只有"两组对比"才引入第二色；图注在下、功能标题在右。
+
+### `TargetBarChart` 排序条形图 ★替代饼图
+`<TargetBarChart items={[{ label, value, color }]} ticks={5} caption barColor labelWidth="46mm" />`
+- **轴在顶部**（与 MCE 一致）+ 右侧对齐的类别标签列 + 单色横条，自动把最大值收成"好看的整刻度"
+- `caption` 渲染为**右下角加粗深灰**（MCE 的功能性图注位置）
+- 适合：靶点举例 / 参数分布 / 品类计数。单序列排行比饼图更易读。
+
+### `InstrumentReportPanel` 仪器报告面板 ★QC 检测页首选
+`<InstrumentReportPanel blocks={[{ label, chart } | { label, columns, rows, total }]} />`
+- 浅色标题条 + **图与数据表同框**，容器仅一圈极浅描边
+- 表内**无竖线**、表头浅底深灰字、斑马纹、`total` 行带顶线
+- 单元格支持 `{ v, rowSpan, colSpan }` 表达纵向合并（如 NO. 列）
+- **与 `SpecTable` 的分工**：`SpecTable` = 实底表头的营销参数表；本组件 = 浅底细线的技术数据表。**两种语体按页型选用，不要混**。
+
+### `CitationBlock` 文献引用块
+`<CitationBlock title items={[{ journal, text }]} columns={2} icon />`
+期刊名加粗深灰 + 卷期页次级灰，CSS 多栏流式（`breakInside: avoid` 防跨栏断行）。
+用于**信任页**：用同行评议背书，而不是 logo 墙。
+
+---
+
+## 族 J · 标签与图标列表族（v0.3）
+
+> 核心纪律「同色系自配」：任何彩色元素都是"浅色底 + 同色相深一阶字"，从不跨色相配对。
+> 色相由主题主色经 `pastelRamp()` 派生 —— 因此**换主题自动换肤**，组件内不出现任何硬编码色值。
+
+### `CategoryTagRow` 类目胶囊标签行
+`<CategoryTagRow items={[]} size="md"|"sm" />`
+水平自动换行的圆角胶囊；元素可为字符串或 `{ label, color, fg }`。
+用于产品/样本的适用性标记（如 `['mRNA','LNP','GMP 级','标准品']`）。
+**规则「类目色恒定」**：同一类目在全册任何页应保持同一色 —— 若要固定，用 `color` 显式指定。
+
+### `ChipPillGrid` 芯片标签网格
+`<ChipPillGrid items={[{ label, icon }]} columns={3} />`
+浅底圆角芯片 + 行内小图标，2–3 列。用于子能力清单。
+
+### `IconFeatureList` 图标特性列表
+`<IconFeatureList items={[{ icon, title, points: [], text, color }]} columns={3} />`
+**实心彩圆图标**（白线图标）+ 彩色标题 + 圆点列表。
+规则「图标必入容器」：图标从不裸放，容器色即语义色（默认按 `pastelRamp` 轮转）。
+
+---
+
+## 色彩工具（v0.3，供自定义组件派生浅色系）
+
+| 函数 | 说明 |
+|---|---|
+| `pastelRamp(baseHex, n)` | 从主色派生 n 组 `{ bg, fg, base }` 浅色标签色（低饱和高亮度，色相均匀错开） |
+| `mixWhite(hex, amt)` / `mixBlack(hex, amt)` | 与白/黑混合 |
+| `shiftHue(hex, deg)` | 色相偏移 |
+| `hexToRgb` / `rgbToHex` / `rgbToHsl` / `hslToRgb` | 基础转换 |
+
+**为什么要它**：让组件从主题令牌**派生**浅色系，从而不必在组件里写死 hex（硬约束 R4）。
 
 ---
 

@@ -26,7 +26,7 @@ AI 从零设计产品页时会"发散"：每次配色、字阶、版式都重新
 
 ## 硬约束（不可违反）
 
-1. **组件白名单**：每一页只能由 `src/lib/` 提供的组件拼成（`Cover`/`Page`/`PillTitle`/`SpecTable`/`StatCardRow`/`FlowChain`/`TimelineBar`/`CaseBlock`/`DataChart`/`ConclusionBanner`/`BackCover` …）。**禁止自创一次性组件或手写任意样式**；确需新组件时，先在 `src/lib/` 里新增可复用组件并补文档，而非在页面里硬写。
+1. **组件白名单**：每一页只能由 `src/lib/` 提供的组件拼成（34 个 / 10 族）。常用：`Cover`/`Page`/`PillTitle`/`SpecTable`/`StatCardRow`/`FlowChain`/`TimelineBar`/`CaseBlock`/`DataChart`/`ConclusionBanner`/`BackCover`；v0.3 新增：`StagePipelineChain`/`FunnelStages`/`CycleFlowDiagram`/`ComboEquationDiagram`/`TargetBarChart`/`InstrumentReportPanel`/`CitationBlock`/`CategoryTagRow`/`ChipPillGrid`/`IconFeatureList`。**禁止自创一次性组件或手写任意样式**；确需新组件时，先在 `src/lib/` 里新增可复用组件并补文档，而非在页面里硬写。
 2. **一册一色相**（R1）：整本手册/整个页面只用一个色相家族，功能色、表头色、浅底、深底全在族内，**永不引入第二色相**（图表"阳性对照"橙 `#E8963C` 是唯一许可例外）。
 3. **深底只属于结构页**（R2）：满版深色只允许封面、章节页、封底；内页永远白纸 + ≤10% 主题色实底点缀。
 4. **只从已定义的主题取色**：禁止在页面里写死十六进制色值，一律用 `theme` 角色的令牌（见 `references/tokens.md`）。

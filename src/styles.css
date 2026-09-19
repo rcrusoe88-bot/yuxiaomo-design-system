@@ -39,6 +39,10 @@ body {
 @media print {
   body { background: #fff; }
   .bds-page { margin: 0; box-shadow: none; }
+  /* 末页不能留 break-after，否则会多顶出一张空白页（打印链路经典坑） */
+  .bds-page:last-of-type { break-after: auto; }
+  /* 演示外壳的内边距/背景在打印时必须归零，否则同样会多出空白页 */
+  .bds-demo-wrap { padding: 0 !important; background: #fff !important; }
   .bds-demo-banner { display: none; }
   .bds-switchbar { display: none; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
