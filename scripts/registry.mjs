@@ -297,8 +297,12 @@ if (isMain) {
   console.log('\n──────────────────────────────────────────────────────────')
   console.log('  registry 生成完成')
   console.log('──────────────────────────────────────────────────────────')
-  console.log(`  ✓ registry.json               ${(jsonText.length / 1024).toFixed(1)} KB`)
-  console.log(`  ✓ references/prompt-pack.md   ${(md.length / 1024).toFixed(1)} KB`)
+  // 注意用 Buffer.byteLength 而不是 .length —— 本库是 CJK 密集文件，一个中文字符
+  // UTF-8 占 3 字节，用 .length（UTF-16 码元数）会把体积少报 25%–40%。
+  // 报错的数字比不报更糟：它会被当成事实抄进文档。
+  const kb = (s) => (Buffer.byteLength(s, 'utf8') / 1024).toFixed(1)
+  console.log(`  ✓ registry.json               ${kb(jsonText)} KB`)
+  console.log(`  ✓ references/prompt-pack.md   ${kb(md)} KB`)
   console.log(`  ✓ ${stats.components} 个组件 / ${stats.families} 族 / ${stats.rules} 条规则`)
   if (issues.length) {
     console.log(`  ! ${issues.length} 条问题：`)
