@@ -220,8 +220,9 @@ import { ThemeProvider, Cover, Page, PillTitle, SpecTable /* … */ } from './sr
 本组件 = 圆形**编号** + 描边盒（更亲和，更适合"实验步骤"）。
 
 ### `HexChain` 六边形图标链 ★"套餐包含什么"
-`<HexChain items={[{ icon, label, en, color }]} connector="+" palette="category" size={19} caption />`
+`<HexChain items={[{ icon, label, en, color }]} connector="+" palette="tone" size={19} caption />`
 6 个六边形图标 + 下方 `⊕` 连接符。**语义 = 并列的条件项**（A + B + C，无先后，缺一不可）。
+`palette` 默认 `tone`（同色相多档，守 R22）——各六边形是同一套餐的组成件，不是不同类目。
 **与 `IconFlowBar` 的分工**：`IconFlowBar` 用 `›`（有方向），本组件用 `⊕`（无方向、相加）。
 
 ### `BeadChain` 实验动作链

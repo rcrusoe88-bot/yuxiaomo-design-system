@@ -43,6 +43,15 @@
 |---|---|---|---|---|
 | **R22** | 类目色纪律 | 组件的多档配色**默认同色相**（`palette="tone"`，`toneRamp`）；只有当颜色本身承载类目含义时才允许跨色相（`palette="category"`），且必须经 R21 全册锁定 | `HexChain` / `ProductCardGrid` / `NumberedStepFlow` / `CategoryTagRow`（`palette` 参数） | MCE library p44 七色相并列（确有类目含义）vs p06/p40 同色相多档（仅"第一项、第二项"） |
 
+**默认值核对表**（改组件默认值时必须同步这张表 —— 规则与代码不许各说各话）：
+
+| 组件 | 默认 | 理由 |
+|---|---|---|
+| `NumberedStepFlow` / `BeadChain` / `ProductCardGrid` / `HexChain` | `tone` | 条目之间只是"第一项、第二项"，无类目差异。`HexChain` 的来源页 p06/p40 本身即同色相多档 |
+| `AnnotatedDonut` | `category` | 扇区 = 不同服务线（类目），且需与 R21 类目色恒定联动 |
+| `ScatterClusterPanel` | `category` | 聚类图里**颜色就是分组的键**，同色相会让分组消失 |
+| `SwatchLegend` | `category` | 它本身就是"色卡图例"，颜色是内容而非装饰 |
+
 ### 三条被 MCE 验证、但**我们主动不采纳**的做法
 
 | MCE 做法 | 我们为何不采纳 |

@@ -85,9 +85,13 @@ export function NumberedStepFlow({ steps = [], palette = 'tone', size = 'md', ca
  * 语义：**并列的条件项**（A + B + C + …），项之间没有先后，缺一不可。
  * 与 IconFlowBar 的分工：IconFlowBar 用 `›`（有方向），HexChain 用 `⊕`（无方向、相加）。
  *
+ * palette 默认 'tone'（同色相多档）——依据 R22：来源页 p06/p40 本身即**同色相多档**，
+ *   且各六边形是"同一个套餐的组成件"，并非不同类目；跨色相会让读者以为颜色有含义。
+ *   确需跨色相时显式传 palette="category"，并注意 R21 类目色恒定。
+ *
  * items: [{ icon, label, en, color }]
  * --------------------------------------------------------------- */
-export function HexChain({ items = [], connector = '+', palette = 'category', size = 19, caption, style }) {
+export function HexChain({ items = [], connector = '+', palette = 'tone', size = 19, caption, style }) {
   const t = useTheme(); const n = useNeutral()
   const ramp = rampOf(t.functional, Math.max(items.length, 1), palette)
   const HEX = 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
