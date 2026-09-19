@@ -45,6 +45,8 @@ themes.js 里只有    ：blue / red / purple / wine / yuantai  ← 全部来自
 - `shot.cjs` 支持 `[outDir]` 与 `[path]` 参数（原来写死相对路径 `preview/`，而本机 `cd` 是坏的，无法控制输出位置）。
 - `export-pdf.cjs` 支持 `[path]` 参数（原来写死 `/`，导不出换色状态）——现可一条命令导出品牌版。
 - 新增样例：`examples/components-v0.5-source.pdf`（来源模式）与 `examples/components-v0.5-brand-yuantai.pdf`（品牌模式）。
+- 新增 `scripts/contact-sheet.py`：把同一页的多个配色状态**并排拼成一张对比图**。本库是「一套语言 × 多套主题」，
+  13 页 × 3 状态 = 39 张图逐张翻是比不出"哪一块没跟着换色"的 —— 这次的验收正需要它。
 - 陈列页「纯来源徽标」（该单元本无 API 提示）用更紧的下边距 —— 满档会把这页顶溢出（实测 2.7mm，被 `verify` 抓到）。
 - `package.json` → `0.5.0`。
 

@@ -36,7 +36,7 @@ yuxiaomo-design-system/
 │   └── styles.css              # 基础样式 + A4 打印规则
 ├── registry.json               # ⭐ 机器可读契约（由源码生成）：Agent 精确选型入口
 ├── examples/                   # 出品样例（PDF）
-├── scripts/                    # 校验 / 生成 / 运维脚本（audit, verify, density, registry, contract-src, demo-wrap-src, shot-page, fix-tracking-ref, api-push）
+├── scripts/                    # 校验 / 生成 / 运维脚本（audit, verify, density, registry, contract-src, demo-wrap-src, shot-page, contact-sheet, fix-tracking-ref, api-push）
 ├── shot.cjs / export-pdf.cjs   # 截图 / A4 PDF 导出脚本
 └── package.json
 ```
@@ -60,6 +60,18 @@ npm run registry                                  # ⭐ 由源码生成 registry
 NODE_PATH="<托管 node 工作区>/node_modules" node scripts/verify.cjs 5173   # 溢出？被静默裁掉没有
 NODE_PATH="<托管 node 工作区>/node_modules" node scripts/density.cjs 5173  # 密度？半页空白没有
 npm run audit                                                              # 文档与代码数对得上没有
+```
+
+**要看某个配色状态**（`shot.cjs` / `export-pdf.cjs` 都收 `[path]`，别只截默认页）：
+
+```bash
+node shot.cjs 5175 preview "/"                            # 来源模式（每块按自己来源脉取色）
+node shot.cjs 5175 preview/qms "/?mce=mce-qms&gs=red"     # 换册：MCE 珊瑚红 + GenScript 红
+node shot.cjs 5175 preview/yuantai "/?mode=brand&brand=yuantai"   # 品牌模式：全册远泰红
+node export-pdf.cjs examples/out-v0.5.pdf 5175 "/"        # 导出 A4 PDF（可带 path 导换色版）
+# 再把三种状态并排成一张图，一眼看出哪一块没跟着换色：
+python scripts/contact-sheet.py preview/_cmp.png \
+  "来源模式|preview/p05.png" "?mce=mce-qms|preview/qms/p05.png" "品牌模式|preview/yuantai/p05.png"
 ```
 
 **要"复制提示词"**：`node node_modules/vite/bin/vite.js --port 5175` 后打开 **`/?app=registry`**（组件提示词实验室）。
@@ -196,6 +208,7 @@ src/lib/*.jsx
 | `scripts/shot-page.cjs` | `node scripts/shot-page.cjs <port> <path> <outPrefix>` | **整页截图（非 A4 页）**：抓工具页 / 提示词实验室（`/?app=registry`）的首屏与整页两张图。`shot.cjs` 只遍历 `.bds-page`，对工具页输出 "A4 pages found: 0"，所以需要这个。 |
 | `scripts/contract-src.py` | `python scripts/contract-src.py [--apply]` | **契约 `src` / `manual` 字段的推导与写入**（幂等，可对新增组件重跑）。从 `hue` 文本派生来源脉与锁定册 —— 规则里有一条例外条款很关键：hue 写了「随册/多册/五册/各册」的组件是**跨册复用**，**不许**锁定到某一册（否则把它的通用性丢了）。写完自带字段位置自检。 |
 | `scripts/demo-wrap-src.py` | `python scripts/demo-wrap-src.py [--apply]` | **给陈列页的演示单元套 `<SrcBlock>`**（幂等）。演示单元的结构规整（`<RuleTitle>` 引领、到下一个 `<RuleTitle>` 或 `</Page>` 结束），所以可以自动配对；手改 32 处 = 32 次可能打错，而且以后新增演示单元必漏。 |
+| `scripts/contact-sheet.py` | `python scripts/contact-sheet.py <out.png> "<label>\|<png>" …` | **配色对比联络表**：把同一页在多个配色状态下的截图**并排成一张图**。本库是「一套语言 × 多套主题」，13 页 × 3 状态 = 39 张图逐张翻是比不出来"哪一块没跟着换色"的。label 里可带 `=`（如 `?mce=mce-qms`），故**用 `\|` 分隔** label 与路径。 |
 
 > `npm run build` 只保证代码能编译，**不保证文档没写错数**——改完文档或加了组件后跑一次 `npm run audit`。
 
