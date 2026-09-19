@@ -5,6 +5,36 @@
 **定位**：公司产品手册 / 服务手册 / 产品宣传册，主载体 **A4 印刷页（210×297mm）→ PDF 交付**。Web 落地页为规划中的第二载体。
 
 本系统由三部分构成：**可命名的审美规则**（rules）、**可复用的 React 组件**（components）、**可套用的版式原型**（layouts）。三者与品牌主题令牌解耦，换公司只换主题。系统会持续生长——新增能力的规范见 `references/extending.md`。
+## 👀 预览入口
+
+先看成品，再看规则和源码：
+
+### 手册成品预览
+
+| 预览 | 说明 | 入口 |
+|---|---|---|
+| **远泰红品牌版** | 5 页企业产品/服务手册，品牌模式 | [打开 PDF](examples/yuantai-demo.pdf) |
+| **深海蓝主题版** | 与远泰版同一套内容，仅切换主题令牌 | [打开 PDF](examples/demo-blue.pdf) |
+| **组件陈列 · 来源模式** | 13 页，组件按来源脉展示配色 | [打开 PDF](examples/components-v0.5-source.pdf) |
+| **组件陈列 · 品牌模式** | 13 页，组件统一换成远泰品牌主题 | [打开 PDF](examples/components-v0.5-brand-yuantai.pdf) |
+| **组件陈列 v0.4** | 71 个组件扩展前的完整陈列样例 | [打开 PDF](examples/components-v0.4.pdf) |
+
+### 按页面模板查看
+
+当前模板索引按页面任务组织，适合先判断“这页要完成什么”，再选择组件：
+
+| 页面任务 | 推荐入口 | 适合查看 |
+|---|---|---|
+| 封面 / 章节开篇 | [结构页组件](src/lib/structure.jsx) | 深底、章节宣告、信息岛 |
+| 产品参数 / 规格 | [表格组件](src/lib/tables.jsx) | 参数表、方法表、键值表、矩阵表 |
+| 服务流程 / 交付路径 | [流程组件](src/lib/process.jsx) | 阶段管线、漏斗、循环、组合关系 |
+| 案例 / 数据证据 | [案例与数据组件](src/lib/case.jsx) | 案例块、证据图、数据图表 |
+| 标题 / 文本 / 目录 | [文字与标题组件](src/lib/titles.jsx) · [文本组件](src/lib/text.jsx) | 页面层级、正文、列表、注释 |
+| 收尾 / 联系页 | [页眉页脚组件](src/lib/furniture.jsx) | 品牌条、联系带、页脚结构 |
+
+完整模板索引见 [`templates/README.md`](templates/README.md)，完整组件契约见 [`registry.json`](registry.json)。
+
+> **想看可运行预览？** 本地执行 `npm install` 后运行 `node node_modules/vite/bin/vite.js --port 5173`，打开 `http://localhost:5173/`；组件提示词实验室入口为 `http://localhost:5173/?app=registry`。
 
 ## 目录结构
 
@@ -265,3 +295,4 @@ qms 珊瑚红 `#F16366` / 生化试剂 青 `#2995B3` / 药物发现 紫 `#574DA0
 ## 许可
 
 MIT（见 LICENSE）。参考手册的版式语言属公开可观察的设计事实；本仓库代码与文档为原创实现。
+
