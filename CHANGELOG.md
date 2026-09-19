@@ -2,6 +2,64 @@
 
 遵循「只加不改语义」（additive-first）：新增能力升**次版本**；修改既有组件 / 令牌的语义或默认值属破坏性变更，必须在此记明并检查 `examples/` 全部样例是否仍成立。
 
+## v0.4.0 — 2026-09-19
+
+**主题：把组件从 37 补到 71 —— 按「层 × 族」系统性补全组件库**
+
+起因是一次交付复核：用 v0.3 做真实手册时发现**组件太少**，遇到"编号步骤""并列条件""多入口汇聚""时间轴位置""多产品矩阵"这类语义时，只能硬套现有拓扑或手写一次性样式，导致**语义漂移**（把迭代画成链、把并列画成流程）。本版按 11 张 MCE 关键页的形态谱系，把每一层的空缺补上。
+
+**新增 34 个组件（其中 3 个新族）**
+
+| 族 | 新增 | 组件 |
+|---|---|---|
+| **B 标题**（+7） | 标题形态变体 | `EyebrowTitle` `PairTitle` `BlockTitle` `OutlineTitle` `BarTitle` `RuleTitle` `NumberedTitle` |
+| **K 文本**（新族，7） | 补齐占比最大的内容层 | `BodyText` `BulletList` `NumberedList` `DefinitionList` `NoteBand` `AnnotationPair` `FigCaption` |
+| **C 表格**（+3） | 补选型 / 方法 / 属性三种语体 | `RowLabelMatrixTable` `MethodTable` `KeyValueTable` |
+| **D 卡片**（+3） | 产品卡 / 指标条 / 目录 | `ProductCardGrid` `MetricStrip` `TocList` |
+| **M 拓扑**（新族，6） | 补 3 种表达不了的语义 | `NumberedStepFlow` `HexChain` `BeadChain` `AnnotatedCycle` `ServiceNetworkMap` `PhaseBand` |
+| **I 数据**（+3） | 小倍数 / 构成 / 分布 | `PanelBarChart` `AnnotatedDonut` `ScatterClusterPanel` |
+| **N 图解**（新族，3） | 给图装统一外壳 | `FigurePanel` `LegendFigure` `SwatchLegend` |
+| **O 页眉页脚**（新族，2） | 内页品牌条与联系带 | `BrandHeaderBar` `ContactFooterBand` |
+
+**新增 1 条规则（R22 类目色纪律）**
+
+组件一旦支持"多档配色"，默认值选错就会让整册变花。故立 R22：**多档配色默认同色相**（`palette="tone"` / `toneRamp`）；只有颜色本身承载类目含义时才允许跨色相（`palette="category"`），且必须经 R21 全册锁定。
+为此 `color.js` 新增语义化别名 `toneRamp` / `categoryRamp`（`pastelRamp` 保留为通用入口，v0.3 旧签名默认跨色相，兼容）。**所有多档配色组件（`HexChain` / `ProductCardGrid` / `NumberedStepFlow` / `CategoryTagRow` …）默认值统一为同色相。**
+
+**新增分类体系 `references/taxonomy.md`**
+
+v0.3 的组件只能"按族查签名"（作者视角），但设计一页的真实顺序是自上而下的"这页要说哪一层"。
+新文件按 **层（骨架 → 标题 → 文本 → 结构化信息 → 图形 → 页眉页脚）× 族** 重排，并给出：
+- 12 种标题形态的**语义分工表**（形态必须跟语义绑定，不许"好看就用"）
+- 层 5 的**语义 → 拓扑对照表**（R14 的落地判据：你要表达的是哪种关系？）
+- `palette` 参数的**选择判据**（R22）
+
+**族 L 刻意留空**：`L1–L7` 是版式原型的命名空间，组件族不占用，避免 v0.3.1 修过的"命名空间撞车"复发。
+
+**新增校验工具 `scripts/verify.cjs`**
+
+`npm run verify` —— 逐页比对 `scrollHeight` vs `clientHeight`。
+**为什么必须是独立一步**：分页骨架里每页 `height:297mm; overflow:hidden`，**内容超高不报错、只被静默裁掉**，`npm run build` 通过 ≠ 页面没被裁。
+本版末次运行：13 页全部"无溢出、零报错"。
+（Playwright 只装在托管 node 工作区，须 `.cjs + require` + `NODE_PATH` 运行——ESM 的 `import` 不认 `NODE_PATH`。）
+
+**新增示例 `src/demo/AppTaxonomy.jsx`**
+
+12 个内容页 + 封面，按分类体系的"层序"逐层陈列 34 个新组件，内容用远泰 mRNA-LNP 场景（数字均为示例）。
+逐页密度实测：**75.6%–89.9%**（封面满版不计），无一行溢出。
+
+**本版修掉的问题（均为"只有渲染出来才看得见"的类型）**
+
+- `ServiceNetworkMap` 首个 demo 语义不成立：只放了 4 个节点 + 2 条注解，既没做出"多入口汇聚再分出"的网络结构，还留了一支**悬空箭头**（`arrow:'down'` 下方没有节点）→ 重写为 3 入口 → 1 中枢（独占整行、跨满 3 列）→ 3 出口 → 3 交付注解，并加"配比纪律"说明。
+- 该页因此**只占 52.4% 高度**（页面近半空白）→ 补入「六种拓扑的选择速查」表（`KeyValueTable`），既填满又给拓扑章一个收束 → 84%+。
+- 文本层页（`p03`）密度仅 62.4% → 补第二段正文（含 CQA / CPP / 设计空间论述）与列表条目 → 75.6%。
+- 拆页重编号后**页眉眉标整体错位一页**（`Page9` 眉标仍写 `P8`，一路错到 `P12` 写 `P11`），`Page7` 页题仍写着已移到别页的"网络"→ 逐条改正。
+  *教训：页号与眉标是两套编号，拆页时必须一起改；光看代码不渲染发现不了。*
+
+**文档同步**
+
+`components.md`（37→71 个 / 10→14 族，34 个新条目全部登记）、`README.md`、`SKILL.md`、`rules.md`（R1–R22）、`checklist.md`（新增 J 节 9 条 v0.4 专项）、`ROADMAP.md`。`npm run audit` 全绿。
+
 ## v0.3.1 — 2026-09-19
 
 **主题：修文档漂移（doc drift）——不碰任何组件代码**

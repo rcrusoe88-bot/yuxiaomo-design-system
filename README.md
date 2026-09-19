@@ -15,9 +15,10 @@ yuxiaomo-design-system/
 ├── ROADMAP.md                  # 路线图：已完成 / 待补 / backlog
 ├── design-language.md          # 设计基因：为什么这样设计
 ├── references/                 # 被参照的规范（Agent 按需读）
-│   ├── rules.md                # 21 条可命名审美规则（R1–R21）
+│   ├── rules.md                # 22 条可命名审美规则（R1–R22）
 │   ├── tokens.md               # 主题令牌 / 颜色 / 字阶 / 间距
-│   ├── components.md           # 37 个组件的 API 与用法（10 族）
+│   ├── taxonomy.md             # ⭐ 组件分类体系（层 × 族）：选组件的入口
+│   ├── components.md           # 71 个组件的 API 与用法（14 族）
 │   ├── layouts.md              # 7 个版式原型 + 叙事铁律
 │   ├── anti-patterns.md        # AI slop 反模式黑名单
 │   ├── checklist.md            # 交付前自检清单
@@ -29,10 +30,11 @@ yuxiaomo-design-system/
 ├── assets/<brand-key>/         # 品牌素材包（logo / photo / chart / brand.md）
 │   └── README.md               # 素材规范 + 公开性红线
 ├── src/
-│   ├── lib/                    # 组件库（themes/theme/primitives/structure/cards/tables/flow/case/process/data/tags/icons/color）
+│   ├── lib/                    # 组件库（themes/theme/primitives/titles/text/structure/cards/tables/flow/case/process/topology/data/figures/furniture/tags/icons/color）
 │   ├── demo/                   # 演示页：多主题巡展 + 真实文案手册
 │   └── styles.css              # 基础样式 + A4 打印规则
 ├── examples/                   # 出品样例（PDF）
+├── scripts/                    # 校验脚本（audit / verify / density / api-push）
 ├── shot.cjs / export-pdf.cjs   # 截图 / A4 PDF 导出脚本
 └── package.json
 ```
@@ -48,6 +50,14 @@ node export-pdf.cjs output.pdf                    # 导出 A4 PDF（printBackgro
 node shot.cjs                                     # 逐页截图（visual check）
 ```
 
+**改完页面必跑的两条**（A4 骨架的两个坑，都不是 `build` 能发现的）：
+
+```bash
+NODE_PATH="<托管 node 工作区>/node_modules" node scripts/verify.cjs 5173   # 溢出？被静默裁掉没有
+NODE_PATH="<托管 node 工作区>/node_modules" node scripts/density.cjs 5173  # 密度？半页空白没有
+npm run audit                                                              # 文档与代码数对得上没有
+```
+
 ## 主题一览（`src/lib/themes.js`）
 
 | key | 名称 | 主色 | 深底 | 来源 |
@@ -60,20 +70,30 @@ node shot.cjs                                     # 逐页截图（visual check�
 
 每套主题含 7 个角色：`functional` / `header` / `dark` / `tint` / `zebra` / `capsuleLight` / `capsuleDeep`，外加 `ramp`（时间轴递变色带）。**加一家新公司 = 往 `themes.js` 加 8 行。**
 
-## 组件总览（37 个，10 族）
+## 组件总览（71 个，14 族）
+
+> **选组件的顺序**：先按 `references/taxonomy.md` 的"层"定位（这页要说哪一层），再回来查签名。
+> 层 = 我要说什么（骨架/标题/文本/结构化信息/图形/页眉页脚）；族 = 用什么装。
 
 - **A 结构页**：`Cover` / `SectionDivider` / `IslandBulletGrid` / `BackCover`
-- **B 标题**：`PillTitle` / `H2` / `Sub` / `Lead` / `Footnotes`
-- **C 表格**：`SpecTable` / `TierMatrixTable` / `ProductHeaderRow`
-- **D 卡片**：`StatCardRow` / `TierCards` / `TestimonialCard` / `ConclusionBanner`
+- **B 标题**（12）：`PillTitle` / `H2` / `Sub` / `Lead` / `Footnotes` + **v0.4 七形态** `EyebrowTitle` / `PairTitle` / `BlockTitle` / `OutlineTitle` / `BarTitle` / `RuleTitle` / `NumberedTitle`
+- **G 页面骨架与图标**：`Page` / `Folio` / `Icon`（16 个面性双色图标）/ `CapsuleDecor`（装饰原语，母题 E01）
+- **K 文本**（v0.4，7）：`BodyText` / `BulletList` / `NumberedList` / `DefinitionList` / `NoteBand` / `AnnotationPair` / `FigCaption`
+- **C 表格**（6）：`SpecTable` / `TierMatrixTable` / `ProductHeaderRow` / **v0.4** `RowLabelMatrixTable` / `MethodTable` / `KeyValueTable`
+- **D 卡片**（7）：`StatCardRow` / `TierCards` / `TestimonialCard` / `ConclusionBanner` / **v0.4** `ProductCardGrid` / `MetricStrip` / `TocList`
 - **E 流程**：`FlowChain` / `IconFlowBar` / `TimelineBar` / `ChevronFlow`
 - **F 案例证据**：`CaseBlock` / `EvidenceGrid` / `DataChart`
-- **G 家具**：`Page` / `Folio` / `Icon`（16 个面性双色图标）/ `CapsuleDecor`（装饰原语，母题 E01）
 - **H 流程图解**（v0.3）：`StagePipelineChain` / `FunnelStages` / `CycleFlowDiagram` / `ComboEquationDiagram`
-- **I 数据证据**（v0.3）：`TargetBarChart` / `InstrumentReportPanel` / `CitationBlock`
+- **M 拓扑图**（v0.4，6）：`NumberedStepFlow` / `HexChain` / `BeadChain` / `AnnotatedCycle` / `ServiceNetworkMap` / `PhaseBand`
+- **I 数据证据**（v0.3 3 + v0.4 3）：`TargetBarChart` / `InstrumentReportPanel` / `CitationBlock` / `PanelBarChart` / `AnnotatedDonut` / `ScatterClusterPanel`
+- **N 图解**（v0.4，3）：`FigurePanel` / `LegendFigure` / `SwatchLegend`
 - **J 标签**（v0.3）：`CategoryTagRow` / `ChipPillGrid` / `IconFeatureList`
+- **O 页眉页脚**（v0.4，2）：`BrandHeaderBar` / `ContactFooterBand`
 
-另有色彩工具 `pastelRamp` / `mixWhite` / `mixBlack` / `shiftHue`：让组件从主题令牌**派生**浅色系，而非写死 hex。
+> **族 L 刻意留空**：`L` 是版式原型（L1–L7）的编号命名空间，组件族不占用它，避免撞车。
+
+另有色彩工具 `toneRamp` / `categoryRamp` / `pastelRamp` / `mixWhite` / `mixBlack` / `shiftHue`
+与文本工具 `renderRich`（行内加粗 = 唯一允许的文本高亮）：让组件从主题令牌**派生**浅色系，而非写死 hex。
 
 ## 编号命名空间
 
@@ -81,8 +101,8 @@ node shot.cjs                                     # 逐页截图（visual check�
 
 | 命名空间 | 含义 | 定义处 | 当前范围 |
 |---|---|---|---|
-| `R1–R21` | 可命名审美规则 | `references/rules.md` | 21 条 |
-| 族 `A–J` | 组件族 | `references/components.md` | 10 族 / 37 组件 |
+| `R1–R22` | 可命名审美规则 | `references/rules.md` | 22 条 |
+| 族 `A–O` | 组件族 | `references/components.md` | 14 族 / 71 组件 |
 | `L1–L7` | 版式原型（页面**句型**/骨架） | `references/layouts.md` | 7 个 |
 | `T01–T07` | 整页模板（装配好的**成品页**） | `templates/README.md` | 7 个（待补） |
 | `E01–E0x` | 设计元素母题 | `elements/README.md` | 3 个（已实现） |
@@ -96,6 +116,8 @@ node shot.cjs                                     # 逐页截图（visual check�
 |---|---|---|
 | `scripts/audit.mjs` | `npm run audit` | **一致性校验**：核对文档声明的组件/规则/原型/模板数量与代码实际是否一致；检查组件文档双向覆盖、编号无缺号、命名空间无越界、被引用的文件都存在。不一致退出码 1。 |
 | `scripts/api-push.py` | `python scripts/api-push.py <sha>` | **应急推送**：当本机代理把 `github.com` 隧道拦掉（502）、`git push` 不可用时，改用 GitHub Git Data API 原样推送已有提交（完整复刻 author/committer，**生成相同 sha**，不留分叉）。 |
+| `scripts/verify.cjs` | `npm run verify` | **A4 溢出与运行时校验**：逐页比对 `scrollHeight` vs `clientHeight`。**为什么必须有它**——分页骨架里每页是 `height:297mm; overflow:hidden`，内容超高**不会报错、只会被静默裁掉**，构建通过 ≠ 页面没被裁。同时收集 console 报错与 React 警告。须带 `NODE_PATH` 运行（见文件头注释）。 |
+| `scripts/density.cjs` | `npm run density` | **逐页密度校验**：量每页正常流内容占高（**排除 absolute 的页码**，否则每页都量成 96.6%）。`verify` 查"超出"（是错误），`density` 查"没填满"（是质量问题）——一个 A4 页只占 52% 高度时构建通过、无报错、截图也不崩，但印出来就是半页空白。不在 70–93% 区间即提示；**永远退出 0**，不挡构建。 |
 
 > `npm run build` 只保证代码能编译，**不保证文档没写错数**——改完文档或加了组件后跑一次 `npm run audit`。
 
@@ -126,6 +148,9 @@ node shot.cjs                                     # 逐页截图（visual check�
 **第一批 · GenScript（金斯瑞）**三份产品手册共 44 页 —— 逐页视觉逆向 + 像素级色值实测，产出 R1–R13、族 A–G。经真实项目（远泰生物 mRNA-LNP 手册）迭代校准。
 
 **第二批 · MCE（MedChemExpress 皓元）**五份手册共 145 页 —— 文字层字号普查 + 表格结构检出 + 矢量/位图密度扫描 + 46 页逐页视觉读取，产出 R14–R21、族 H–J（10 个新组件）。这一批补上了本系统原本的短板：**流程拓扑的语义分工、技术数据的呈现语体、服务型手册的信任与转化结构**。
+
+**第三批 · 同一批 MCE 语料的 11 页版式细读（v0.4）** —— 把 11 张关键页截图逐页拆解"标题块 / 表格 / 文本块 / 流程图"的**形态谱系**，产出 **34 个新组件**（族 K / M / N / O + 族 B/C/D/I 扩展）、**R22 类目色纪律**，以及按"层 × 族"重排的 `references/taxonomy.md`。
+这一批解决的是**组件太少**的问题：v0.3 只有 37 个组件时，遇到"编号步骤""并列条件""多入口汇聚""时间轴位置"这类语义只能硬套现有拓扑，导致语义漂移；补齐到 71 个之后，每种语义都有专属形态可用。
 
 完整逆向报告：`行业参考手册库/GenScript_金斯瑞/设计元素完整清单_GenScript.md`、`行业参考手册库/MCE_皓元/设计元素完整清单_MCE.md`。
 方法可复用：《手册设计元素提炼提示词.md》。

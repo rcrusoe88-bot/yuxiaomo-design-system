@@ -1,6 +1,6 @@
 ---
 name: yuxiaomo-design-system
-description: 公司产品服务手册设计系统（余小莫）。当需要为公司与产品或服务设计 A4 印刷手册 / 服务手册 / 产品宣传册（PDF 交付）时使用。系统提供 37 个可复用组件、5 套品牌主题令牌、21 条可命名审美规则、7 个版式原型、整页模板与 anti-slop 反模式清单，保证不同公司、不同项目的输出风格统一且不产生 AI slop。
+description: 公司产品服务手册设计系统（余小莫）。当需要为公司与产品或服务设计 A4 印刷手册 / 服务手册 / 产品宣传册（PDF 交付）时使用。系统提供 71 个可复用组件、5 套品牌主题令牌、22 条可命名审美规则、7 个版式原型、整页模板与 anti-slop 反模式清单，保证不同公司、不同项目的输出风格统一且不产生 AI slop。
 ---
 
 # 公司产品服务手册设计系统 · Yuxiaomo Design System
@@ -20,17 +20,22 @@ AI 从零设计产品页时会"发散"：每次配色、字阶、版式都重新
 | 0 | 理解设计基因与底线 | `design-language.md` |
 | 1 | 选定/新建品牌主题（色相家族） | `references/tokens.md` |
 | 2 | 从 7 个版式原型（L1–L7）挑页、排叙事顺序 | `references/layouts.md` |
-| 3 | 用 37 个组件（10 族）拼装每一页 | `references/components.md` |
-| 4 | 遵守 21 条审美规则（R1–R21） | `references/rules.md` |
+| 3 | **按"层"选组件**，再用 71 个组件（14 族）拼装每一页 | `references/taxonomy.md` → `references/components.md` |
+| 4 | 遵守 22 条审美规则（R1–R22） | `references/rules.md` |
 | 5 | 交付前逐条自检 + 扫反模式 | `references/checklist.md`、`references/anti-patterns.md` |
-| 6 | 改了本系统自身？跑一致性校验 | `npm run audit` |
+| 6 | **A4 双机械校验**：溢出 + 密度（`build` 查不出这两个） | `npm run verify`、`npm run density` |
+| 7 | 改了本系统自身？跑一致性校验 | `npm run audit` |
+
+> **为什么第 6 步不可省**：A4 骨架里每页是 `height:297mm; overflow:hidden`。
+> 内容**超出**会被静默裁掉（不报错）；内容**没填满**则是半页空白（也不报错）。
+> 两者都只能靠机械校验发现 —— 见 `README.md`「工具脚本」。
 
 ### 编号命名空间（不要混用）
 
 | 命名空间 | 含义 | 定义处 |
 |---|---|---|
-| `R1–R21` | 可命名审美规则 | `references/rules.md` |
-| 族 `A–J` | 组件族（37 个组件） | `references/components.md` |
+| `R1–R22` | 可命名审美规则 | `references/rules.md` |
+| 族 `A–O` | 组件族（71 个组件 / 14 族） | `references/components.md` |
 | `L1–L7` | 版式原型（页面**句型**） | `references/layouts.md` |
 | `T01–T07` | 整页模板（装配好的**成品页**） | `templates/README.md` |
 | `E01–E0x` | 设计元素母题 | `elements/README.md` |
@@ -38,7 +43,7 @@ AI 从零设计产品页时会"发散"：每次配色、字阶、版式都重新
 
 ## 硬约束（不可违反）
 
-1. **组件白名单**：每一页只能由 `src/lib/` 提供的组件拼成（37 个 / 10 族）。常用：`Cover`/`Page`/`PillTitle`/`SpecTable`/`StatCardRow`/`FlowChain`/`TimelineBar`/`CaseBlock`/`DataChart`/`ConclusionBanner`/`BackCover`；v0.3 新增：`StagePipelineChain`/`FunnelStages`/`CycleFlowDiagram`/`ComboEquationDiagram`/`TargetBarChart`/`InstrumentReportPanel`/`CitationBlock`/`CategoryTagRow`/`ChipPillGrid`/`IconFeatureList`。**禁止自创一次性组件或手写任意样式**；确需新组件时，先在 `src/lib/` 里新增可复用组件并补文档，而非在页面里硬写。
+1. **组件白名单**：每一页只能由 `src/lib/` 提供的组件拼成（71 个 / 14 族）。常用：`Cover`/`Page`/`PillTitle`/`SpecTable`/`StatCardRow`/`FlowChain`/`TimelineBar`/`CaseBlock`/`DataChart`/`ConclusionBanner`/`BackCover`；v0.3 新增：`StagePipelineChain`/`FunnelStages`/`CycleFlowDiagram`/`ComboEquationDiagram`/`TargetBarChart`/`InstrumentReportPanel`/`CitationBlock`/`CategoryTagRow`/`ChipPillGrid`/`IconFeatureList`；v0.4 新增（34 个）：标题 7 变体（`PairTitle`/`BlockTitle`/`BarTitle`/`RuleTitle`/`EyebrowTitle`/`OutlineTitle`/`NumberedTitle`）、文本族 K（`BodyText`/`BulletList`/`NumberedList`/`DefinitionList`/`NoteBand`/`AnnotationPair`/`FigCaption`）、表格 3（`RowLabelMatrixTable`/`MethodTable`/`KeyValueTable`）、卡片 3（`ProductCardGrid`/`MetricStrip`/`TocList`）、拓扑族 M（`NumberedStepFlow`/`HexChain`/`BeadChain`/`AnnotatedCycle`/`ServiceNetworkMap`/`PhaseBand`）、图表 3（`PanelBarChart`/`AnnotatedDonut`/`ScatterClusterPanel`）、图解族 N（`FigurePanel`/`LegendFigure`/`SwatchLegend`）、页眉页脚族 O（`BrandHeaderBar`/`ContactFooterBand`）。**禁止自创一次性组件或手写任意样式**；确需新组件时，先在 `src/lib/` 里新增可复用组件并补文档，而非在页面里硬写。
 2. **一册一色相**（R1）：整本手册/整个页面只用一个色相家族，功能色、表头色、浅底、深底全在族内，**永不引入第二色相**（图表"阳性对照"橙 `#E8963C` 是唯一许可例外）。
 3. **深底只属于结构页**（R2）：满版深色只允许封面、章节页、封底；内页永远白纸 + ≤10% 主题色实底点缀。
 4. **只从已定义的主题取色**：禁止在页面里写死十六进制色值，一律用 `theme` 角色的令牌（见 `references/tokens.md`）。需要浅色系时用 `pastelRamp(theme.functional, n)` **派生**，不要手填。
@@ -54,6 +59,8 @@ AI 从零设计产品页时会"发散"：每次配色、字阶、版式都重新
 - **表格出现竖线**；**营销参数表**用浅色底深字表头（该用实底反白）；**技术数据表**却用实底反白表头（该用浅底细线）—— 违反 R5 / R16
 - 深色底出现在内页正文区
 - 同一个"流程/收敛/迭代"语义全册复用同一种图（违反 R14 一站一拓扑）
+- **多档配色组件跨色相、但这些颜色并不代表类目**（违反 R22 类目色纪律）—— 不传 `palette` 默认就是同色相多档
+- 一页出现 3 种以上标题形态，或全册 H2 时而色条、时而细线夹（违反族 B 的形态纪律）
 
 ## 技术栈与产物
 

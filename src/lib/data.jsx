@@ -1,7 +1,10 @@
 // 数据与证据组件族 —— 源自 MCE 五册逆向
 // 核心规则：图表默认单色，只有"两组对比"才允许引入第二色；图注在下、功能标题在右。
+// v0.4 追加 I4–I6（多面板参数条形图 / 注释甜甜圈 / 散点聚类面板）
 import { useTheme, useNeutral } from './theme'
 import { Icon } from './icons'
+import { FigCaption, renderRich } from './text'
+import { pastelRamp, mixWhite } from './color'
 
 // 把最大值收成"好看的整刻度"
 function niceMax(v, ticks) {
@@ -170,4 +173,260 @@ export function CitationBlock({ title, items = [], columns = 2, icon = true, sty
       </div>
     </div>
   )
+}
+
+/* =================================================================
+ * v0.4 新增三种图表：多面板参数条形图 / 注释甜甜圈 / 散点聚类面板
+ *
+ * 图表选型决策（务必按此选，不要凭手感）：
+ *   「一个」指标做排行          → TargetBarChart（单序列，轴在顶）
+ *   「多个」指标做同构对比      → PanelBarChart（小倍数，竖基线，可共享刻度）
+ *   构成占比且要解释每一块      → AnnotatedDonut
+ *   分布/聚类形状本身就是信息  → ScatterClusterPanel
+ *   两组的同一指标做对比        → DataChart
+ * ================================================================= */
+
+/* ---------------------------------------------------------------
+ * I4 多面板参数条形图（PanelBarChart）★理化参数分布页
+ * 复刻自 MCE library p45「片段化合物库相关参数」：2×2 面板，
+ *   每面板 = 顶部刻度行 + 左侧类别标签列 + **竖基线** + 横条，
+ *   底部可选功能标题（如"分子量相关参数"）。
+ * 与 TargetBarChart 的两处硬差别：
+ *   ① 本组件的读法轴是**左侧竖基线**（读数向右），TargetBarChart 的轴在**顶部通栏**；
+ *   ② 本组件是**小倍数**（同构多图），TargetBarChart 是单图。
+ * sharedScale=true 时所有面板共用同一 max —— 只有这时才能横向比较面板之间的量级，
+ *   这是"四个面板看起来一样高"这类误读的唯一解药。
+ *
+ * panels: [{ title, items: [{ label, value, color }], note }]
+ * --------------------------------------------------------------- */
+export function PanelBarChart({
+  panels = [], columns = 2, ticks = 4, barColor, labelWidth = '15mm',
+  sharedScale = false, barHeight = '4.4mm', caption, style,
+}) {
+  const allMax = Math.max(...panels.flatMap(p => (p.items || []).map(i => i.value)), 1)
+  const shared = sharedScale ? niceMax(allMax, ticks) : null
+  return (
+    <div style={{ margin: '5mm 0', ...style }}>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, 1fr)`, gap: '7mm 9mm' }}>
+        {panels.map((p, i) => (
+          <BarPanel key={i} panel={p} ticks={ticks} barColor={barColor}
+            labelWidth={labelWidth} barHeight={barHeight} sharedMax={shared} />
+        ))}
+      </div>
+      {caption && <FigCaption>{caption}</FigCaption>}
+    </div>
+  )
+}
+
+function BarPanel({ panel, ticks, barColor, labelWidth, barHeight, sharedMax }) {
+  const t = useTheme(); const n = useNeutral()
+  const items = panel.items || []
+  if (!items.length) return null
+  const max = sharedMax || niceMax(Math.max(...items.map(i => i.value)), ticks)
+  const scale = Array.from({ length: ticks + 1 }, (_, i) => Math.round((max / ticks) * i))
+
+  return (
+    <div>
+      {panel.title && (
+        <div style={{ fontSize: '9pt', fontWeight: 600, color: '#333', marginBottom: '2.4mm', lineHeight: 1.35 }}>
+          {panel.title}
+        </div>
+      )}
+      {/* 顶部刻度行：与条形区同宽，因此刻度值与条长严格对齐 */}
+      <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+        <div style={{ flex: `0 0 ${labelWidth}` }} />
+        <div style={{
+          flex: 1, display: 'flex', justifyContent: 'space-between',
+          fontSize: '6.5pt', color: n.textSoft, fontVariantNumeric: 'tabular-nums', lineHeight: 1,
+        }}>
+          {scale.map((v, i) => <span key={i}>{v}</span>)}
+        </div>
+      </div>
+      <div style={{ display: 'flex', marginTop: '0.6mm' }}>
+        <div style={{ flex: `0 0 ${labelWidth}` }}>
+          {items.map((it, i) => (
+            <div key={i} style={{
+              height: barHeight, display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+              paddingRight: '2mm', fontSize: '6.8pt', color: n.text,
+              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+            }}>{it.label}</div>
+          ))}
+        </div>
+        <div style={{ flex: 1, minWidth: 0, borderLeft: `0.5pt solid ${n.textSoft}` }}>
+          {items.map((it, i) => (
+            <div key={i} style={{ height: barHeight, display: 'flex', alignItems: 'center' }}>
+              <div style={{
+                width: `${Math.max((it.value / max) * 100, 0.8)}%`, height: `calc(${barHeight} - 1.6mm)`,
+                background: it.color || barColor || t.functional,
+              }} />
+            </div>
+          ))}
+        </div>
+      </div>
+      {panel.note && (
+        <div style={{ fontSize: '7pt', color: n.textSoft, textAlign: 'center', marginTop: '2mm' }}>{panel.note}</div>
+      )}
+    </div>
+  )
+}
+
+/* ---------------------------------------------------------------
+ * I5 注释甜甜圈（AnnotatedDonut）★"我们有什么"的总览页
+ * 复刻自 MCE library p3「药物发现」：中心双行标签 + N 段环 +
+ *   环外侧的**同色标题注解块**（每块 = 彩色标题 + 圆点清单）。
+ * 关键细节（MCE 的"类目色恒定"实证）：注解块标题色 == 对应扇区色，
+ *   读者不需要引线也能完成配对；引线只作辅助。
+ *
+ * ✱ palette 默认 "category"（跨色相）：甜甜圈的各段本就是不同类目，
+ *   同色相会让读者无法区分。这是 R22 允许的显式例外，但要求：
+ *   同一类目在全册任何页保持同一色（传入 segment.color 固定）。
+ *
+ * segments: [{ label, points: [], side: 'left'|'right', color }]
+ * --------------------------------------------------------------- */
+export function AnnotatedDonut({
+  segments = [], center, size = 62, thickness = 20, palette = 'category', caption, style,
+}) {
+  const t = useTheme(); const n = useNeutral()
+  const ramp = pastelRamp(t.functional, Math.max(segments.length, 1), { spread: palette === 'category' ? 1 : 0 })
+  const colors = segments.map((s, i) => s.color || ramp[i % ramp.length].base)
+  const total = segments.length || 1
+  const rOut = 46
+  const rIn = rOut - Math.max(8, Math.min(thickness, 30))
+  const gapA = total > 1 ? 0.03 : 0
+  const left = segments.map((s, i) => ({ s, i })).filter(({ s, i }) => (s.side || (i % 2 === 0 ? 'left' : 'right')) === 'left')
+  const right = segments.map((s, i) => ({ s, i })).filter(({ s, i }) => (s.side || (i % 2 === 0 ? 'left' : 'right')) === 'right')
+
+  return (
+    <div style={{ margin: '5mm 0', ...style }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '4mm', alignItems: 'center' }}>
+        <DonutLegend items={left} colors={colors} align="right" />
+        <div style={{ position: 'relative', width: `${size}mm`, height: `${size}mm`, flexShrink: 0 }}>
+          <svg viewBox="0 0 100 100" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+            {segments.map((_, i) => {
+              const a0 = -Math.PI / 2 + (i / total) * Math.PI * 2 + gapA / 2
+              const a1 = -Math.PI / 2 + ((i + 1) / total) * Math.PI * 2 - gapA / 2
+              return <path key={i} d={arcPath(50, 50, rOut, rIn, a0, a1)} fill={colors[i]} />
+            })}
+          </svg>
+          {center && (
+            <div style={{
+              position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 8mm',
+            }}>
+              <div style={{ fontSize: '11pt', fontWeight: 700, color: '#333', lineHeight: 1.25 }}>{center.label}</div>
+              {center.sub && <div style={{ fontSize: '7pt', color: n.textSoft, marginTop: '0.8mm' }}>{center.sub}</div>}
+            </div>
+          )}
+        </div>
+        <DonutLegend items={right} colors={colors} align="left" />
+      </div>
+      {caption && <FigCaption>{caption}</FigCaption>}
+    </div>
+  )
+}
+
+function DonutLegend({ items, colors, align }) {
+  const n = useNeutral()
+  const right = align === 'right'
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '4mm' }}>
+      {items.map(({ s, i }) => (
+        <div key={i} style={{ borderRight: right ? `0.75pt solid ${colors[i]}` : 'none', paddingRight: right ? '3mm' : 0 }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '1.6mm', marginBottom: '1.4mm',
+            justifyContent: right ? 'flex-end' : 'flex-start',
+          }}>
+            {!right && <span style={{ width: '2.6mm', height: '2.6mm', background: colors[i], flexShrink: 0 }} />}
+            <span style={{ fontSize: '9pt', fontWeight: 700, color: colors[i], lineHeight: 1.3 }}>{s.label}</span>
+            {right && <span style={{ width: '2.6mm', height: '2.6mm', background: colors[i], flexShrink: 0 }} />}
+          </div>
+          <ul style={{
+            margin: 0, paddingLeft: '4.2mm', color: n.text, fontSize: '7pt',
+            lineHeight: 1.62, listStyle: 'disc', textAlign: 'left',
+          }}>
+            {(s.points || []).map((p, j) => <li key={j} style={{ marginBottom: '0.4mm' }}>{renderRich(p)}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// 甜甜圈扇区路径（外弧 → 内弧闭合）
+function arcPath(cx, cy, rO, rI, a0, a1) {
+  const P = (r, a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)]
+  const large = a1 - a0 > Math.PI ? 1 : 0
+  const [x0, y0] = P(rO, a0); const [x1, y1] = P(rO, a1)
+  const [x2, y2] = P(rI, a1); const [x3, y3] = P(rI, a0)
+  return `M${x0.toFixed(2)} ${y0.toFixed(2)} A${rO} ${rO} 0 ${large} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`
+    + ` L${x2.toFixed(2)} ${y2.toFixed(2)} A${rI} ${rI} 0 ${large} 0 ${x3.toFixed(2)} ${y3.toFixed(2)} Z`
+}
+
+/* ---------------------------------------------------------------
+ * I6 散点聚类面板（ScatterClusterPanel）★化学空间 / 分布形态
+ * 复刻自 MCE library p44 上带：一片散点云 + 半透明聚类色块 + 横排色块图例。
+ * 语义：**分布形状本身就是信息**——用条形图会把这个信息压掉。
+ * points 省略时按种子确定性生成（同一份数据每次渲染结果一致，避免 PDF 与预览不符）。
+ *
+ * points:   [{ x, y, group }]        坐标为 0–100 的百分比空间
+ * clusters: [{ x, y, r, color }]     半透明聚类色块
+ * legend:   [{ label, color }]
+ * --------------------------------------------------------------- */
+export function ScatterClusterPanel({
+  points, clusters = [], legend = [], height = 46, dot = 1.5,
+  palette = 'category', seed = 7, caption, style,
+}) {
+  const t = useTheme(); const n = useNeutral()
+  const pts = points || generateCloud(seed, 220)
+  const groups = [...new Set(pts.map(p => p.group ?? 0))].sort()
+  const ramp = pastelRamp(t.functional, Math.max(groups.length, 1), { spread: palette === 'category' ? 1 : 0 })
+  const colorOf = (g) => ramp[Math.max(groups.indexOf(g ?? 0), 0) % ramp.length].base
+  return (
+    <div style={{ margin: '5mm 0', ...style }}>
+      <div style={{ position: 'relative', width: '100%', height: `${height}mm`, background: '#fff' }}>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+          {clusters.map((c, i) => (
+            <circle key={`c${i}`} cx={c.x} cy={c.y} r={c.r} fill={c.color || t.capsuleLight} fillOpacity="0.22" />
+          ))}
+          {pts.map((p, i) => (
+            <circle key={i} cx={p.x} cy={p.y} r={dot} fill={p.color || colorOf(p.group)}
+              fillOpacity={p.dim ? 0.5 : 0.92} />
+          ))}
+        </svg>
+      </div>
+      <div style={{ borderBottom: `0.4pt solid ${n.line}` }} />
+      {legend.length > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2mm 6mm', marginTop: '2.4mm', justifyContent: 'flex-end' }}>
+          {legend.map((l, i) => (
+            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '1.6mm', fontSize: '7pt', color: n.text }}>
+              <span style={{ width: '2.4mm', height: '2.4mm', background: l.color, flexShrink: 0 }} />{l.label}
+            </span>
+          ))}
+        </div>
+      )}
+      {caption && <FigCaption>{caption}</FigCaption>}
+    </div>
+  )
+}
+
+// 确定性散点云：LCG 伪随机，保证每次渲染完全一致（PDF 与预览不得有差异）
+function generateCloud(seed, count) {
+  let s = seed
+  const rnd = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff }
+  const out = []
+  for (let i = 0; i < count; i++) {
+    const g = i % 4
+    const cx = [22, 52, 74, 34][g]
+    const cy = [68, 30, 62, 22][g]
+    const r = 14 + rnd() * 10
+    const a = rnd() * Math.PI * 2
+    const d = Math.sqrt(rnd()) * r
+    out.push({
+      x: Math.max(2, Math.min(98, cx + d * Math.cos(a))),
+      y: Math.max(2, Math.min(98, cy + d * Math.sin(a))),
+      group: g,
+    })
+  }
+  return out
 }

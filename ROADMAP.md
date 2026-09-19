@@ -30,19 +30,35 @@
 - [x] 6 页 A4 组件陈列 + `examples/components-v0.3.pdf`
 - [x] `scripts/audit.mjs` 一致性校验（`npm run audit`）：组件/规则/原型/模板计数与命名空间越界，文档与代码不一致即退出码 1
 - [x] doc-drift 修复：组件计数 24/34 → 实际 **37**；规则 13 → **21**；命名空间去撞车（原型 `T1–T7` → `L1–L7`、扩展类型 `E` → `X`、铁律去 `L` 前缀、元素母题保留 `E01–`）
-- [ ] 实现队列 **P1**：`RowLabelMatrixTable` / `DotLeaderIndex` / `ContactFooterBand` / `BrandHeaderBar` / `GhostPairTitle`（默认关闭）
-- [ ] 实现队列 **P2**：`CompareMatrixTable` / `CodedProductGrid` / `StatCompareCard` / `CategoryIconGrid` / `GelEvidencePanel` / `MediaCoverGrid` / `PathwayFigureCard` / `InstrumentPhotoGrid` / `FunnelBand` / `FeatureBulletList`
-- [ ] 实现队列 **P3**：`TableOfContentsBand` / `SeriesListTable` / `ChartPanel` / `StructureGallery` / `DonutChartPanel` / `NumberedPlatformFigure` / `CircleBadge` / `Cover` 遮罩变体
-- [ ] **待你决策的两项**：① 英文幽灵标题是否纳入默认标题体系；② 分子彩纸母题是否作为第 4 母题加入（当前决定：不加入）
+- [x] 实现队列 **P1**（部分，v0.4 完成）：`RowLabelMatrixTable` ✅ / `BrandHeaderBar` ✅ / `ContactFooterBand` ✅ / `TocList`（等价于 `DotLeaderIndex`）✅ / `GhostPairTitle` ⬜（仍待决策）
+- [ ] 实现队列 **P2**（v0.4 未做，顺延）：`CompareMatrixTable` / `CodedProductGrid` / `StatCompareCard` / `CategoryIconGrid` / `GelEvidencePanel` / `MediaCoverGrid` / `PathwayFigureCard` / `InstrumentPhotoGrid` / `FunnelBand` / `FeatureBulletList`
+- [ ] 实现队列 **P3**（v0.4 未做，顺延）：`TableOfContentsBand` / `SeriesListTable` / `ChartPanel` / `StructureGallery` / `DonutChartPanel` / `NumberedPlatformFigure` / `CircleBadge` / `Cover` 遮罩变体
+- [ ] **待你决策的两项**：① 英文幽灵标题是否纳入默认标题体系（v0.4 给了 `PairTitle` 作中英对照默认，幽灵叠压版仍搁置）；② 分子彩纸母题是否作为第 4 母题加入（当前决定：不加入）
 
-## v0.4 — 按真实项目补齐
+## v0.4 — 组件库系统性补全（已完成，2026-09-19）
+
+> 触发原因：用 v0.3（37 个组件）做真实手册时，多种语义**找不到对应形态**，只能硬套或手写一次性样式。
+
+- [x] 按「层 × 族」补全组件库：**37 → 71 个组件**（14 族，其中 K / M / N / O 为新族）
+- [x] 标题形态从 3 种补到 **12 种**，并立"形态跟语义绑定"的纪律（H1 一页一个、全册 H2 只用一种）
+- [x] 文本层建族 K（7 个）：此前只有 `Lead` / `Sub` / `Footnotes`，而文本是占比最大的内容层
+- [x] 拓扑从 4 种补到 **10 种**：新增 `NumberedStepFlow` / `HexChain` / `BeadChain` / `AnnotatedCycle` / `ServiceNetworkMap` / `PhaseBand`
+- [x] 新增规则 **R22 类目色纪律** + `toneRamp` / `categoryRamp` 语义化别名
+- [x] 新增 `references/taxonomy.md`：按"层"选组件的入口（含语义→拓扑对照表）
+- [x] 新增 `scripts/verify.cjs`（`npm run verify`）：把"静默裁切"变成退出码
+- [x] 12 页组件陈列 Demo + 逐页密度实测（75.6%–89.9%，无溢出）
+- [x] 文档全量同步（components / README / SKILL / rules / checklist），`npm run audit` 全绿
+- [ ] **仍未做**：`examples/components-v0.4.pdf` 之外的样例更新；族 K/M/N/O 的真实项目验证（下一个真实手册项目里跑）
+
+## v0.5 — 按真实项目补齐
 
 - [ ] 用本系统完整做一版公司手册，记录"哪一页找不到对应原型 / 组件"
 - [ ] 按缺口补 T01–T07 模板与 E04+ 元素
   - **优先补 L4 卖点页型模板（T08）与 L2 目录型模板（T09）**——L1–L7 里目前只有这两个原型没有对应模板，而 L4 是最常用页型
 - [ ] `checklist.md` 的半自动校验脚本（色相越界检测 / 组件白名单扫描 / 一页多胶囊检测）
+  - 注：v0.4 已解决其中最要命的一项（**溢出**，见 `verify.cjs`），剩下的色彩/白名单扫描可在此基础上扩展
 
-## v0.5 — 载体与形态
+## v0.6 — 载体与形态
 
 - [ ] **本地 skill 化**：把 `SKILL.md` 装到 `~/.workbuddy/skills/`，让 Agent 自动触发（当前需手动指路）
 - [ ] 载体 B：Web 产品落地页（同令牌、px 栅格）

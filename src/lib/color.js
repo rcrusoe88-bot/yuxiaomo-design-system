@@ -60,17 +60,31 @@ export const mixBlack = (hex, amt) => {
   return rgbToHex([r * (1 - amt), g * (1 - amt), b * (1 - amt)])
 }
 
-// 从主题主色派生 n 组浅色标签色（低饱和高亮度，色相均匀错开）
-// 返回 [{ bg 浅底, fg 同色相深字, base 中调 }]
+// 从主题主色派生 n 组浅色标签色，返回 [{ bg 浅底, fg 同色相深字, base 中调 }]
+//
+// spread = 1（默认）→ 色相按 HUE_OFFSETS 错开，得到"跨色相"的类目色轮转。
+//   仅用于确需区分类目的场合（R22 要求调用方显式声明 palette="category"）。
+// spread = 0 → 锁死色相，改用**明度分阶**拉开层次，得到"同色相多档"。
+//   这是本系统的默认纪律（R1 一册一色相 / R22 类目色恒定），
+//   因为一页里出现 5 个不同色相，是最典型的 AI slop 视觉特征。
 const HUE_OFFSETS = [0, 30, -26, 58, -54, 88, -84, 116]
-export function pastelRamp(baseHex, n) {
+export function pastelRamp(baseHex, n, { spread = 1, sat = 52, light = 50 } = {}) {
   const [h0] = rgbToHsl(hexToRgb(baseHex))
-  return Array.from({ length: Math.max(n, 1) }, (_, i) => {
-    const h = h0 + HUE_OFFSETS[i % HUE_OFFSETS.length] + Math.floor(i / HUE_OFFSETS.length) * 14
+  const count = Math.max(n, 1)
+  return Array.from({ length: count }, (_, i) => {
+    const round = Math.floor(i / HUE_OFFSETS.length)
+    const h = spread ? h0 + HUE_OFFSETS[i % HUE_OFFSETS.length] * spread + round * 14 : h0
+    // 同色相模式：base 明度从 light+16 线性降到 light-9.6，保证相邻档仍可分辨
+    const step = 32 / count
     return {
-      bg: rgbToHex(hslToRgb([h, 34, 90])),
-      fg: rgbToHex(hslToRgb([h, 44, 33])),
-      base: rgbToHex(hslToRgb([h, 52, 50])),
+      bg: rgbToHex(hslToRgb([h, 34, spread ? 90 : Math.min(94, 87 + (i % 3) * 3)])),
+      fg: rgbToHex(hslToRgb([h, 44, spread ? 33 : Math.max(26, 42 - (i % count) * (12 / count))])),
+      base: rgbToHex(hslToRgb([h, spread ? sat : Math.max(34, sat - 14), spread ? light : light + 16 - (i % count) * step])),
     }
   })
 }
+
+// 同色相多阶（R22 默认路径的语法糖）：pastelRamp(hex, n, { spread: 0 })
+export const toneRamp = (baseHex, n) => pastelRamp(baseHex, n, { spread: 0 })
+// 跨色相类目色（须显式声明）：pastelRamp(hex, n, { spread: 1 })
+export const categoryRamp = (baseHex, n) => pastelRamp(baseHex, n, { spread: 1 })

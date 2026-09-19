@@ -1,6 +1,8 @@
 // 族 C 表格：R5 —— 表头实底+白字+白缝+顶角圆；表体仅横线+斑马纹
 // cells 支持 { v, rowSpan, colSpan, highlight, bold, label }
+// v0.4 追加 C4–C6（行标签矩阵 / 方法对照 / 键值属性），语体分工见文件中部注释。
 import { useTheme, useNeutral } from './theme'
+import { renderRich } from './text'
 
 /**
  * columns: string[] 表头
@@ -103,5 +105,205 @@ export function ProductHeaderRow({ title, colSpan }) {
         borderBottom: '1mm solid #fff',
       }}>{title}</td>
     </tr>
+  )
+}
+
+/* =================================================================
+ * 以下为 v0.4 新增：源自 MCE 逆向的三种**非营销**表格语体。
+ *
+ * 至此本系统的表格共 **四种语体**，按"页型"选用，不可混：
+ *   SpecTable            实底反白表头   → 营销参数表（卖点导向）
+ *   TierMatrixTable      列头深浅递进   → 档位对比（承诺强度导向）
+ *   InstrumentReportPanel 浅底细线      → 仪器/技术数据表（证据导向）
+ *   RowLabelMatrixTable  行标签 + 图片列头 → 多产品横向规格对比（选型导向）
+ *   MethodTable          左列术语双语   → 方法/用途对照（知识导向）
+ *   KeyValueTable        无表头键值纵排 → 产品属性栏（信息导向）
+ * ================================================================= */
+
+/* ---------------------------------------------------------------
+ * C4 行标签矩阵表（RowLabelMatrixTable）★多产品横向选型首选
+ * 复刻自 MCE library p7「化合物库常规参数」：
+ *   行 = 参数名（左列 tint 底、居中、加粗），列 = 被测产品（列头可放产品图）。
+ * 什么时候用它而不是 SpecTable？
+ *   SpecTable 的行是"产品"，列是"参数"——适合逐行读一家；
+ *   本组件的行是"参数"，列是"产品"——适合**横向比同档位**（选型场景）。
+ *
+ * columns: [{ label, sub, image, en }]   —— image 走 base64 内联，导出 PDF 才不丢图
+ * rows:    [{ label, en, cells: [] }]    —— cell 支持 { v,rowSpan,colSpan,highlight,bold,align }
+ * divider: 默认 false（守 R5 无竖线）；列数 >3 的宽矩阵可开，用 0.4pt 极浅竖线辅助对齐
+ * --------------------------------------------------------------- */
+export function RowLabelMatrixTable({
+  labelHeader = '', labelWidth = '34mm', columns = [], rows = [],
+  fontSize = '8pt', divider = false, style,
+}) {
+  const t = useTheme(); const n = useNeutral()
+  const cellBorder = (ci) => ({
+    borderBottom: `0.4pt solid ${n.line}`,
+    borderLeft: divider && ci > 0 ? `0.4pt solid ${n.line}` : 'none',
+  })
+  return (
+    <table style={{
+      width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed',
+      fontSize, color: n.text, ...style,
+    }}>
+      <colgroup>
+        <col style={{ width: labelWidth }} />
+        {columns.map((_, i) => <col key={i} />)}
+      </colgroup>
+      <thead>
+        <tr>
+          <th style={{
+            textAlign: 'left', verticalAlign: 'bottom', padding: '1.8mm 2.4mm',
+            fontSize: '7.5pt', fontWeight: 600, color: n.textSoft,
+            borderBottom: `0.75pt solid ${t.functional}`,
+          }}>{labelHeader}</th>
+          {columns.map((c, i) => (
+            <th key={i} style={{
+              textAlign: 'center', verticalAlign: 'bottom', padding: '2mm 2.4mm',
+              borderBottom: `0.75pt solid ${t.functional}`,
+              borderLeft: divider && i > 0 ? `0.4pt solid ${n.line}` : 'none',
+            }}>
+              {c.image && (
+                <div style={{ marginBottom: '1.6mm' }}>
+                  <img src={c.image} alt="" style={{ maxWidth: '100%', maxHeight: '16mm', objectFit: 'contain' }} />
+                </div>
+              )}
+              {c.label && (
+                <div style={{ fontWeight: 700, fontSize: '9pt', color: '#333', lineHeight: 1.35 }}>{c.label}</div>
+              )}
+              {c.sub && (
+                <div style={{
+                  fontWeight: 400, fontSize: '7pt', color: n.textSoft, marginTop: '0.7mm', lineHeight: 1.4,
+                }}>{c.sub}</div>
+              )}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r, ri) => (
+          <tr key={ri}>
+            <td style={{
+              background: t.tint, textAlign: 'center', verticalAlign: 'middle',
+              padding: '2mm 2.4mm', fontWeight: 700, fontSize: '8.5pt', color: '#333',
+              lineHeight: 1.45, borderBottom: `0.4pt solid ${n.line}`,
+            }}>
+              {r.label}
+              {r.en && (
+                <div style={{ fontWeight: 400, fontSize: '6.5pt', color: n.textSoft, marginTop: '0.7mm' }}>{r.en}</div>
+              )}
+            </td>
+            {(r.cells || []).map((cell, ci) => {
+              if (cell === null) return null
+              const o = typeof cell === 'object' ? cell : { v: cell }
+              return (
+                <td key={ci}
+                  rowSpan={o.rowSpan} colSpan={o.colSpan}
+                  style={{
+                    ...cellBorder(ci),
+                    padding: '2mm 2.4mm', verticalAlign: 'middle', lineHeight: 1.58,
+                    textAlign: o.align || 'center',
+                    background: o.highlight ? t.tint : '#fff',
+                    color: o.highlight ? t.functional : n.text,
+                    fontWeight: o.bold || o.highlight ? 700 : 400,
+                  }}>{o.v}</td>
+              )
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
+/* ---------------------------------------------------------------
+ * C5 方法对照表（MethodTable）★服务/检测能力页
+ * 复刻自 MCE library p8「常用分子水平检测方法」：
+ *   左列 = 中文方法名 + 英文缩写（Roboto 混排、次级灰、另起一行），右列 = 用途描述。
+ * 语言纪律（本系统核心）：中文与英文缩写**分行**，绝不写成 `时间分辨荧光共振能量转移(TR-FRET)`
+ *   这样把括号塞在中文中间——那会让整列参差不齐。
+ * --------------------------------------------------------------- */
+export function MethodTable({ rows = [], headers = ['方法', '用途'], nameWidth = '46mm', size = '8.5pt', caption, style }) {
+  const t = useTheme(); const n = useNeutral()
+  return (
+    <div style={{ margin: '4mm 0', ...style }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed', fontSize: size, color: n.text }}>
+        <colgroup>
+          <col style={{ width: nameWidth }} />
+          <col />
+        </colgroup>
+        <thead>
+          <tr>
+            {headers.map((h, i) => (
+              <th key={i} style={{
+                background: t.tint, textAlign: 'left', verticalAlign: 'middle',
+                padding: '2.2mm 2.6mm', fontSize: '8.5pt', fontWeight: 600, color: '#333',
+                borderBottom: `0.5pt solid ${t.capsuleLight}`,
+              }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r, ri) => (
+            <tr key={ri} style={{ background: ri % 2 ? t.zebra : '#fff' }}>
+              <td style={{
+                padding: '2.4mm 2.6mm', verticalAlign: 'top', lineHeight: 1.5,
+                borderBottom: `0.4pt solid ${n.line}`,
+              }}>
+                <div style={{ fontWeight: 600, color: n.text }}>{r.name}</div>
+                {r.en && (
+                  <div style={{ fontSize: '7pt', fontWeight: 400, color: n.textSoft, marginTop: '0.7mm' }}>{r.en}</div>
+                )}
+              </td>
+              <td style={{
+                padding: '2.4mm 2.6mm', verticalAlign: 'top', lineHeight: 1.65,
+                borderBottom: `0.4pt solid ${n.line}`,
+              }}>{renderRich(r.desc)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {caption && (
+        <div style={{ fontSize: '7.5pt', fontWeight: 600, color: n.text, textAlign: 'right', marginTop: '2mm' }}>
+          {caption}
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* ---------------------------------------------------------------
+ * C6 键值属性表（KeyValueTable）★产品页左栏属性清单
+ * **无列头**的两列纵排：左键（tint 底、加粗）右值。
+ * 与 DefinitionList 的分工：DefinitionList 是"术语 → 释义"的连续阅读块（无底色）；
+ *   本组件是"属性 → 取值"的**清单**（有底色、可读性优先、用于选型决策）。
+ * --------------------------------------------------------------- */
+export function KeyValueTable({ items = [], labelWidth = '32mm', size = '8.5pt', divided = true, style }) {
+  const t = useTheme(); const n = useNeutral()
+  return (
+    <table style={{
+      width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed',
+      fontSize: size, color: n.text, ...style,
+    }}>
+      <colgroup>
+        <col style={{ width: labelWidth }} />
+        <col />
+      </colgroup>
+      <tbody>
+        {items.map((it, i) => (
+          <tr key={i}>
+            <td style={{
+              background: t.tint, fontWeight: 700, color: '#333',
+              padding: '2.2mm 2.8mm', verticalAlign: 'middle', lineHeight: 1.5,
+              borderBottom: divided && i < items.length - 1 ? `0.4pt solid ${n.line}` : 'none',
+            }}>{it.k}</td>
+            <td style={{
+              padding: '2.2mm 3mm', verticalAlign: 'middle', lineHeight: 1.65,
+              borderBottom: divided && i < items.length - 1 ? `0.4pt solid ${n.line}` : 'none',
+            }}>{renderRich(it.v)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   )
 }

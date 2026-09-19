@@ -27,8 +27,8 @@ const warn = (m) => warns.push(m)
 
 const NON_COMPONENT = new Set([
   'THEMES', 'NEUTRAL', 'getTheme', 'ThemeProvider', 'useTheme', 'useNeutral', 'ICON_NAMES',
-  'pastelRamp', 'mixWhite', 'mixBlack', 'shiftHue',
-  'hexToRgb', 'rgbToHex', 'rgbToHsl', 'hslToRgb',
+  'pastelRamp', 'toneRamp', 'categoryRamp', 'mixWhite', 'mixBlack', 'shiftHue',
+  'hexToRgb', 'rgbToHex', 'rgbToHsl', 'hslToRgb', 'renderRich',
 ])
 
 const indexSrc = read('src/lib/index.js')
