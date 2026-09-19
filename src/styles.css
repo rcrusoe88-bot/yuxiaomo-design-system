@@ -1,0 +1,45 @@
+/* 基础 + 打印规则（A4 print SOP：@page margin 0 + 逐页真实尺寸 + print-color-adjust） */
+* { margin: 0; padding: 0; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  background: #e8e8e8;
+  font-family: 'Inter', 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  color: #4D4D4F;
+  font-size: 9.5pt;
+}
+
+/* A4 页面在屏幕上的呈现 */
+.bds-page {
+  margin: 8mm auto;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.18);
+  break-after: page;
+}
+
+/* 主题区标签（打印时隐藏） */
+.bds-demo-banner {
+  max-width: 210mm; margin: 8mm auto 0; padding: 3mm 5mm;
+  background: #333; color: #fff; font-size: 10pt; border-radius: 2mm;
+}
+
+/* 主题切换条（演示用，可点选对比；打印时隐藏） */
+.bds-switchbar {
+  max-width: 210mm; margin: 8mm auto 0; padding: 4mm 5mm;
+  background: #fff; border: 1px solid #ddd; border-radius: 2mm;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  font-size: 9pt;
+}
+.bds-switchbar button {
+  cursor: pointer; padding: 4px 10px; border-radius: 999px; font-size: 9pt;
+  font-weight: 600; line-height: 1; transition: all .15s;
+}
+.bds-switchbar .hint { color: #999; font-size: 8pt; font-weight: 400; margin-left: 4px; }
+
+@page { size: A4; margin: 0; }
+
+@media print {
+  body { background: #fff; }
+  .bds-page { margin: 0; box-shadow: none; }
+  .bds-demo-banner { display: none; }
+  .bds-switchbar { display: none; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

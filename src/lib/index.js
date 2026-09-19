@@ -1,0 +1,10 @@
+// Brochure Design System —— 公开 API
+export { THEMES, NEUTRAL, getTheme } from './themes'
+export { ThemeProvider, useTheme, useNeutral } from './theme'
+export { Page, Folio, CapsuleDecor, PillTitle, H2, Sub, Lead, Footnotes } from './primitives'
+export { Cover, SectionDivider, IslandBulletGrid, BackCover } from './structure'
+export { StatCardRow, TierCards, ConclusionBanner, TestimonialCard } from './cards'
+export { SpecTable, TierMatrixTable, ProductHeaderRow } from './tables'
+export { FlowChain, IconFlowBar, TimelineBar, ChevronFlow } from './flow'
+export { CaseBlock, EvidenceGrid, DataChart } from './case'
+export { Icon, ICON_NAMES } from './icons'
