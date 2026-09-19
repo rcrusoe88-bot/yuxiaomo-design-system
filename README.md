@@ -15,13 +15,13 @@ yuxiaomo-design-system/
 ├── ROADMAP.md                  # 路线图：已完成 / 待补 / backlog
 ├── design-language.md          # 设计基因：为什么这样设计
 ├── references/                 # 被参照的规范（Agent 按需读）
-│   ├── rules.md                # 13 条可命名审美规则
+│   ├── rules.md                # 21 条可命名审美规则（R1–R21）
 │   ├── tokens.md               # 主题令牌 / 颜色 / 字阶 / 间距
-│   ├── components.md           # 24 个组件的 API 与用法
+│   ├── components.md           # 37 个组件的 API 与用法（10 族）
 │   ├── layouts.md              # 7 个版式原型 + 叙事铁律
 │   ├── anti-patterns.md        # AI slop 反模式黑名单
 │   ├── checklist.md            # 交付前自检清单
-│   └── extending.md            # ⭐ 扩展指南：五类扩展 SOP + 完成定义 + 公开红线
+│   └── extending.md            # ⭐ 扩展指南：六类扩展 SOP（X1–X6）+ 完成定义 + 公开红线
 ├── templates/                  # 整页参考模板（组件是零件，模板是装好的整页）
 │   └── README.md               # 模板索引 T01–T07 + 模板规范
 ├── elements/                   # 设计元素库（可跨主题复用的装饰母题）
@@ -60,20 +60,43 @@ node shot.cjs                                     # 逐页截图（visual check�
 
 每套主题含 7 个角色：`functional` / `header` / `dark` / `tint` / `zebra` / `capsuleLight` / `capsuleDeep`，外加 `ramp`（时间轴递变色带）。**加一家新公司 = 往 `themes.js` 加 8 行。**
 
-## 组件总览（34 个，10 族）
+## 组件总览（37 个，10 族）
 
 - **A 结构页**：`Cover` / `SectionDivider` / `IslandBulletGrid` / `BackCover`
-- **B 标题**：`PillTitle` / `H2` / `Sub` / `Lead`
+- **B 标题**：`PillTitle` / `H2` / `Sub` / `Lead` / `Footnotes`
 - **C 表格**：`SpecTable` / `TierMatrixTable` / `ProductHeaderRow`
 - **D 卡片**：`StatCardRow` / `TierCards` / `TestimonialCard` / `ConclusionBanner`
 - **E 流程**：`FlowChain` / `IconFlowBar` / `TimelineBar` / `ChevronFlow`
 - **F 案例证据**：`CaseBlock` / `EvidenceGrid` / `DataChart`
-- **G 家具**：`Page` / `Folio` / `Footnotes` / `Icon`（16 个面性双色图标）
+- **G 家具**：`Page` / `Folio` / `Icon`（16 个面性双色图标）/ `CapsuleDecor`（装饰原语，母题 E01）
 - **H 流程图解**（v0.3）：`StagePipelineChain` / `FunnelStages` / `CycleFlowDiagram` / `ComboEquationDiagram`
 - **I 数据证据**（v0.3）：`TargetBarChart` / `InstrumentReportPanel` / `CitationBlock`
 - **J 标签**（v0.3）：`CategoryTagRow` / `ChipPillGrid` / `IconFeatureList`
 
 另有色彩工具 `pastelRamp` / `mixWhite` / `mixBlack` / `shiftHue`：让组件从主题令牌**派生**浅色系，而非写死 hex。
+
+## 编号命名空间
+
+系统里并存六套编号，**互不通用**——引用时务必带前缀，否则 Agent 会误判指向哪个文件。
+
+| 命名空间 | 含义 | 定义处 | 当前范围 |
+|---|---|---|---|
+| `R1–R21` | 可命名审美规则 | `references/rules.md` | 21 条 |
+| 族 `A–J` | 组件族 | `references/components.md` | 10 族 / 37 组件 |
+| `L1–L7` | 版式原型（页面**句型**/骨架） | `references/layouts.md` | 7 个 |
+| `T01–T07` | 整页模板（装配好的**成品页**） | `templates/README.md` | 7 个（待补） |
+| `E01–E0x` | 设计元素母题 | `elements/README.md` | 3 个（已实现） |
+| `X1–X6` | 扩展 SOP 类型 | `references/extending.md` | 6 类 |
+
+> 原型与模板是**多对多**：一个原型可派生多个模板，一个模板必挂一个原型（见 `templates/README.md` 的"对应原型"列）。
+
+## 一致性校验
+
+```bash
+npm run audit     # 核对文档声明的组件/规则/原型/模板数量与代码实际是否一致
+```
+
+改完文档或加了组件后跑一次。`npm run build` 只保证代码能编译，**不保证文档没写错数**。
 
 ## 如何往里加东西（扩展系统）
 
@@ -83,7 +106,7 @@ node shot.cjs                                     # 逐页截图（visual check�
 |---|---|---|---|
 | **品牌主题** | `src/lib/themes.js` | key 用品牌小写（`yuantai`） | 补 `references/tokens.md` + 本文件主题表；跑一遍 examples 确认对比度 |
 | **React 组件** | `src/lib/<族>.jsx` | PascalCase 语义化 | 导出到 `lib/index.js` + 补 `references/components.md` + demo 里真用一次 |
-| **版式原型** | `references/layouts.md` | 顺延 `L9 / L10…` | 写清"何时用 / 由哪些组件构成 / 密度等级"，补进叙事铁律 |
+| **版式原型** | `references/layouts.md` | 顺延 `L8 / L9…` | 写清"何时用 / 由哪些组件构成 / 密度等级"，补进叙事铁律 |
 | **整页模板** | `templates/` | `tpl-<场景>-<版式>.html` | 补 `templates/README.md` 索引 + 预览图 |
 | **设计元素** | `elements/` | `el-<族>-<名称>.svg` | 补 `elements/README.md` 母题登记表 |
 | **参考手册语料** | 本地参考库（仓库外） | — | 逆向出结论后，只把**被验证的规则/组件/令牌**并入系统，原图与原文件不入库 |

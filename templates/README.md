@@ -10,15 +10,18 @@
 
 | 编号 | 模板 | 对应原型 | 密度 | 主题 | 文件 | 状态 |
 |---|---|---|---|---|---|---|
-| T01 | 封面（深底 + 斜带母题） | L1 | 疏 | 任意 | `tpl-cover-diagonal.html` | 待补 |
-| T02 | 章节分隔页 | L2 | 疏 | 任意 | `tpl-section-divider.html` | 待补 |
-| T03 | 参数规格页（实底表头表） | L4 | 密 | 任意 | `tpl-spec-table.html` | 待补 |
-| T04 | 服务档位页（三卡 + 矩阵表） | L3 | 中 | 任意 | `tpl-tier-cards.html` | 待补 |
-| T05 | 数据证据页（图 + 结论横幅） | L5 | 中 | 任意 | `tpl-evidence.html` | 待补 |
-| T06 | 案例页（图叠文 + 客户证言） | L6 | 中 | 任意 | `tpl-case-story.html` | 待补 |
-| T07 | 收尾联系页 | L8 | 疏 | 任意 | `tpl-backcover.html` | 待补 |
+| T01 | 封面（深底 + 斜带母题） | L1 封面型 | 疏 | 任意 | `tpl-cover-diagonal.html` | 待补 |
+| T02 | 章节分隔页 | L3 章节总览型 | 疏 | 任意 | `tpl-section-divider.html` | 待补 |
+| T03 | 参数规格页（实底表头表） | L5 参数页型 | 密 | 任意 | `tpl-spec-table.html` | 待补 |
+| T04 | 服务档位页（三卡 + 矩阵表） | L5 参数页型 | 中 | 任意 | `tpl-tier-cards.html` | 待补 |
+| T05 | 数据证据页（图 + 结论横幅） | L6 证据页型 | 中 | 任意 | `tpl-evidence.html` | 待补 |
+| T06 | 案例页（图叠文 + 客户证言） | L6 证据页型 | 中 | 任意 | `tpl-case-story.html` | 待补 |
+| T07 | 收尾联系页 | L7 收口页型 | 疏 | 任意 | `tpl-backcover.html` | 待补 |
 
-> 现在可直接参考的完整装配样例：`../src/demo/AppYuantai.jsx`（5 页 mRNA-LNP 手册，真实文案）。
+> **原型覆盖缺口**：`L2 目录型` 与 `L4 卖点页型` 目前**无模板**（L4 是最常用的页型，建议优先补 T08）。
+> 原型编号见 `../references/layouts.md`（`L1–L7`）；本表编号是**整页模板**的 `T01–T07`，两者不可混用。
+>
+> 现在可直接参考的完整装配样例：`../src/demo/AppYuantai.jsx`（5 页 mRNA-LNP 手册，真实文案）与 `../src/demo/AppComponents.jsx`（6 页 v0.3 组件陈列）。
 
 ## 模板规范
 

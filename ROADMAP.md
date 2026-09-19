@@ -4,9 +4,9 @@
 
 ## v0.1 — 系统成型（2026-09-19）
 
-- [x] 13 条可命名审美规则（带页码证据）
+- [x] 13 条可命名审美规则（带页码证据，v0.3 扩到 21 条）
 - [x] 5 套品牌主题令牌（blue / red / purple / wine / yuantai）
-- [x] 24 个 React 组件（7 族）+ 16 个面性双色图标
+- [x] 27 个 React 组件（7 族）+ 16 个面性双色图标（v0.3 实测：初版计数漏 3 个，实为 27）
 - [x] 7 个版式原型 + 叙事铁律 + 密度节奏
 - [x] AI slop 六类反模式黑名单
 - [x] A4 打印链路（Playwright → PDF）+ 交付自检清单
@@ -14,20 +14,22 @@
 
 ## v0.2 — 扩展骨架
 
-- [x] 扩展指南 `references/extending.md`（五类扩展 SOP + 完成定义 + 公开红线）
+- [x] 扩展指南 `references/extending.md`（六类扩展 SOP X1–X6 + 完成定义 + 公开红线）
 - [x] `templates/` 整页模板索引（T01–T07 待补）
 - [x] `elements/` 设计元素母题登记（E01–E03 已实现）
 - [x] `assets/` 品牌素材包规范
 - [ ] **好坏样例对照** `examples/good-vs-bad.md`（同内容并排：系统产出 vs 典型 AI slop）——防 slop 最直接的一课
 - [ ] 首个真实模板落地（建议从 T04 服务档位页开始）
 
-## v0.3 — 第二批语料：MCE 五册逆向（当前完成）
+## v0.3 — 第二批语料：MCE 五册逆向（已完成）
 
 - [x] 逆向 MCE 五册 145 页，产出 `设计元素完整清单_MCE.md`（含 5 处冲突判定）
 - [x] 新增 3 族 / 10 个组件：`StagePipelineChain` `FunnelStages` `CycleFlowDiagram` `ComboEquationDiagram` / `TargetBarChart` `InstrumentReportPanel` `CitationBlock` / `CategoryTagRow` `ChipPillGrid` `IconFeatureList`
 - [x] 新增 `color.js` 色彩派生工具（`pastelRamp` 等）
 - [x] 新增规则 R14–R21
 - [x] 6 页 A4 组件陈列 + `examples/components-v0.3.pdf`
+- [x] `scripts/audit.mjs` 一致性校验（`npm run audit`）：组件/规则/原型/模板计数与命名空间越界，文档与代码不一致即退出码 1
+- [x] doc-drift 修复：组件计数 24/34 → 实际 **37**；规则 13 → **21**；命名空间去撞车（原型 `T1–T7` → `L1–L7`、扩展类型 `E` → `X`、铁律去 `L` 前缀、元素母题保留 `E01–`）
 - [ ] 实现队列 **P1**：`RowLabelMatrixTable` / `DotLeaderIndex` / `ContactFooterBand` / `BrandHeaderBar` / `GhostPairTitle`（默认关闭）
 - [ ] 实现队列 **P2**：`CompareMatrixTable` / `CodedProductGrid` / `StatCompareCard` / `CategoryIconGrid` / `GelEvidencePanel` / `MediaCoverGrid` / `PathwayFigureCard` / `InstrumentPhotoGrid` / `FunnelBand` / `FeatureBulletList`
 - [ ] 实现队列 **P3**：`TableOfContentsBand` / `SeriesListTable` / `ChartPanel` / `StructureGallery` / `DonutChartPanel` / `NumberedPlatformFigure` / `CircleBadge` / `Cover` 遮罩变体
@@ -37,9 +39,10 @@
 
 - [ ] 用本系统完整做一版公司手册，记录"哪一页找不到对应原型 / 组件"
 - [ ] 按缺口补 T01–T07 模板与 E04+ 元素
+  - **优先补 L4 卖点页型模板（T08）与 L2 目录型模板（T09）**——L1–L7 里目前只有这两个原型没有对应模板，而 L4 是最常用页型
 - [ ] `checklist.md` 的半自动校验脚本（色相越界检测 / 组件白名单扫描 / 一页多胶囊检测）
 
-## v0.4 — 载体与形态
+## v0.5 — 载体与形态
 
 - [ ] **本地 skill 化**：把 `SKILL.md` 装到 `~/.workbuddy/skills/`，让 Agent 自动触发（当前需手动指路）
 - [ ] 载体 B：Web 产品落地页（同令牌、px 栅格）

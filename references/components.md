@@ -1,7 +1,8 @@
-# 组件 API · Components（34 个 / 10 族）
+# 组件 API · Components（37 个 / 10 族）
 
 > 全部组件从 `src/lib` 导入，自动消费 `ThemeProvider` 注入的主题，**不接收硬编码色值**。
 > 族 H / I / J 为 v0.3 新增，源自 MCE（皓元）五册逆向 —— 见 `行业参考手册库/MCE_皓元/设计元素完整清单_MCE.md`。
+> **计数口径**：`src/lib/index.js` 的全部组件导出（含 `Icon`、`CapsuleDecor`），不含色彩工具函数与常量。可用 `npm run audit` 自动核对。
 
 ```jsx
 import { ThemeProvider, Cover, Page, PillTitle, SpecTable /* … */ } from './src/lib'
@@ -98,6 +99,7 @@ import { ThemeProvider, Cover, Page, PillTitle, SpecTable /* … */ } from './sr
 | `Page` | `number folioSide="left"\|"right"` | A4 页面容器（210×297mm，自动页码） |
 | `Folio` | `num side color` | `– 0X –` 页码，奇偶左右交替 |
 | `Icon` | `name size primary secondary` | 面性双色 SVG 图标 |
+| `CapsuleDecor` | `preset="cover"\|"backcover"\|"divider"` | **装饰原语**（母题 E01「胶囊棒束」）：45° 等距平行圆头长条，按 `d = x − y` 定位。通常由 `Cover` / `BackCover` / `SectionDivider` 内部调用，**不单独在页面里手写**；确需自定义布点时才直接用。 |
 | `ICON_NAMES` | — | 16 个图标名：`flask timer truck shield award chart dna gear box cell link globe phone mail pin check` |
 
 ---

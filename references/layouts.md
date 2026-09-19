@@ -1,28 +1,33 @@
-# 7 个版式原型 · Layouts
+# 7 个版式原型 · Layouts（L1–L7）
 
 > 任意新手册 = 从这 7 个原型挑页组装。**不要自创"第 8 种页面"**——多样性由内容承担，不由版式承担。
+>
+> **编号命名空间**：本文件的原型编号为 **`L1–L7`**；整页模板编号为 **`T01–T07`**（见 `../templates/README.md`）。
+> 原型 = 页面**句型**（骨架），模板 = 装配好的**整页成品**。二者是多对多：一个原型可派生多个模板，一个模板必挂一个原型。
 
 | 原型 | 名称 | 组件骨架 | 用途 |
 |---|---|---|---|
-| **T1** | 封面型 | `Cover` | 品牌开场 |
-| **T2** | 目录型 | `Page` + 幽灵大字（≥20 页手册才需要） | 导航 |
-| **T3** | 章节总览型 | `SectionDivider` +（`IslandBulletGrid` / 总览表 / `ChevronFlow` 三选一） | 承诺总览，数字前置 |
-| **T4** | 卖点页型 | `PillTitle` + `Lead` + `StatCardRow`×1 + `FlowChain`/`IconFlowBar`（+ `TimelineBar`） | 可扫读的承诺 |
-| **T5** | 参数页型 | `H2` + `SpecTable`/`TierMatrixTable` + `Footnotes`（可叠 `TierCards`） | 可核查的承诺 |
-| **T6** | 证据页型 | `H2`"案例分享" + `CaseBlock` + `EvidenceGrid`/`DataChart` + `ConclusionBanner` | 终极证据 |
-| **T7** | 收口页型 | `BackCover`（+ 联系列表） | 安静收口 |
+| **L1** | 封面型 | `Cover` | 品牌开场 |
+| **L2** | 目录型 | `Page` + 幽灵大字（≥20 页手册才需要） | 导航 |
+| **L3** | 章节总览型 | `SectionDivider` +（`IslandBulletGrid` / 总览表 / `ChevronFlow` 三选一） | 承诺总览，数字前置 |
+| **L4** | 卖点页型 | `PillTitle` + `Lead` + `StatCardRow`×1 + `FlowChain`/`IconFlowBar`（+ `TimelineBar`） | 可扫读的承诺 |
+| **L5** | 参数页型 | `H2` + `SpecTable`/`TierMatrixTable` + `Footnotes`（可叠 `TierCards`） | 可核查的承诺 |
+| **L6** | 证据页型 | `H2`"案例分享" + `CaseBlock` + `EvidenceGrid`/`DataChart` + `ConclusionBanner` | 终极证据 |
+| **L7** | 收口页型 | `BackCover`（+ 联系列表） | 安静收口 |
+
+> v0.3 新增族 H/I/J 后，L1–L7 均为**可用**；新增原型从 `L8` 起顺延（见 `extending.md` X3）。
 
 ## 叙事铁律（说服力结构）
 
 一份完整的 B2B 产品手册按此顺序展开，每一步都在回答读者心里的问题：
 
-1. **T1 品牌** — 你是谁？（建立可信外观）
-2. **T3 承诺总览** — 你能给我什么？**数字前置**（"已交付 10,000+ 细胞株""包封率 ≥90%"）
-3. **T4 卖点卡** — 凭什么信你？（可扫读的差异化）
-4. **T5 参数表** — 具体到什么程度？（可逐行核对的规格）
-5. **T6 原始数据** — 有证据吗？（版面最"素"、最有说服力的一页）
+1. **L1 品牌** — 你是谁？（建立可信外观）
+2. **L3 承诺总览** — 你能给我什么？**数字前置**（"已交付 10,000+ 细胞株""包封率 ≥90%"）
+3. **L4 卖点卡** — 凭什么信你？（可扫读的差异化）
+4. **L5 参数表** — 具体到什么程度？（可逐行核对的规格）
+5. **L6 原始数据** — 有证据吗？（版面最"素"、最有说服力的一页）
 6. **横幅收口** — 把数据翻译成一句承诺
-7. **T7 安静收口** — 怎么找到你？（B2B 用"可抵达"而非"催单"）
+7. **L7 安静收口** — 怎么找到你？（B2B 用"可抵达"而非"催单"）
 
 > 违反顺序的典型错误：把参数表放在卖点卡之前（还没建立动机就上细节）；把原始数据藏在附录（证据在最需要的时候缺席）。
 
@@ -44,9 +49,12 @@
 
 | 你手上有什么内容 | 用哪个原型 |
 |---|---|
-| 一组数字承诺 / 优势 | T4（`StatCardRow`） |
-| 分步骤的服务流程 + 周期 | T4（`FlowChain` + `TimelineBar`） |
-| 规格、交付标准、参数 | T5（`SpecTable`） |
-| 多档服务分级 | T5（`TierMatrixTable` / `TierCards`） |
-| 真实实验数据（FACS/blot/胶图） | T6（`DataChart` / `EvidenceGrid`） |
-| 客户故事（难题→方案→结果） | T6（`CaseBlock`） |
+| 一组数字承诺 / 优势 | L4（`StatCardRow`） |
+| 分步骤的服务流程 + 周期 | L4（`FlowChain` + `TimelineBar`） |
+| 规格、交付标准、参数 | L5（`SpecTable`） |
+| 多档服务分级 | L5（`TierMatrixTable` / `TierCards`） |
+| 真实实验数据（FACS/blot/胶图） | L6（`DataChart` / `EvidenceGrid`） |
+| 客户故事（难题→方案→结果） | L6（`CaseBlock`） |
+| 某个靶点的阶段管线 / 收敛漏斗 / 迭代循环 | L3 或 L5（族 H：`StagePipelineChain` / `FunnelStages` / `CycleFlowDiagram`） |
+| 同行评议文献背书 | L6（`CitationBlock`） |
+| 仪器报告（图 + 数据表同框） | L5（`InstrumentReportPanel`） |
