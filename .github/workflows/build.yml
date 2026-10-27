@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build and audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - run: npm ci
+
+      # registry.json and prompt-pack.md are projections of the component
+      # source, so a stale copy means the docs drifted from the code.
+      - name: Regenerate registry
+        run: npm run registry
+
+      # --ignore-cr-at-eol: the committed files use CRLF on Windows checkouts
+      # while the generator emits LF, so compare content rather than bytes.
+      - name: Check registry is in sync
+        run: git diff --exit-code --ignore-cr-at-eol registry.json references/prompt-pack.md
+
+      - name: Audit docs against source
+        run: npm run audit
+
+      - name: Build
+        run: npm run build
